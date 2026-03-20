@@ -499,7 +499,7 @@ const RelatedTools = ({ currentTool, isDarkMode, navigate }) => {
                 {t.description}
               </div>
             </div>
-          </div>
+          </CrystalCard>
         ))}
       </div>
     </section>
@@ -512,37 +512,46 @@ const RelatedTools = ({ currentTool, isDarkMode, navigate }) => {
 const Breadcrumb = ({ tool, isDarkMode, navigate }) => {
   const dk = isDarkMode;
   const crumbs = [
-    { label: 'Home',     action: () => navigate('/') },
-    { label: tool.category.charAt(0).toUpperCase() + tool.category.slice(1),
-      action: () => navigate(`/category/${tool.category}`) },
+    { label: 'Home',     icon: Home, action: () => navigate('/') },
+    { label: tool.category, action: () => navigate(`/category/${tool.category.toLowerCase()}`) },
     { label: tool.name },
   ];
   return (
     <nav style={{
-      display: 'flex', alignItems: 'center', gap: 4,
-      flexWrap: 'wrap', marginBottom: 16,
-      fontFamily: 'system-ui, sans-serif',
-    }} aria-label="breadcrumb">
-      {crumbs.map((c, i) => (
-        <React.Fragment key={i}>
-          {i > 0 && <span style={{ color: dk ? '#475569' : '#cbd5e1', fontSize: 13 }}>/</span>}
-          {c.action ? (
-            <button onClick={c.action} style={{
-              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-              fontSize: 12, color: dk ? '#64748b' : '#94a3b8',
-              transition: 'color .13s',
-            }}
-              onMouseEnter={e => e.target.style.color = dk ? '#e2e8f0' : '#0f172a'}
-              onMouseLeave={e => e.target.style.color = dk ? '#64748b' : '#94a3b8'}>
-              {c.label}
-            </button>
-          ) : (
-            <span style={{ fontSize: 12, color: dk ? '#94a3b8' : '#64748b', fontWeight: 500 }}>
-              {c.label}
-            </span>
-          )}
-        </React.Fragment>
-      ))}
+      display: 'flex', alignItems: 'center', gap: 6,
+      flexWrap: 'wrap', marginBottom: 24,
+      fontSize: 12, color: dk ? '#64748b' : '#94a3b8'
+    }}>
+      {crumbs.map((c, i) => {
+        const Icon = c.icon;
+        return (
+          <React.Fragment key={i}>
+            {i > 0 && <ChevronRight size={12} style={{ opacity: 0.5 }} />}
+            {c.action ? (
+              <button 
+                onClick={c.action}
+                className="crystal-hover"
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px',
+                  borderRadius: 6, color: 'inherit', fontWeight: 500,
+                  display: 'flex', alignItems: 'center', gap: 4,
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {Icon && <Icon size={13} />}
+                {c.label}
+              </button>
+            ) : (
+              <span style={{ 
+                padding: '4px 8px', fontWeight: 600, 
+                color: dk ? '#a5b4fc' : '#6366f1' 
+              }}>
+                {c.label}
+              </span>
+            )}
+          </React.Fragment>
+        );
+      })}
     </nav>
   );
 };
