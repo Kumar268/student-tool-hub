@@ -1,0 +1,151 @@
+/**
+ * Crystalline 3D Design System — v1.0
+ * Premium glassmorphism, depth layering, and perspective utilities.
+ */
+
+:root {
+  --crystal-blur: 14px;
+  --crystal-saturate: 160%;
+  --crystal-bg: rgba(255, 255, 255, 0.08);
+  --crystal-border: rgba(255, 255, 255, 0.18);
+  --crystal-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  --crystal-inset: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
+}
+
+.dark {
+  --crystal-bg: rgba(17, 24, 39, 0.55);
+  --crystal-border: rgba(255, 255, 255, 0.08);
+}
+
+/* 1. Global Protective Rules */
+* {
+  box-sizing: border-box;
+}
+
+/* 2. Perspective System */
+.crystal-scene {
+  perspective: 1200px;
+  perspective-origin: center;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* 3. Crystalline Surfaces — Cards & Panels */
+.crystalline-surface {
+  backdrop-filter: blur(var(--crystal-blur)) saturate(var(--crystal-saturate));
+  -webkit-backdrop-filter: blur(var(--crystal-blur)) saturate(var(--crystal-saturate));
+  background: var(--crystal-bg);
+  border: 1px solid var(--crystal-border);
+  border-radius: 16px;
+  box-shadow: var(--crystal-shadow), var(--crystal-inset);
+  transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.4s ease;
+}
+
+/* 4. Hover Depth Effects */
+.crystal-hover {
+  cursor: pointer;
+}
+
+.crystal-hover:hover {
+  transform: translateZ(20px) scale(1.02);
+  box-shadow: 0 28px 56px rgba(0,0,0,0.22), 0 8px 24px rgba(99,102,241,0.12);
+  z-index: 20;
+}
+
+/* 5. Tool Content Protection (CRITICAL) */
+.tool-content-zone,
+.tool-content-zone *,
+input, textarea, select, canvas, [role="slider"], .recharts-wrapper {
+  transform-style: flat !important;
+}
+
+input, textarea, select, button {
+  transform: none !important;
+}
+
+/* 6. AdSense Safe Container */
+.adsense-3d-container {
+  transform: translateZ(2px);
+  transform-style: flat;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 0;
+  z-index: 10;
+}
+
+.ad-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(148, 163, 184, 0.6);
+  margin-bottom: 8px;
+  font-family: system-ui, sans-serif;
+}
+
+/* 7. Performance & Mobile Fallbacks */
+@media (max-width: 768px) {
+  :root {
+    --crystal-blur: 8px;
+  }
+  
+  .crystalline-surface {
+    border-radius: 12px;
+  }
+  
+  .crystal-hover:hover {
+    transform: none; /* Disable 3D lift on mobile */
+  }
+
+  .crystal-scene {
+    perspective: none;
+  }
+}
+
+/* Respect @media (prefers-reduced-motion: reduce) */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    transform: none !important;
+  }
+}
+
+.reduce-motion * {
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Ambient Shimmer Effect */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0) 55%
+  );
+  animation: shimmer-anim 8s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes shimmer-anim {
+  0% { transform: translateX(-30%) translateY(-30%); }
+  100% { transform: translateX(30%) translateY(30%); }
+}
