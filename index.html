@@ -2,30 +2,87 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StudentToolHub - Free Online Student Tools & Calculators</title>
-    <meta name="description" content="StudentToolHub: 56+ free online tools for students. Academic calculators, financial tools, image editors, PDF utilities, and more. Perfect for homework, assignments, and learning." />
-    <meta name="keywords" content="student tools, calculators, academic tools, GPA calculator, unit converter, image editor, PDF tools" />
-    <meta name="theme-color" content="#1f2937" />
-    
-    <!-- Google AdSense -->
+
+    <!-- Primary Meta -->
+    <title>StudentToolHub — 79+ Free Tools for Students</title>
+    <meta name="description" content="79+ free online tools for students and engineers. Academic calculators, financial tools, PDF utilities, image editors, document makers, and more. No login required." />
+    <meta name="keywords" content="student tools, engineering calculator, GPA calculator, unit converter, PDF tools, image editor, free tools for students, ECE tools" />
+    <meta name="author" content="StudentToolHub" />
+    <meta name="theme-color" content="#020408" />
+    <link rel="canonical" href="https://studenttoolhub.com/" />
+
+    <!-- Open Graph (for social sharing) -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="https://studenttoolhub.com/" />
+    <meta property="og:title"       content="StudentToolHub — 56+ Free Tools for Students & Engineers" />
+    <meta property="og:description" content="Free online tools for students: calculators, converters, PDF utilities, image editors, document makers, and more. No login required. 100% browser-based." />
+    <meta property="og:site_name"   content="StudentToolHub" />
+    <meta property="og:image"       content="https://studenttoolhub.com/og-image.png" />
+    <meta property="og:locale"      content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:site"        content="@studenttoolhub" />
+    <meta name="twitter:title"       content="StudentToolHub — 56+ Free Tools for Students" />
+    <meta name="twitter:description" content="Free online tools for students and engineers. No login. No cost. 100% browser-based." />
+    <meta name="twitter:image"       content="https://studenttoolhub.com/og-image.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+
+    <!-- Sitemap hint for crawlers -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "StudentToolHub",
+      "url": "https://studenttoolhub.com",
+      "description": "56+ free online tools for students and engineers",
+      "image": "https://studenttoolhub.com/og-image.png",
+      "author": {
+        "@type": "Person",
+        "name": "Aman Kumar",
+        "description": "First-year ECE student from Bihar, India"
+      },
+      "applicationCategory": "UtilityApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://studenttoolhub.com/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Google AdSense — replace ca-pub-XXXXXXXXXXXXXXXX with your real Publisher ID -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-    
-    <!-- Google Analytics (optional) -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script> -->
-    <!-- <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script> -->
   </head>
   <body>
     <div id="root">
-      <h1>Loading...</h1>
-      <p>If you see this for more than a few seconds, something is wrong.</p>
+      <noscript>
+        <h1>StudentToolHub — 79+ Free Tools for Students</h1>
+        <p>Please enable JavaScript to use StudentToolHub.</p>
+        <p><a href="/privacy">Privacy Policy</a> | <a href="/about">About Us</a> | <a href="/contact">Contact</a></p>
+      </noscript>
     </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
+```
+
+**Then on the highlighted line — replace only this part:**
+```
+client=ca-pub-XXXXXXXXXXXXXXXX
+```
+
+With your real publisher ID, for example:
+```
+client=ca-pub-1234567890123456

@@ -10,11 +10,12 @@ import React, {
 } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, Share2, Printer, Copy, Download,
   Twitter, Facebook, Linkedin, X, Check,
   Clock, AlertTriangle, RotateCcw, Bookmark, BookmarkCheck,
+  Home, ChevronRight,
 } from 'lucide-react';
 import { tools } from '../data/tools';
 import { ToolIcon } from './ToolIcon';
@@ -25,7 +26,7 @@ import {
 import '../crystalline.css';
 
 // ─── YOUR PUBLISHER ID — change this one place only ──────────────
-const ADSENSE_CLIENT = 'ca-pub-XXXXXXXXXXXXXXXX';
+const ADSENSE_CLIENT = 'YOUR_ADSENSE_CLIENT_ID';
 
 // ─── AD SLOT IDs — change these to your real slot IDs ────────────
 const AD_SLOTS = {
@@ -54,7 +55,7 @@ const AdUnit = ({ slotId, format = 'auto', style = {} }) => {
   }, [slotId]);
 
   return (
-    <div style={{ width: '100%', overflow: 'hidden', ...style }} ref={ref}>
+    <div style={{ width: '100%', ...style }} ref={ref}>
       <ins
         className="adsbygoogle"
         style={{ display: 'block', width: '100%' }}
@@ -226,7 +227,7 @@ const ToolLoadingFallback = ({ isDarkMode }) => (
 // ═══════════════════════════════════════════════════════════════════
 // TOAST SYSTEM — replaces all alert() calls
 // ═══════════════════════════════════════════════════════════════════
-const Toast = ({ toasts, remove }) => (
+const Toast = ({ toasts }) => (
   <div style={{
     position: 'fixed', bottom: 28, left: '50%', transform: 'translateX(-50%)',
     zIndex: 9999, display: 'flex', flexDirection: 'column', gap: 8,
@@ -641,6 +642,7 @@ const TOOL_MAP = {
   'recommendation-letter':  React.lazy(() => import('../tools/documentmaker/RecommendationLetter')),
   'internship-letter':      React.lazy(() => import('../tools/documentmaker/InternshipApplication')),
   'bmi-calorie-calculator': React.lazy(() => import('../tools/health/BMIAndCalorie')),
+  'image-editor':          React.lazy(() => import('../tools/image/ImageEditor')),
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -808,16 +810,6 @@ const ToolDetail = ({ isDarkMode }) => {
     fontFamily: 'system-ui, sans-serif',
     display: 'flex',
     flexDirection: 'column',
-  };
-
-  const actionBtnStyle = {
-    display: 'flex', alignItems: 'center', gap: 6,
-    padding: '8px 14px', borderRadius: 8,
-    cursor: 'pointer', fontSize: 13, fontWeight: 500,
-    transition: 'all .13s',
-    background: dk ? 'rgba(255,255,255,.06)' : '#fff',
-    color: dk ? '#94a3b8' : '#64748b',
-    border: `1px solid ${dk ? 'rgba(255,255,255,.1)' : '#e2e8f0'}`,
   };
 
   const centeredSectionStyle = {

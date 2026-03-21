@@ -1,0 +1,21 @@
+
+> studenttoolhub@0.0.0 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m???[39m 21 modules transformed.
+node.exe : [31m???[39m Build failed in 2.56s
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo              : NotSpecified    : ([31m???[39m Bu    ild failed in 2.56s    :String) [], Remote    Exception
+    + FullyQualifiedErr    orId : NativeComman    dError
+ 
+[31merror during build:
+[31mCould not resolve "./pages/Contact" from "src/Router.jsx"[31m
+file: [36mC:/Users/Aman kumar/OneDrive/Pictures/main/student/StudentToolHub/src/Router.jsx[31m
+    at getRollupError (file:///C:/Users/Aman%20kumar/OneDrive/Pictures/main/student/StudentToolHub/node_modules/rollup/dist/es/shared/parseAst.js:402:41)
+    at error (file:///C:/Users/Aman%20kumar/OneDrive/Pictures/main/student/StudentToolHub/node_modules/rollup/dist/es/shared/parseAst.js:398:42)
+    at ModuleLoader.handleInvalidResolvedId (file:///C:/Users/Aman%20kumar/OneDrive/Pictures/main/student/StudentToolHub/node_modules/rollup/dist/es/shared/node-entry.js:21710:24)
+    at file:///C:/Users/Aman%20kumar/OneDrive/Pictures/main/student/StudentToolHub/node_modules/rollup/dist/es/shared/node-entry.js:21670:26[39m

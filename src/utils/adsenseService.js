@@ -14,7 +14,7 @@ export const useAdSense = () => {
   if (typeof window !== 'undefined') {
     const script = document.createElement('script');
     script.async = true;
-    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-xxxxxxxxxxxxxxxx';
+    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR_ADSENSE_CLIENT_ID';
     script.crossOrigin = 'anonymous';
     document.head.appendChild(script);
   }

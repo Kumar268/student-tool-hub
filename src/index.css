@@ -21,9 +21,11 @@ html {
   scroll-padding-top: 80px;
 }
 
-/* Enhanced smooth transitions */
-* {
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+/* Smooth color/opacity transitions globally — excludes transform
+   so the 3D tilt hook can own transform timing without fighting this */
+*:not(.crystal-hover):not(.crystalline-surface):not(.crystal-btn) {
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+              color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
 /* Custom glassmorphic utilities */

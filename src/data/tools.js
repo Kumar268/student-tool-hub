@@ -673,9 +673,27 @@ export const tools = [
     slug: 'bmi-calorie-calculator',
     tags: ['health', 'bmi', 'calories', 'fitness']
   },
-  // Adding more financial, utility, and academic apps
   {
     id: 72,
+    name: 'Nutrition Calculator',
+    description: 'Student-friendly calorie and macro calculator for budget meals',
+    category: 'health',
+    icon: 'Apple',
+    slug: 'nutrition-calculator',
+    tags: ['nutrition', 'calories', 'macros', 'health']
+  },
+  {
+    id: 73,
+    name: 'Age Calculator',
+    description: 'Calculate your exact age in years, months, and days',
+    category: 'health',
+    icon: 'CalendarDays',
+    slug: 'age-calculator-health',
+    tags: ['age', 'health', 'date']
+  },
+  // Adding more financial, utility, and academic apps
+  {
+    id: 74,
     name: 'EMI / Loan Calculator',
     description: 'Calculate Equated Monthly Installment for home or car loans',
     category: 'financial',
@@ -684,7 +702,7 @@ export const tools = [
     tags: ['finance', 'loan', 'emi', 'mortgage']
   },
   {
-    id: 73,
+    id: 75,
     name: 'Age Calculator',
     description: 'Calculate your exact age in years, months, and days',
     category: 'utility',

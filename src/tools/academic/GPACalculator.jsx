@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Trash, Calculator, ArrowRight, Table, BookOpen } from 'lucide-react';
+import { Plus, Trash, ArrowRight, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import SolutionStep from '../../components/SolutionStep';
-
-import { BlockMath } from 'react-katex';
+import GoogleAd from '../../components/monetization/GoogleAd';
+import AffiliateLink from '../../components/monetization/AffiliateLink';
 
 const scaleConfigs = {
   '4.0': {
@@ -65,18 +64,16 @@ const GPACalculator = ({ isDarkMode }) => {
 
   const calculation = useMemo(() => {
     const currentScale = scaleConfigs[scale];
-    let totalQualityPoints = 0;
-    let totalCredits = 0;
-    let totalPointsForCBSE = 0;
-
+    
     const courseDetails = courses.map(course => {
       const points = currentScale.grades[course.grade] || 0;
       const qualityPoints = points * parseFloat(course.credits || 0);
-      totalQualityPoints += qualityPoints;
-      totalCredits += parseFloat(course.credits || 0);
-      totalPointsForCBSE += points;
       return { ...course, points, qualityPoints };
     });
+
+    const totalQualityPoints = courseDetails.reduce((sum, c) => sum + c.qualityPoints, 0);
+    const totalCredits = courseDetails.reduce((sum, c) => sum + parseFloat(c.credits || 0), 0);
+    const totalPointsForCBSE = courseDetails.reduce((sum, c) => sum + c.points, 0);
 
     let gpa;
     if (scale === 'CBSE') {
@@ -136,6 +133,17 @@ const GPACalculator = ({ isDarkMode }) => {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Native Contextual Ad Placement */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+        <GoogleAd slot="NATIVE_GPA_AD_SLOT" format="fluid" className="my-0" />
+        <AffiliateLink 
+          url="https://example.com/student-discount" 
+          title="Student Discount Hub" 
+          description="Get up to 60% off software, laptops, and textbooks with your .edu email"
+          category="textbook"
+        />
       </div>
 
       {/* Calculator Interface */}

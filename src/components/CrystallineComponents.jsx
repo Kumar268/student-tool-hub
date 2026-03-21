@@ -1,144 +1,224 @@
-import React, { useEffect, useRef, Suspense } from 'react';
+import React, { useEffect, useRef } from 'react';
 import use3DTilt from '../hooks/use3DTilt';
 
 /**
- * CrystalCard — Glassmorphism card with optional 3D tilt.
+ * CrystalCard
+ * Glassmorphism card with optional 3D tilt.
+ * crystal-scene provides the perspective context.
  */
-export const CrystalCard = ({ children, tilt = true, hoverLift = true, className = "", style = {} }) => {
-  const { ref, isLowEnd } = use3DTilt({ max: 2 });
-  const containerRef = tilt && !isLowEnd ? ref : null;
+export const CrystalCard = ({
+  children,
+  tilt      = true,
+  hoverLift = true,
+  shimmer   = false,
+  className = '',
+  style     = {},
+  onClick,
+  ...props
+}) => {
+  const { ref } = use3DTilt({ max: 2 });
 
   return (
     <div
-      ref={containerRef}
-      className={`crystalline-surface preserve-3d ${hoverLift ? 'crystal-hover' : ''} ${className}`}
-      style={{
-        width: '100%',
-        ...style
-      }}
+      ref={tilt ? ref : undefined}
+      className={[
+        'crystal-scene',
+        'crystalline-surface',
+        hoverLift ? 'crystal-hover' : '',
+        shimmer   ? 'shimmer' : '',
+        className,
+      ].filter(Boolean).join(' ')}
+      style={{ width: '100%', ...style }}
+      onClick={onClick}
+      {...props}
     >
-      <div className="preserve-3d" style={{ width: '100%', height: '100%' }}>
-        {children}
-      </div>
+      {children}
     </div>
   );
 };
 
 /**
- * CrystalPanel — Non-tilting crystalline surface.
+ * CrystalPanel
+ * Non-tilting crystalline surface for dense content / form areas.
  */
-export const CrystalPanel = ({ children, className = "", style = {} }) => (
-  <div className={`crystalline-surface ${className}`} style={{ width: '100%', ...style }}>
+export const CrystalPanel = ({ children, className = '', style = {}, ...props }) => (
+  <div
+    className={`crystalline-surface ${className}`}
+    style={{ width: '100%', ...style }}
+    {...props}
+  >
     {children}
   </div>
 );
 
 /**
- * CrystalBtn — Premium glass button with hover interaction.
+ * CrystalBtn
+ * Glass button with hover lift.
+ * NOTE: transform:none is NOT forced here — the button itself is safe
+ *       to animate. Only tool-content-zone inputs are locked flat.
  */
-export const CrystalBtn = ({ children, onClick, className = "", style = {}, disabled = false }) => (
+export const CrystalBtn = ({
+  children,
+  onClick,
+  className = '',
+  style     = {},
+  disabled  = false,
+  type      = 'button',
+  ...props
+}) => (
   <button
+    type={type}
     onClick={onClick}
     disabled={disabled}
-    className={`crystalline-surface crystal-hover preserve-3d ${className}`}
+    className={`crystalline-surface crystal-hover ${className}`}
     style={{
-      display: 'inline-flex',
-      alignItems: 'center',
+      display:        'inline-flex',
+      alignItems:     'center',
       justifyContent: 'center',
-      gap: '8px',
-      padding: '10px 20px',
-      fontSize: '14px',
-      fontWeight: '600',
-      cursor: disabled ? 'not-allowed' : 'pointer',
-      opacity: disabled ? 0.6 : 1,
-      transition: 'all 0.2s ease',
-      ...style
+      gap:            '6px',
+      padding:        '8px 16px',
+      fontSize:       '13px',
+      fontWeight:     '600',
+      cursor:         disabled ? 'not-allowed' : 'pointer',
+      opacity:        disabled ? 0.55 : 1,
+      border:         'none',
+      outline:        'none',
+      lineHeight:     1,
+      whiteSpace:     'nowrap',
+      ...style,
     }}
+    {...props}
   >
-    <div className="preserve-3d">{children}</div>
+    {children}
   </button>
 );
 
 /**
- * CrystalAdSlot — Safe wrapper for AdSense.
+ * CrystalAdSlot
+ * AdSense-safe wrapper.
+ * Guarantees:
+ *  - translateZ(2px) is the ONLY transform
+ *  - NO overflow:hidden (clips iframes)
+ *  - NO backdrop-filter on the container
+ *  - NO pointer-events manipulation
+ *  - Double-init guard (StrictMode safe)
  */
-export const CrystalAdSlot = ({ slotId, className = "" }) => {
-  const adRef = useRef(null);
+export const CrystalAdSlot = ({
+  slotId,
+  adClient  = 'ca-pub-XXXXXXXXXXXXXXXX',
+  format    = 'auto',
+  className = '',
+  style     = {},
+}) => {
+  const adRef   = useRef(null);
+  const didPush = useRef(false);
 
   useEffect(() => {
+    if (didPush.current) return;       // guard against double-init
+    if (!adRef.current) return;
+    if (adRef.current.childElementCount > 0) return; // already has children
+
     try {
-      if (window.adsbygoogle && adRef.current && adRef.current.children.length === 0) {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      }
+      didPush.current = true;
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (e) {
-      console.error("AdSense Error:", e);
+      console.warn('[CrystalAdSlot]', e);
     }
-  }, []);
+  }, [slotId]);
 
   return (
-    <div className={`adsense-3d-container ${className}`}>
+    <div
+      className={`adsense-3d-container ${className}`}
+      style={style}
+    >
       <span className="ad-label">Advertisement</span>
-      <div 
+      <ins
         ref={adRef}
-        style={{ width: '100%', minHeight: '100px', display: 'flex', justifyContent: 'center' }}
-      >
-        <ins
-          className="adsbygoogle"
-          style={{ display: 'block' }}
-          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-          data-ad-slot={slotId}
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
-      </div>
+        className="adsbygoogle"
+        style={{ display: 'block', width: '100%' }}
+        data-ad-client={adClient}
+        data-ad-slot={slotId}
+        data-ad-format={format}
+        data-full-width-responsive="true"
+      />
     </div>
   );
 };
 
 /**
- * CrystalBadge — Premium tag/badge.
+ * CrystalBadge — tag / label pill
  */
-export const CrystalBadge = ({ children, color = "#6366f1", className = "" }) => (
-  <span 
-    className={`preserve-3d ${className}`}
+export const CrystalBadge = ({
+  children,
+  color     = '#6366f1',
+  className = '',
+  style     = {},
+  ...props
+}) => (
+  <span
+    className={className}
     style={{
-      padding: '4px 12px',
-      borderRadius: '20px',
-      fontSize: '11px',
-      fontWeight: '600',
-      background: `rgba(99, 102, 241, 0.1)`,
-      border: `1px solid rgba(99, 102, 241, 0.2)`,
-      color: color,
+      display:       'inline-block',
+      padding:       '3px 10px',
+      borderRadius:  '20px',
+      fontSize:      '11px',
+      fontWeight:    '600',
+      whiteSpace:    'nowrap',
+      background:    'rgba(99, 102, 241, 0.10)',
+      border:        '1px solid rgba(99, 102, 241, 0.22)',
+      color,
       backdropFilter: 'blur(4px)',
-      display: 'inline-block',
-      whiteSpace: 'nowrap'
+      ...style,
     }}
+    {...props}
   >
     {children}
   </span>
 );
 
 /**
- * CrystalDivider — Subtle gradient separator.
+ * CrystalDivider — gradient separator line
  */
-export const CrystalDivider = ({ className = "" }) => (
-  <div 
-    className={className}
-    style={{
-      height: '1px',
-      width: '100%',
-      background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent)',
-      margin: '24px 0'
-    }}
-  />
-);
+export const CrystalDivider = ({ label, className = '' }) => {
+  if (!label) {
+    return (
+      <div
+        className={className}
+        style={{
+          height:     '1px',
+          width:      '100%',
+          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent)',
+          margin:     '24px 0',
+        }}
+      />
+    );
+  }
+  return (
+    <div
+      className={className}
+      style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '24px 0' }}
+    >
+      <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+      <span style={{ fontSize: '11px', color: 'rgba(148,163,184,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        {label}
+      </span>
+      <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+    </div>
+  );
+};
 
 /**
- * CrystalSkeleton — Shimmer loading state.
+ * CrystalSkeleton — shimmer loading placeholder
  */
-export const CrystalSkeleton = ({ width = "100%", height = "100px", className = "" }) => (
-  <div 
-    className={`crystalline-surface shimmer ${className}`}
-    style={{ width, height }}
+export const CrystalSkeleton = ({
+  width     = '100%',
+  height    = '100px',
+  className = '',
+  style     = {},
+}) => (
+  <div
+    className={`crystal-skeleton ${className}`}
+    style={{ width, height, ...style }}
+    aria-hidden="true"
   />
 );
