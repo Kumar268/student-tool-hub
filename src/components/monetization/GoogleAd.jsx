@@ -1,43 +1,51 @@
 import React, { useEffect, useRef } from 'react';
-import { usePremium } from '../../contexts/PremiumContext';
 import { ADSENSE_PUB_ID } from '../../utils/adsenseService';
 
-const GoogleAd = ({ slot, format = 'auto', responsive = 'true', className = '' }) => {
-  const { isPremium } = usePremium();
-  const adRef = useRef(null);
-  const initialized = useRef(false);
+// ─── AD KILL SWITCH ──────────────────────────────────────
+// Set to true after receiving AdSense approval to enable ads.
+// Also set VITE_ADS_ENABLED=true in your .env file.
+const ADS_ENABLED = import.meta.env.VITE_ADS_ENABLED === 'true' || false;
+// ─────────────────────────────────────────────────────────
 
-  // YOUR_ADSENSE_CLIENT_ID
-  const client = ADSENSE_PUB_ID;
+const GoogleAd = ({ slot, format = 'auto', className = '', style = {} }) => {
+  const pushed = useRef(false);
 
   useEffect(() => {
-    // Don't initialize if premium user or already initialized
-    if (isPremium || initialized.current || !adRef.current) return;
-
+    // Don't try to push ads if disabled — avoids all console errors
+    if (!ADS_ENABLED) return;
+    if (pushed.current) return;
+    pushed.current = true;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-      initialized.current = true;
     } catch (e) {
-      console.error("AdSense error:", e);
+      console.warn('[GoogleAd]', e);
     }
-  }, [isPremium]);
+  }, []);
 
-  if (isPremium) return null;
+  // Return nothing when ads are disabled — no placeholder, no errors
+  if (!ADS_ENABLED) return null;
 
   return (
-    <div className={`w-full flex flex-col items-center justify-center my-6 ${className}`}>
-      <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-2 font-mono opacity-60">Advertisement</span>
-      <div className="w-full overflow-hidden flex justify-center bg-gray-50 dark:bg-gray-900/30 rounded-lg min-h-[90px] border border-gray-100 dark:border-gray-800">
-        <ins
-          ref={adRef}
-          className="adsbygoogle"
-          style={{ display: 'block', width: '100%', minHeight: '90px' }}
-          data-ad-client={client}
-          data-ad-slot={slot}
-          data-ad-format={format}
-          data-full-width-responsive={responsive}
-        />
-      </div>
+    <div className={className} style={{ width: '100%', margin: '16px 0', ...style }}>
+      <p style={{
+        fontSize: '9px',
+        color: 'rgba(148,163,184,.35)',
+        letterSpacing: '.12em',
+        textTransform: 'uppercase',
+        marginBottom: 4,
+        textAlign: 'center',
+        userSelect: 'none',
+      }}>
+        Advertisement
+      </p>
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block', width: '100%' }}
+        data-ad-client={ADSENSE_PUB_ID}
+        data-ad-slot={slot}
+        data-ad-format={format}
+        data-full-width-responsive="true"
+      />
     </div>
   );
 };

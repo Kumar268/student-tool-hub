@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Disallow nothing — all tool pages are public and should be indexed
+Disallow:
+
+# Sitemap location
+Sitemap: https://studenttoolhub.vercel.app/sitemap.xml

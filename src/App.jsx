@@ -8,7 +8,8 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { tools, categories } from './data/tools';
-import { AdSlot, InFeedAd } from './components/GoogleAds';
+// AdSlot and InFeedAd are disabled until AdSense approval — import kept for future use
+// import { AdSlot, InFeedAd } from './components/GoogleAds';
 
 // ─── Category metadata ───────────────────────────────────────────
 const CAT = {
