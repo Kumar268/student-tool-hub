@@ -1,4 +1,6 @@
 // Initialize Google AdSense
+export const ADSENSE_PUB_ID = 'ca-pub-1234567890123456';
+
 export const initializeAdSense = () => {
   if (typeof window !== 'undefined' && window.adsbygoogle) {
     try {

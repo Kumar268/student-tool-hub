@@ -4,9 +4,10 @@ import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import Layout from './components/Layout';
 import ToolLayout from './components/ToolLayout';
-import Legal from './pages/Legal';
+import TermsOfService from './pages/TermsOfService';
 import About from './pages/About';
-import Privacy from './pages/Privacy';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Contact from './pages/Contact';
 import { tools } from './data/tools';
 import { PremiumProvider } from './contexts/PremiumContext';
 
@@ -50,8 +51,8 @@ const AppRouter = () => {
         <Router>
           <Routes>
             {/* Main dashboard using App.jsx */}
-            <Route path="/"                   element={<App isDarkMode={isDarkMode} onToggleDarkMode={toggleDarkMode} />} />
-            <Route path="/category/:categoryId" element={<App isDarkMode={isDarkMode} onToggleDarkMode={toggleDarkMode} />} />
+            <Route path="/"                   element={<Layout isDarkMode={isDarkMode}><App isDarkMode={isDarkMode} onToggleDarkMode={toggleDarkMode} /></Layout>} />
+            <Route path="/category/:categoryId" element={<Layout isDarkMode={isDarkMode}><App isDarkMode={isDarkMode} onToggleDarkMode={toggleDarkMode} /></Layout>} />
 
             {/* Map over all declared tools to create individual routes */}
             {tools.map(tool => {
@@ -88,11 +89,16 @@ const AppRouter = () => {
                 />
               );
             })}
-
+            
             {/* Static pages */}
-            <Route path="/about"   element={<Layout isDarkMode={isDarkMode}><About   isDarkMode={isDarkMode} /></Layout>} />
-            <Route path="/privacy" element={<Layout isDarkMode={isDarkMode}><Privacy isDarkMode={isDarkMode} /></Layout>} />
-            <Route path="/legal"   element={<Layout isDarkMode={isDarkMode}><Legal   isDarkMode={isDarkMode} /></Layout>} />
+            <Route path="/about"            element={<Layout isDarkMode={isDarkMode}><About isDarkMode={isDarkMode} /></Layout>} />
+            <Route path="/privacy-policy"   element={<Layout isDarkMode={isDarkMode}><PrivacyPolicy isDarkMode={isDarkMode} /></Layout>} />
+            <Route path="/terms-of-service" element={<Layout isDarkMode={isDarkMode}><TermsOfService isDarkMode={isDarkMode} /></Layout>} />
+            <Route path="/contact"          element={<Layout isDarkMode={isDarkMode}><Contact isDarkMode={isDarkMode} /></Layout>} />
+
+            {/* Legacy redirects/cleanup */}
+            <Route path="/privacy" element={<Navigate to="/privacy-policy" replace />} />
+            <Route path="/legal"   element={<Navigate to="/terms-of-service" replace />} />
 
             {/* 404 → home */}
             <Route path="*" element={<Navigate to="/" replace />} />

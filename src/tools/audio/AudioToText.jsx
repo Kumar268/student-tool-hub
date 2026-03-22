@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { ADSENSE_PUB_ID } from "../../utils/adsenseService";
 
 // ─── Google AdSense Ad Unit Component ────────────────────────────────────────
 // Replace data-ad-client and data-ad-slot with your real AdSense values.
@@ -23,7 +24,7 @@ const AdUnit = ({ slot, format = "auto", style = {}, label = "" }) => {
         ref={ref}
         className="adsbygoogle"
         style={{ display: "block", minHeight: 90 }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+        data-ad-client={ADSENSE_PUB_ID}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive="true"
@@ -190,7 +191,7 @@ export default function AudioToText() {
       <style>{CSS}</style>
 
       {/* HEAD — add AdSense script tag in your HTML <head>:
-          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1234567890123456" crossorigin="anonymous"></script>
       */}
 
       <div style={{ minHeight: "100vh", background: "#020408", fontFamily: "'Share Tech Mono', monospace", color: "#e0f7fa", position: "relative" }}>

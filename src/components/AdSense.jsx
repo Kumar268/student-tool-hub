@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ADSENSE_PUB_ID } from '../utils/adsenseService';
 
 const AdSense = ({ 
   format = 'auto', 
@@ -33,7 +34,7 @@ const AdSense = ({
           minHeight: '90px',
           ...style
         }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXXXX"
+        data-ad-client={ADSENSE_PUB_ID}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive="true"

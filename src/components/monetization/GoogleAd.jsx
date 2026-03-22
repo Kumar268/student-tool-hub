@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { usePremium } from '../../contexts/PremiumContext';
+import { ADSENSE_PUB_ID } from '../../utils/adsenseService';
 
 const GoogleAd = ({ slot, format = 'auto', responsive = 'true', className = '' }) => {
   const { isPremium } = usePremium();
@@ -7,7 +8,7 @@ const GoogleAd = ({ slot, format = 'auto', responsive = 'true', className = '' }
   const initialized = useRef(false);
 
   // YOUR_ADSENSE_CLIENT_ID
-  const client = 'ca-pub-XXXXXXXXXXXXXXXX'; // Replace with real ID
+  const client = ADSENSE_PUB_ID;
 
   useEffect(() => {
     // Don't initialize if premium user or already initialized

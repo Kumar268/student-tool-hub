@@ -105,7 +105,7 @@ export const CrystalBtn = ({
  */
 export const CrystalAdSlot = ({
   slotId,
-  adClient  = 'ca-pub-XXXXXXXXXXXXXXXX',
+  adClient  = 'ca-pub-1234567890123456',
   format    = 'auto',
   className = '',
   style     = {},

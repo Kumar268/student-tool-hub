@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import AppRouter from './Router.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 
 console.log('main.jsx loaded');
 const rootElement = document.getElementById('root');
@@ -11,7 +12,9 @@ try {
   const root = createRoot(rootElement);
   root.render(
     <StrictMode>
-      <AppRouter />
+      <ErrorBoundary>
+        <AppRouter />
+      </ErrorBoundary>
     </StrictMode>,
   );
   console.log('App rendered successfully');

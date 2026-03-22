@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Trash, ArrowRight, BookOpen } from 'lucide-react';
+import { Plus, Trash, ArrowRight, BookOpen, Calculator } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import GoogleAd from '../../components/monetization/GoogleAd';
 import AffiliateLink from '../../components/monetization/AffiliateLink';
+import SolutionStep from '../../components/SolutionStep';
 
 const scaleConfigs = {
   '4.0': {
