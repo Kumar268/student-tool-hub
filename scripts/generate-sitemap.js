@@ -9,7 +9,35 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // ─── CONFIGURATION ────────────────────────────────────────
-const SITE_URL = process.env.VITE_SITE_URL || 'https://studenttoolhub.vercel.app';
+/**
+ * Determine the site URL from multiple fallback sources:
+ * 1. VITE_SITE_URL env var (recommended - set in CI/CD)
+ * 2. VERCEL_URL (Vercel auto-provides this)
+ * 3. NETLIFY_SITE_URL (Netlify auto-provides this)
+ * 4. Default fallback
+ */
+function getSiteUrl() {
+  // Explicit environment variable (best practice)
+  if (process.env.VITE_SITE_URL) {
+    return process.env.VITE_SITE_URL.replace(/\/$/, ''); // Remove trailing slash
+  }
+
+  // Vercel deployment
+  if (process.env.VERCEL_URL) {
+    const protocol = process.env.VERCEL_ENV === 'production' ? 'https' : 'https';
+    return `${protocol}://${process.env.VERCEL_URL}`;
+  }
+
+  // Netlify deployment
+  if (process.env.NETLIFY_SITE_URL) {
+    return process.env.NETLIFY_SITE_URL.replace(/\/$/, '');
+  }
+
+  // Fallback for development/unknown environments
+  return 'https://studenttoolhub.com';
+}
+
+const SITE_URL = getSiteUrl();
 const TODAY = new Date().toISOString().split('T')[0];
 // ─────────────────────────────────────────────────────────
 

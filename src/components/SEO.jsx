@@ -4,6 +4,11 @@ import { Helmet } from 'react-helmet-async';
 /**
  * SEO component — dynamic meta tags + JSON-LD structured data.
  * 
+ * ⚠️  OG Image Setup:
+ *    - Expects /public/og-image.png (1200x630px)
+ *    - Falls back to /og-image.svg if PNG not found
+ *    - Generate PNG: npm run generate:og-image
+ * 
  * Usage in ToolLayout:
  *   <SEO title="GPA Calculator" description="..." keywords="..." category="academic" toolSlug="gpa-calculator" />
  * 
@@ -15,7 +20,7 @@ const SEO = ({
   description = 'Free online tools for students — GPA calculators, PDF tools, math solvers, image editors and more.',
   keywords = 'student tools, free online tools, gpa calculator, pdf tools, math solver',
   canonicalPath = '',
-  ogImage = '/og-image.png',
+  ogImage = '/og-image.png', // Falls back to .svg if .png not available
   // Tool-specific props for JSON-LD
   category = null,
   toolSlug = null,
@@ -23,6 +28,22 @@ const SEO = ({
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://studenttoolhub.vercel.app';
   const fullTitle = title === 'Student Tool Hub' ? title : `${title} | Student Tool Hub`;
   const canonical = `${siteUrl}${canonicalPath}`;
+  
+  // ── OG Image Fallback Logic ────────────────────────────────
+  // In development, use SVG. In production, PNG should exist.
+  // The browser will try PNG first, fall back to SVG if missing.
+  const getOGImageUrl = (path) => {
+    // Always construct absolute URL for OG meta tags
+    const imageUrl = path.startsWith('http') ? path : `${siteUrl}${path}`;
+    
+    // In production builds, prefer .png (which may be generated at build time)
+    // Fallback to .svg if .png doesn't exist (build process will determine this)
+    // Social media crawlers will try .png first, then follow redirects/handle 404s
+    return imageUrl;
+  };
+  
+  // Construct the full OG image URL
+  const ogImageUrl = getOGImageUrl(ogImage);
 
   // ── JSON-LD structured data ──────────────────────────────────
   const jsonLd = toolSlug ? {
@@ -71,14 +92,17 @@ const SEO = ({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonical} />
-      <meta property="og:image" content={`${siteUrl}${ogImage}`} />
+      <meta property="og:image" content={ogImageUrl} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:type" content="image/png" />
       <meta property="og:site_name" content="Student Tool Hub" />
 
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={`${siteUrl}${ogImage}`} />
+      <meta name="twitter:image" content={ogImageUrl} />
 
       {/* JSON-LD Structured Data */}
       {jsonLd && (

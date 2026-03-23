@@ -592,10 +592,13 @@ function TextPanel({ layers, setLayers, neon }) {
 
       <div style={{ display:'flex', gap:6, marginBottom:10, flexWrap:'wrap' }}>
         {colors.map(c => (
-          <div key={c} className={neon?'n-swatch':'nm-swatch'} style={{ background:c }}
+          <div 
+            key={c} 
             onClick={()=>setColor(c)}
             data-active={color===c||undefined}
-            className={`${neon?'n-swatch':'nm-swatch'} ${color===c?'active':''}`} />
+            className={`${neon?'n-swatch':'nm-swatch'} ${color===c?'active':''}`}
+            style={{ background:c }} 
+          />
         ))}
       </div>
 

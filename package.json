@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "node scripts/generate-og-image.js && node scripts/generate-sitemap.js && node scripts/update-robots.js",
+    "generate:og-image": "node scripts/generate-og-image.js",
+    "verify-robots": "node scripts/verify-robots.js",
+    "final-check": "npm run build && node scripts/final-check.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },

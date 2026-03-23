@@ -2,81 +2,74 @@ import React, { useEffect, useState } from 'react';
 import { usePremium } from '../../contexts/PremiumContext';
 import { X } from 'lucide-react';
 
-const VideoAd = ({ videoSrc, adLink }) => {
+const VideoAd = ({ videoSrc, adLink, isEnabled = true }) => {
   const { isPremium } = usePremium();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // 1. If premium, never show ads
-    if (isPremium) return;
+    // 1. If disabled or premium, never show
+    if (!isEnabled || isPremium) return;
 
     // 2. Check if video ad has already been shown this session
     const hasShownVideoAd = sessionStorage.getItem('videoAdShown');
     
     if (!hasShownVideoAd) {
-      // Show the ad and mark it as shown for this session
       setIsVisible(true);
       sessionStorage.setItem('videoAdShown', 'true');
     }
-  }, [isPremium]);
+  }, [isPremium, isEnabled]);
 
   const handleClose = () => {
     setIsVisible(false);
   };
 
-  if (!isVisible) return null;
+  if (!isVisible || isPremium || !isEnabled) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="relative bg-gray-900 rounded-2xl overflow-hidden max-w-3xl w-full shadow-2xl border border-gray-700">
+    <div className="my-8 mx-auto max-w-4xl w-full px-4">
+      <div className="relative bg-gray-900 rounded-2xl overflow-hidden shadow-xl border border-gray-700/50 dark:border-gray-600/30">
         
-        {/* Ad Header/Skip Button */}
-        <div className="absolute top-0 left-0 right-0 flex justify-between items-center p-4 bg-gradient-to-b from-black/80 to-transparent z-10">
-          <span className="bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">Advertisement</span>
+        {/* Ad Label & Close */}
+        <div className="flex justify-between items-center p-3 bg-gray-800/50 border-b border-gray-700/30">
+          <span className="text-[10px] text-gray-400 uppercase tracking-widest font-medium">Sponsored Video</span>
           <button 
             onClick={handleClose}
-            className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full transition-colors backdrop-blur-md"
+            className="p-1 hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-white"
+            title="Close Ad"
           >
-            <span>Skip Ad</span>
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
-        {/* Video Content */}
+        {/* Video Player */}
         <div className="aspect-video bg-black relative w-full">
           {videoSrc ? (
             <video 
               src={videoSrc} 
-              autoPlay 
-              muted 
-              controls={false}
-              className="w-full h-full object-cover"
-              onEnded={handleClose} // Auto-close when video finishes
+              controls 
+              className="w-full h-full object-contain"
             />
           ) : (
-            // Fallback placeholder
-            <div className="flex flex-col items-center justify-center w-full h-full text-gray-500">
-              <span className="text-4xl mb-4">🎥</span>
-              <p>Video Ad Placeholder</p>
-              <p className="text-sm mt-2 opacity-50">Auto-closes after play</p>
+            <div className="flex flex-col items-center justify-center w-full h-full text-gray-600 bg-gray-950">
+              <span className="text-3xl mb-3">🎞️</span>
+              <p className="text-sm">Video Advertisement</p>
             </div>
           )}
         </div>
 
-        {/* Ad Footer/Call to Action */}
-        <div className="p-6 bg-gray-900 flex justify-between items-center">
-          <div>
-            <h3 className="text-xl font-bold text-white mb-1">Special Student Offer</h3>
-            <p className="text-gray-400 text-sm">Get 50% off your first year</p>
+        {/* Ad Call to Action */}
+        <div className="p-4 sm:p-5 bg-gray-900 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="text-center sm:text-left">
+            <h3 className="text-base font-semibold text-white">Student Hub Premium Offer</h3>
+            <p className="text-gray-400 text-xs">Unlock all tools with a single click</p>
           </div>
           <a 
             href={adLink || "#"} 
             target="_blank" 
             rel="noopener noreferrer"
-            onClick={handleClose}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors shadow-lg shadow-blue-600/20"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-all shadow-md active:scale-95"
           >
-            Learn More
+            Get Started
           </a>
         </div>
       </div>

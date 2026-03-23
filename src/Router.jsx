@@ -16,74 +16,93 @@ import FAQ from './pages/FAQ';
 import { tools } from './data/tools';
 import { trackToolVisit } from './hooks/useToolHistory';
 import { PremiumProvider } from './contexts/PremiumContext';
-import { pageview } from './utils/analytics';
+import { pageview, initGA } from './utils/analytics';
 
 // ─── Lazy tool imports ──────────────────────────────────────────────────────
 const ComingSoon = lazy(() => import('./tools/ComingSoonTemplate'));
 
 const TOOL_MAP = {
-  // Academic
-  'calculus-solver':        lazy(() => import('./tools/academic/CalculusSolver')),
-  'integral-calculator':    lazy(() => import('./tools/academic/IntegralCalculator')),
-  'matrix-algebra':         lazy(() => import('./tools/academic/MatrixAlgebra')),
-  'basic-stats':            lazy(() => import('./tools/academic/BasicStats')),
-  'gpa-calculator':         lazy(() => import('./tools/academic/GPACalculator')),
-  'scientific-notation':    lazy(() => import('./tools/academic/ScientificNotation')),
-  'percentage-calc':        lazy(() => import('./tools/academic/PercentageCalc')),
-  'unit-converter':         lazy(() => import('./tools/academic/UnitConverter')),
-  'economics-elasticity':   lazy(() => import('./tools/academic/EconomicsElasticity')),
-  'projectile-simulator':   lazy(() => import('./tools/academic/ProjectileSimulator')),
-  'chemistry-balancer':     lazy(() => import('./tools/academic/ChemistryBalancer')),
-  'circuit-designer':       lazy(() => import('./tools/academic/CircuitDesigner')),
-  'physics-kinematics':     lazy(() => import('./tools/academic/PhysicsKinematics')),
-  'scientific-calculator':  lazy(() => import('./tools/academic/scientificCalc')),
-  'derivative-solver':      lazy(() => import('./tools/academic/DerivativeSolver')),
-
-  // PDF
-  'pdf-merger-splitter':    lazy(() => import('./tools/pdf/PDFMergeSplit')),
-  'pdf-compressor':         lazy(() => import('./tools/pdf/PDFCompressor')),
-  'pdf-to-word':            lazy(() => import('./tools/pdf/PDFToWord')),
-  'word-to-pdf':            lazy(() => import('./tools/pdf/WordToPDF')),
-  'pdf-unlock':             lazy(() => import('./tools/pdf/PDFUnlock')),
-  'image-to-pdf':           lazy(() => import('./tools/pdf/ImageToPDF')),
-
-  // Image
-  'background-remover':     lazy(() => import('./tools/image/BackgroundRemover')),
-  'image-compressor':       lazy(() => import('./tools/image/ImageCompressor')),
-  'image-resizer':          lazy(() => import('./tools/image/ImageResizer')),
-  'image-editor':           lazy(() => import('./tools/image/ImageEditor')),
-  'format-converter':       lazy(() => import('./tools/image/FormatConverter')),
-  'screenshot-mockup':      lazy(() => import('./tools/image/ScreenshotMockup')),
-
-  // Financial
-  'emi-loan-calculator':    lazy(() => import('./tools/financial/EMILoanCalc')),
-  'sip-calculator':         lazy(() => import('./tools/financial/SIPCalculator')),
-  'student-budgeting':      lazy(() => import('./tools/financial/StudentBudgeting')),
-  'student-loan-repayment': lazy(() => import('./tools/financial/StudentLoanRepayment')),
-  'moving-costs':           lazy(() => import('./tools/financial/MovingCosts')),
-  'housing-calculator':     lazy(() => import('./tools/financial/HousingCalc')),
-  'scholarship-roi':        lazy(() => import('./tools/financial/ScholarshipROICalc')),
-  'textbook-resale':        lazy(() => import('./tools/financial/TextbookResale')),
-  'salary-tax':             lazy(() => import('./tools/financial/salaryTax')),
-  'pomodoro-timer':         lazy(() => import('./tools/financial/PomodoroTimer')),
-
-  // Text
-  'word-counter':           lazy(() => import('./tools/text/WordCounter')),
-  'case-converter':         lazy(() => import('./tools/text/CaseConverter')),
-  'text-formatter':         lazy(() => import('./tools/text/TextFormatter')),
-  'grammar-checker':        lazy(() => import('./tools/text/GrammarChecker')),
-  'plagiarism-checker':     lazy(() => import('./tools/text/PlagiarismCheck')),
-
-  // Utility
-  'age-calculator':         lazy(() => import('./tools/utility/AgeCalculator')),
-  'date-difference':        lazy(() => import('./tools/utility/DateDifference')),
-  'exam-weighting':         lazy(() => import('./tools/utility/ExamWeighting')),
-  'final-grade-calculator': lazy(() => import('./tools/utility/FinalGradeCalc')),
-  'assignment-tracker':     lazy(() => import('./tools/utility/AssignmentTracker')),
-  'study-planner':          lazy(() => import('./tools/utility/StudyPlanner')),
-
-  // Audio
-  'audio-to-text':          lazy(() => import('./tools/audio/AudioToText')),
+  'age-calculator': lazy(() => import('./tools/utility/AgeCalculator')),
+  'age-calculator-health': lazy(() => import('./tools/health/agecalc')),
+  'assignment-tracker': lazy(() => import('./tools/utility/AssignmentTracker')),
+  'astronomy-calc': lazy(() => import('./tools/niche/AstronomyCalc')),
+  'audio-converter': lazy(() => import('./tools/audio/AudioConverter')),
+  'background-remover': lazy(() => import('./tools/image/BackgroundRemover')),
+  'basic-stats': lazy(() => import('./tools/academic/BasicStats')),
+  'binary-converter': lazy(() => import('./tools/niche/BinaryConverter')),
+  'biodata-maker': lazy(() => import('./tools/documentmaker/BiodataMaker')),
+  'bmi-calorie-calculator': lazy(() => import('./tools/health/BMIAndCalorie')),
+  'calculus-solver': lazy(() => import('./tools/academic/CalculusSolver')),
+  'carbon-footprint': lazy(() => import('./tools/developer/CarbonFootprint')),
+  'case-converter': lazy(() => import('./tools/text/CaseConverter')),
+  'chemistry-balancer': lazy(() => import('./tools/academic/ChemistryBalancer')),
+  'circuit-designer': lazy(() => import('./tools/academic/CircuitDesigner')),
+  'code-formatter': lazy(() => import('./tools/developer/CodeFormatter')),
+  'color-picker': lazy(() => import('./tools/developer/ColorPicker')),
+  'cover-letter-generator': lazy(() => import('./tools/documentmaker/CoverLetterGenerator')),
+  'cover-page': lazy(() => import('./tools/documentmaker/AssignmentCoverPage')),
+  'css-minifier': lazy(() => import('./tools/developer/CSSMinifier')),
+  'cv-maker': lazy(() => import('./tools/documentmaker/CVMaker')),
+  'date-difference': lazy(() => import('./tools/utility/DateDifference')),
+  'economics-elasticity': lazy(() => import('./tools/academic/EconomicsElasticity')),
+  'emi-loan-calculator': lazy(() => import('./tools/financial/EMILoanCalc')),
+  'exam-weighting': lazy(() => import('./tools/utility/ExamWeighting')),
+  'final-grade-calc': lazy(() => import('./tools/utility/FinalGradeCalc')),
+  'format-converter': lazy(() => import('./tools/image/FormatConverter')),
+  'gpa-calculator': lazy(() => import('./tools/academic/GPACalculator')),
+  'grammar-checker': lazy(() => import('./tools/text/GrammarChecker')),
+  'housing-calc': lazy(() => import('./tools/financial/HousingCalc')),
+  'html-previewer': lazy(() => import('./tools/developer/HTMLPreviewer')),
+  'image-compressor': lazy(() => import('./tools/image/ImageCompressor')),
+  'image-editor': lazy(() => import('./tools/image/ImageEditor')),
+  'image-resizer': lazy(() => import('./tools/image/ImageResizer')),
+  'image-to-pdf': lazy(() => import('./tools/image/ImageToPDF')),
+  'integral-calculator': lazy(() => import('./tools/academic/IntegralCalculator')),
+  'internship-letter': lazy(() => import('./tools/documentmaker/InternshipLetter')),
+  'job-tracker': lazy(() => import('./tools/documentmaker/JobApplicationTracker')),
+  'lab-report': lazy(() => import('./tools/documentmaker/LabReportBuilder')),
+  'linkedin-summary': lazy(() => import('./tools/documentmaker/LinkedInSummaryGen')),
+  'loan-repayment': lazy(() => import('./tools/financial/StudentLoanRepayment')),
+  'matrix-algebra': lazy(() => import('./tools/academic/MatrixAlgebra')),
+  'moving-costs': lazy(() => import('./tools/financial/MovingCosts')),
+  'music-theory': lazy(() => import('./tools/developer/MusicTheoryCalc')),
+  'nutrition-calc': lazy(() => import('./tools/health/NutritionCalc')),
+  'nutrition-calculator': lazy(() => import('./tools/health/NutritionCalc')),
+  'password-generator': lazy(() => import('./tools/developer/PasswordGenerator')),
+  'pdf-compressor': lazy(() => import('./tools/pdf/PDFCompressor')),
+  'pdf-merger-splitter': lazy(() => import('./tools/pdf/PDFMergeSplit')),
+  'pdf-splitter': lazy(() => import('./tools/pdf/PDFMergeSplit')),
+  'pdf-to-word': lazy(() => import('./tools/pdf/PDFToWord')),
+  'pdf-unlock': lazy(() => import('./tools/pdf/PDFUnlock')),
+  'percentage-calc': lazy(() => import('./tools/utility/PercentageCalc')),
+  'plagiarism-check': lazy(() => import('./tools/text/PlagiarismCheck')),
+  'pomodoro-timer': lazy(() => import('./tools/financial/PomodoroTimer')),
+  'projectile-simulator': lazy(() => import('./tools/academic/ProjectileSimulator')),
+  'qr-generator': lazy(() => import('./tools/developer/QRGenerator')),
+  'recommendation-letter': lazy(() => import('./tools/documentmaker/RecommendationLetter')),
+  'reference-generator': lazy(() => import('./tools/documentmaker/ReferenceGenerator')),
+  'research-outline': lazy(() => import('./tools/documentmaker/ResearchPaperOutline')),
+  'resume-maker': lazy(() => import('./tools/documentmaker/ResumeMaker')),
+  'rsa-demo': lazy(() => import('./tools/developer/RSADemo')),
+  'salary-calculator': lazy(() => import('./tools/financial/salaryTax')),
+  'scholarship-letter': lazy(() => import('./tools/documentmaker/ScholarshipLatter')),
+  'scholarship-roi': lazy(() => import('./tools/financial/ScholarshipROICalc')),
+  'scientific-calculator': lazy(() => import('./tools/academic/scientificCalc')),
+  'scientific-notation': lazy(() => import('./tools/academic/ScientificNotation')),
+  'screenshot-mockup': lazy(() => import('./tools/image/ScreenshotMockup')),
+  'sip-calculator': lazy(() => import('./tools/financial/SIPCalculator')),
+  'sop-generator': lazy(() => import('./tools/documentmaker/SOPGenerator')),
+  'student-budgeting': lazy(() => import('./tools/financial/StudentBudgeting')),
+  'study-planner': lazy(() => import('./tools/utility/StudyPlanner')),
+  'text-formatter': lazy(() => import('./tools/text/TextFormatter')),
+  'textbook-resale': lazy(() => import('./tools/financial/TextbookResale')),
+  'truth-table': lazy(() => import('./tools/developer/TruthTableGenerator')),
+  'tts-converter': lazy(() => import('./tools/audio/TextToSpeech')),
+  'typing-speed-test': lazy(() => import('./tools/niche/TypingSpeedTest')),
+  'unit-converter': lazy(() => import('./tools/academic/UnitConverter')),
+  'voice-recorder': lazy(() => import('./tools/audio/VoiceRecorder')),
+  'word-counter': lazy(() => import('./tools/text/WordCounter')),
+  'word-to-pdf': lazy(() => import('./tools/pdf/WordToPDF')),
 };
 // ───────────────────────────────────────────────────────────────────────────
 
@@ -103,6 +122,7 @@ const AppRouter = () => {
   });
 
   useEffect(() => {
+    initGA();
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('darkMode', 'true');

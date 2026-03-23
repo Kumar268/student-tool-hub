@@ -161,7 +161,7 @@ const SearchBar = ({ isDarkMode }) => {
       } border rounded-lg ${isOpen && filteredTools.length > 0 ? 'rounded-b-none' : ''}`}>
         <Search className={`absolute left-3 w-5 h-5 ${
           isDarkMode ? 'text-gray-400' : 'text-gray-500'
-        }`} />
+        }`} aria-hidden="true" />
         
         <input
           ref={inputRef}
@@ -171,7 +171,12 @@ const SearchBar = ({ isDarkMode }) => {
           onKeyDown={handleKeyDown}
           onFocus={() => query && setIsOpen(true)}
           placeholder="Search tools by name, category, or tags..."
-          className={`w-full pl-11 pr-10 py-3 bg-transparent outline-none text-sm md:text-base ${
+          aria-label="Search tools"
+          aria-autocomplete="list"
+          aria-controls={isOpen && filteredTools.length > 0 ? "search-results" : undefined}
+          aria-expanded={isOpen && filteredTools.length > 0}
+          role="combobox"
+          className={`w-full pl-11 pr-10 py-3 bg-transparent outline-none text-sm md:text-base focus:ring-2 focus:ring-blue-500 ${
             isDarkMode ? 'text-white placeholder-gray-400' : 'text-gray-900 placeholder-gray-500'
           }`}
         />
@@ -179,14 +184,14 @@ const SearchBar = ({ isDarkMode }) => {
         {query && (
           <button
             onClick={handleClear}
-            className={`absolute right-3 p-1 rounded-full transition-colors ${
+            aria-label="Clear search"
+            className={`absolute right-3 p-1 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               isDarkMode 
                 ? 'hover:bg-gray-700 text-gray-400 hover:text-gray-200' 
                 : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'
             }`}
-            aria-label="Clear search"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </button>
         )}
       </div>
@@ -195,6 +200,9 @@ const SearchBar = ({ isDarkMode }) => {
       {isOpen && filteredTools.length > 0 && (
         <div 
           ref={resultsRef}
+          id="search-results"
+          role="listbox"
+          aria-label="Search results"
           className={`absolute z-50 w-full mt-0 max-h-[400px] overflow-y-auto rounded-b-lg border border-t-0 shadow-xl ${
             isDarkMode 
               ? 'bg-gray-800/95 border-gray-700 backdrop-blur-sm' 
@@ -209,7 +217,10 @@ const SearchBar = ({ isDarkMode }) => {
               <button
                 key={tool.id}
                 onClick={() => handleResultClick(tool)}
-                className={`w-full px-4 py-3 flex items-start gap-3 transition-colors text-left ${
+                role="option"
+                aria-selected={isSelected}
+                aria-label={`${tool.name} - ${category.name} - ${tool.description}`}
+                className={`w-full px-4 py-3 flex items-start gap-3 transition-colors text-left focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 ${
                   isSelected
                     ? isDarkMode 
                       ? 'bg-blue-500/20 border-l-2 border-blue-500' 
@@ -222,9 +233,12 @@ const SearchBar = ({ isDarkMode }) => {
                 }`}
               >
                 {/* Tool Icon/Initial */}
-                <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold ${
-                  getCategoryColor(category.color)
-                } border`}>
+                <div 
+                  className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold ${
+                    getCategoryColor(category.color)
+                  } border`}
+                  aria-hidden="true"
+                >
                   {tool.name.charAt(0)}
                 </div>
 
@@ -250,11 +264,14 @@ const SearchBar = ({ isDarkMode }) => {
                 </div>
 
                 {/* Arrow Icon */}
-                <ArrowRight className={`flex-shrink-0 w-5 h-5 ${
-                  isSelected 
-                    ? 'text-blue-500' 
-                    : isDarkMode ? 'text-gray-600' : 'text-gray-400'
-                }`} />
+                <ArrowRight 
+                  className={`flex-shrink-0 w-5 h-5 ${
+                    isSelected 
+                      ? 'text-blue-500' 
+                      : isDarkMode ? 'text-gray-600' : 'text-gray-400'
+                  }`}
+                  aria-hidden="true"
+                />
               </button>
             );
           })}
@@ -263,14 +280,21 @@ const SearchBar = ({ isDarkMode }) => {
 
       {/* No Results */}
       {isOpen && debouncedQuery && filteredTools.length === 0 && (
-        <div className={`absolute z-50 w-full mt-0 p-6 text-center rounded-b-lg border border-t-0 shadow-xl ${
-          isDarkMode 
-            ? 'bg-gray-800/95 border-gray-700 backdrop-blur-sm' 
-            : 'bg-white border-gray-200'
-        }`}>
-          <Search className={`w-12 h-12 mx-auto mb-3 ${
-            isDarkMode ? 'text-gray-600' : 'text-gray-300'
-          }`} />
+        <div 
+          className={`absolute z-50 w-full mt-0 p-6 text-center rounded-b-lg border border-t-0 shadow-xl ${
+            isDarkMode 
+              ? 'bg-gray-800/95 border-gray-700 backdrop-blur-sm' 
+              : 'bg-white border-gray-200'
+          }`}
+          role="status"
+          aria-live="polite"
+        >
+          <Search 
+            className={`w-12 h-12 mx-auto mb-3 ${
+              isDarkMode ? 'text-gray-600' : 'text-gray-300'
+            }`}
+            aria-hidden="true"
+          />
           <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             No tools found for "<span className="font-semibold">{debouncedQuery}</span>"
           </p>

@@ -1,5 +1,5 @@
 // Initialize Google AdSense
-export const ADSENSE_PUB_ID = import.meta.env.VITE_ADSENSE_PUB_ID || 'ca-pub-1234567890123456';
+export const ADSENSE_PUB_ID = import.meta.env.VITE_ADSENSE_PUB_ID || 'YOUR_ADSENSE_PUBLISHER_ID';
 
 export const initializeAdSense = () => {
   if (typeof window !== 'undefined' && window.adsbygoogle) {

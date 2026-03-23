@@ -9,7 +9,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { tools, categories } from './data/tools';
 import AdSlot from './components/AdSlot';
-import InFeedAd from './components/InFeedAd';
 
 // ─── Category metadata ───────────────────────────────────────────
 const CAT = {
@@ -784,7 +783,7 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
           {allCats.map(c => (
             <SideItem key={c.id} catId={c.id} active={cat===c.id} onClick={() => goTo(c.id)}/>
           ))}
-          <AdSlot slot="3456789012" style={{ marginTop: 'auto', minHeight: 250 }} />
+          {/* <AdSlot slot="3456789012" style={{ marginTop: 'auto', minHeight: 250 }} /> */}
         </aside>
 
         <main className="main-area main-pad" style={{
@@ -816,7 +815,7 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
             </h2>
           </div>
 
-          <AdSlot slot="1234567890" style={{ marginBottom: 16, minHeight: 90 }} />
+          {/* <AdSlot slot="1234567890" style={{ marginBottom: 16, minHeight: 90 }} /> */}
 
           {filtered.length > 0 ? (
             <div className="tool-grid">
@@ -831,9 +830,6 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
                       onClick={() => navigate(`/tools/${tool.category}/${tool.slug}`)}
                     />
                   );
-                  if ((i + 1) % 12 === 0) {
-                    gridItems.push(<InFeedAd key={`ad-${i}`} slot="YOUR_SLOT_ID" />);
-                  }
                 });
                 return gridItems;
               })()}
@@ -861,7 +857,7 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
             </div>
           )}
 
-          <AdSlot slot="9876543210" style={{ marginTop: 24, minHeight: 90 }} />
+          {/* <AdSlot slot="9876543210" style={{ marginTop: 24, minHeight: 90 }} /> */}
         </main>
       </div>
 
@@ -890,7 +886,7 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
         {allCats.map(c => (
           <SideItem key={c.id} catId={c.id} active={cat===c.id} onClick={() => goTo(c.id)}/>
         ))}
-        <AdSlot slot="4567890123" style={{ marginTop: 'auto', minHeight: 90 }} />
+        {/* <AdSlot slot="4567890123" style={{ marginTop: 'auto', minHeight: 90 }} /> */}
       </div>
 
       <footer style={{
@@ -908,8 +904,8 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
           ◈ STUDENTTOOLHUB · ALL FREE · NO TRACKING · {new Date().getFullYear()}
         </span>
         <div style={{ display:'flex',gap:14,flexWrap:'wrap' }}>
-          {['Privacy','About','Sitemap','GitHub'].map(l => (
-            <a key={l} href={`/${l.toLowerCase()}`}
+          {['Privacy Policy', 'About', 'Sitemap', 'GitHub'].map(l => (
+            <a key={l} href={l === 'Privacy Policy' ? '/privacy-policy' : `/${l.toLowerCase()}`}
               className="jet-font"
               style={{
                 fontSize:'.6rem',color:'rgba(0,245,255,.22)',

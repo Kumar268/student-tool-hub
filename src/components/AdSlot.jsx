@@ -37,8 +37,8 @@ const AdSlot = ({ type = 'display', className = '', style = {} }) => {
 
   if (!ADS_ENABLED && type !== 'video') {
     return (
-      <div className={`ad-placeholder border border-dashed border-gray-300 dark:border-gray-700 rounded-xl py-4 text-center text-xs text-gray-400 ${className}`} style={style}>
-        [AD REPLACEMET: {type.toUpperCase()} SLOT]
+      <div className={`ad-placeholder border border-dashed border-gray-300 dark:border-gray-700 rounded-xl py-6 text-center text-xs text-gray-400 ${className}`} style={style}>
+        [ADSENSE: {type.toUpperCase()} SLOT]
       </div>
     );
   }
@@ -48,25 +48,30 @@ const AdSlot = ({ type = 'display', className = '', style = {} }) => {
       <VideoAd 
         videoSrc={import.meta.env.VITE_VIDEO_AD_URL} 
         adLink="#" 
+        isEnabled={ADS_ENABLED}
       />
     );
   }
 
+  // Refined ad format based on type
+  const format = type === 'banner' ? 'horizontal' : (type === 'native' ? 'fluid' : 'auto');
+
   return (
-    <div className={`my-6 w-full overflow-hidden ${className}`} style={style}>
-      <div className="flex justify-center flex-col items-center">
-        <span className="text-[10px] text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-1 select-none">
+    <div className={`my-10 w-full flex flex-col items-center ${className}`} style={style}>
+        <span className="text-[10px] text-gray-400 dark:text-gray-600 uppercase tracking-[0.2em] mb-2 select-none font-medium">
           Advertisement
         </span>
-        <ins
-          className="adsbygoogle"
-          style={{ display: 'block', textAlign: 'center' }}
-          data-ad-client={ADSENSE_PUB_ID}
-          data-ad-slot={slotId}
-          data-ad-format={type === 'banner' ? 'horizontal' : 'auto'}
-          data-full-width-responsive="true"
-        />
-      </div>
+        <div className="w-full min-h-[50px]">
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client={ADSENSE_PUB_ID}
+            data-ad-slot={slotId}
+            data-ad-format={format}
+            data-full-width-responsive="true"
+            {...(type === 'native' ? { 'data-ad-layout-key': "-6t+ed+2i-1n-4w" } : {})}
+          />
+        </div>
     </div>
   );
 };

@@ -2,15 +2,12 @@ import React, { useMemo } from 'react';
 import { ExternalLink, Book, Briefcase, Edit3, Music, FileText, Cpu } from 'lucide-react';
 
 /**
- * AffiliateLinks — shows contextual affiliate product suggestions based on tool category.
+ * AffiliateLinks — shows contextual affiliate product suggestions.
  * 
- * Usage: <AffiliateLinks category="academic" isDarkMode={isDarkMode} />
- * 
- * 🔧 TO CONFIGURE:
- * Replace placeholder hrefs with your actual affiliate URLs from:
- *   - Amazon Associates: affiliate-program.amazon.com
- *   - Canva Affiliates: canva.com/affiliates
- *   - Adobe: adobe.com/affiliates
+ * Configured via .env:
+ * - VITE_AFFILIATE_ENABLED (boolean)
+ * - VITE_AMAZON_TAG
+ * - VITE_COURSERA_TAG
  */
 
 const AFFILIATE_DATA = {
@@ -18,14 +15,18 @@ const AFFILIATE_DATA = {
     {
       title: '📚 Amazon Textbooks',
       description: 'Save up to 90% on textbook rentals',
-      href: 'https://www.amazon.com/textbooks?tag=YOUR-AFFILIATE-ID',
+      baseUrl: 'https://www.amazon.com/textbooks',
+      tagParam: 'tag',
+      envKey: 'VITE_AMAZON_TAG',
       cta: 'Browse Textbooks',
       icon: Book,
     },
     {
       title: '🎓 Coursera Plus',
       description: 'Unlimited access to 7000+ top courses',
-      href: 'https://www.coursera.org/?tag=YOUR-AFFILIATE-ID',
+      baseUrl: 'https://www.coursera.org/',
+      tagParam: 'tag',
+      envKey: 'VITE_COURSERA_TAG',
       cta: 'Start Learning',
       icon: Briefcase,
     },
@@ -34,7 +35,7 @@ const AFFILIATE_DATA = {
     {
       title: '📄 Adobe Acrobat',
       description: 'The gold standard for PDF editing',
-      href: 'https://www.adobe.com/acrobat.html',
+      baseUrl: 'https://www.adobe.com/acrobat.html',
       cta: 'Try Adobe',
       icon: FileText,
     },
@@ -43,7 +44,7 @@ const AFFILIATE_DATA = {
     {
       title: '🎨 Canva Pro',
       description: 'Professional design for everyone',
-      href: 'https://www.canva.com/pro',
+      baseUrl: 'https://www.canva.com/pro',
       cta: 'Try Canva',
       icon: Edit3,
     },
@@ -52,7 +53,7 @@ const AFFILIATE_DATA = {
     {
       title: '🎵 Epidemic Sound',
       description: 'Royalty-free music for projects',
-      href: 'https://www.epidemicsound.com',
+      baseUrl: 'https://www.epidemicsound.com',
       cta: 'Get Music',
       icon: Music,
     },
@@ -61,7 +62,7 @@ const AFFILIATE_DATA = {
     {
       title: '💻 GitHub Copilot',
       description: 'AI pair programmer for students',
-      href: 'https://github.com/features/copilot',
+      baseUrl: 'https://github.com/features/copilot',
       cta: 'Get Copilot',
       icon: Cpu,
     },
@@ -69,7 +70,28 @@ const AFFILIATE_DATA = {
 };
 
 const AffiliateLinks = ({ category = 'academic', isDarkMode }) => {
-  const links = useMemo(() => AFFILIATE_DATA[category] || AFFILIATE_DATA.academic, [category]);
+  const isEnabled = import.meta.env.VITE_AFFILIATE_ENABLED === 'true';
+
+  const links = useMemo(() => {
+    const rawLinks = AFFILIATE_DATA[category] || AFFILIATE_DATA.academic;
+    
+    return rawLinks.map(link => {
+      let finalHref = link.baseUrl;
+      
+      // Inject affiliate tags if configured
+      if (link.envKey && link.tagParam) {
+        const tag = import.meta.env[link.envKey];
+        if (tag && !tag.includes('YOUR-')) {
+          const separator = finalHref.includes('?') ? '&' : '?';
+          finalHref = `${finalHref}${separator}${link.tagParam}=${tag}`;
+        }
+      }
+      
+      return { ...link, href: finalHref };
+    });
+  }, [category]);
+
+  if (!isEnabled) return null;
 
   return (
     <div className="space-y-3">

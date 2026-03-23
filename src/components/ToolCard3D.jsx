@@ -52,6 +52,15 @@ const ToolCard3D = ({ tool, isDarkMode, onClick }) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.(e);
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`Open ${tool.name} tool - ${tool.description}`}
       style={{
         rotateX,
         rotateY,
@@ -94,7 +103,7 @@ const ToolCard3D = ({ tool, isDarkMode, onClick }) => {
           isDarkMode 
             ? `bg-${color}-500/10 border border-${color}-500/30 text-${color}-400 shadow-[0_0_15px_rgba(255,255,255,0.1)]` 
             : `bg-${color}-50 border border-${color}-200 text-${color}-600`
-        }`}>
+        }`} aria-hidden="true">
           <ToolIcon iconName={tool.icon} size={28} className={`relative z-10 ${
             isDarkMode ? `text-${color}-400` : `text-${color}-600`
           }`} />

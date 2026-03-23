@@ -92,14 +92,14 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
         </nav>
 
         {/* ── Video Ad (Once per session) ── */}
-        <AdSlot type="video" />
+        {/* <AdSlot type="video" /> */}
 
         {/* ── Main Content ── */}
         <main className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 transition-all duration-300">
           
           {/* Top Banner Ad */}
           <div className="mb-8">
-            <AdSlot type="banner" />
+            {/* <AdSlot type="banner" /> */}
           </div>
 
           {/* Tool content with original custom titles preserved */}
@@ -109,7 +109,7 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
 
           {/* Native In-Article Ad */}
           <div className="my-10">
-            <AdSlot type="native" />
+            {/* <AdSlot type="native" /> */}
           </div>
 
           {/* ── Related Tools ── */}
@@ -125,7 +125,7 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
 
           {/* Bottom Banner Ad */}
           <div className="mt-12 border-t border-gray-200 dark:border-gray-800 pt-8">
-            <AdSlot type="banner" />
+            {/* <AdSlot type="banner" /> */}
           </div>
         </main>
 

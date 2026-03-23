@@ -35,20 +35,30 @@ export const CopyButton = ({ value, label = 'Copy', isDarkMode, className = '' }
     <button
       onClick={handleCopy}
       disabled={!value}
-      title={copied ? 'Copied!' : `Copy ${label}`}
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+      aria-label={copied ? 'Copied to clipboard' : `Copy ${label} to clipboard`}
+      aria-live="polite"
+      aria-atomic="true"
+      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
         copied
-          ? 'bg-green-500 text-white'
+          ? 'bg-green-500 text-white focus:ring-green-500'
           : isDarkMode
-            ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700'
-            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'
+            ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 focus:ring-blue-500'
+            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 focus:ring-blue-500'
       } disabled:opacity-40 disabled:cursor-not-allowed ${className}`}
     >
-      {copied ? <Check size={12} /> : <Copy size={12} />}
+      <span aria-hidden="true">{copied ? <Check size={12} /> : <Copy size={12} />}</span>
       {copied ? 'Copied!' : label}
     </button>
   );
 };
+
+/**
+ * ShareButton — shares the current tool page.
+ * Uses Web Share API on mobile, falls back to copying URL.
+ * 
+ * Usage: <ShareButton toolName="GPA Calculator" isDarkMode={isDarkMode} />
+ */
+
 
 /**
  * ShareButton — shares the current tool page.
@@ -85,16 +95,20 @@ export const ShareButton = ({ toolName = 'this tool', isDarkMode, className = ''
   return (
     <button
       onClick={handleShare}
-      title={shared ? 'Link copied!' : 'Share this tool'}
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+      aria-label={shared ? 'Link copied to clipboard' : `Share ${toolName}`}
+      aria-live="polite"
+      aria-atomic="true"
+      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${
         shared
-          ? 'bg-blue-500 text-white'
+          ? 'bg-blue-500 text-white focus:ring-blue-500'
           : isDarkMode
-            ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700'
-            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'
+            ? 'bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 focus:ring-blue-500'
+            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 focus:ring-blue-500'
       } ${className}`}
     >
-      {shared ? <Check size={12} /> : (navigator.share ? <Share2 size={12} /> : <Link2 size={12} />)}
+      <span aria-hidden="true">
+        {shared ? <Check size={12} /> : (navigator.share ? <Share2 size={12} /> : <Link2 size={12} />)}
+      </span>
       {shared ? 'Link Copied!' : 'Share'}
     </button>
   );

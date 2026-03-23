@@ -2,4 +2,4 @@
 # For Google AdSense
 # Replace YOUR_ADSENSE_PUBLISHER_ID with your actual AdSense publisher ID
 
-google.com, YOUR_ADSENSE_PUBLISHER_ID, DIRECT, f3090b3212ccb732
+# google.com, YOUR_ADSENSE_PUBLISHER_ID, DIRECT, f3090b3212ccb732

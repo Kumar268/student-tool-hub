@@ -1,0 +1,81 @@
+/**
+ * Skeleton Shimmer Animation Styles
+ * ─────────────────────────────────────────────────
+ * Professional shimmer/wave animation for skeleton loaders
+ * Creates a left-to-right gradient wave effect
+ */
+
+/* ─── Shimmer Animation ─────────────────────────── */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ─── Fade Pulse Animation (Alternative) ────────── */
+@keyframes fade-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeleton-fade {
+  animation: fade-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ─── Wave Animation (Slower, smoother) ────────── */
+@keyframes wave {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-wave {
+  background-size: 1000px 100%;
+  animation: wave 3s ease-in-out infinite;
+}
+
+/* ─── Responsive adjustments ───────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer,
+  .skeleton-fade,
+  .skeleton-wave {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* ─── Dark mode support ────────────────────────── */
+:root[data-theme='dark'] .skeleton-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgba(55, 65, 81, 0.5) 0%,
+    rgba(75, 85, 99, 0.5) 50%,
+    rgba(55, 65, 81, 0.5) 100%
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  .skeleton-shimmer {
+    background-image: linear-gradient(
+      90deg,
+      rgba(55, 65, 81, 0.5) 0%,
+      rgba(75, 85, 99, 0.5) 50%,
+      rgba(55, 65, 81, 0.5) 100%
+    ) !important;
+  }
+}
