@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-env node */
+
 /**
  * Generate OG Image Script
  * Converts SVG to PNG for Open Graph / Twitter Cards

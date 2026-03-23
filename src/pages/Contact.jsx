@@ -7,14 +7,34 @@ const Contact = ({ isDarkMode }) => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate form submission
     setStatus('sending');
-    setTimeout(() => {
-      setStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 1500);
+    
+    try {
+      // REPLACE 'YOUR_FORMSPREE_ID' with your actual Formspree form ID
+      // Get it from: https://formspree.io/forms
+      const response = await fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      if (response.ok) {
+        setStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => setStatus(null), 5000);
+      } else {
+        setStatus('error');
+        setTimeout(() => setStatus(null), 5000);
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setStatus('error');
+      setTimeout(() => setStatus(null), 5000);
+    }
   };
 
   return (
@@ -147,13 +167,15 @@ const Contact = ({ isDarkMode }) => {
             <button
               type="submit"
               disabled={status === 'sending' || status === 'success'}
-              className={`w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all shadow-lg shadow-blue-500/20 ${
+              className={`w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all shadow-lg ${
                 status === 'success' 
-                  ? 'bg-green-500 text-white' 
-                  : 'bg-blue-600 hover:bg-blue-500 text-white hover:scale-[1.02] active:scale-[0.98]'
+                  ? 'bg-green-500 text-white shadow-green-500/20' 
+                  : status === 'error'
+                  ? 'bg-red-500 text-white shadow-red-500/20'
+                  : 'bg-blue-600 hover:bg-blue-500 text-white hover:scale-[1.02] active:scale-[0.98] shadow-blue-500/20'
               }`}
             >
-              {status === 'sending' ? 'Sending...' : status === 'success' ? 'Message Sent!' : (
+              {status === 'sending' ? 'Sending...' : status === 'success' ? 'Message Sent!' : status === 'error' ? 'Failed - Try Again' : (
                 <>
                   <Send size={18} /> Send Message
                 </>

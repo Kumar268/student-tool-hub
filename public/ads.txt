@@ -1,5 +1,5 @@
 # StudentToolHub ads.txt
 # For Google AdSense
-# Replace YOUR_ADSENSE_PUBLISHER_ID with your actual AdSense publisher ID
+# REPLACE pub-XXXXXXXXXXXXXXXX with your actual AdSense publisher ID (numbers only, no 'ca-' prefix)
 
-# google.com, YOUR_ADSENSE_PUBLISHER_ID, DIRECT, f3090b3212ccb732
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

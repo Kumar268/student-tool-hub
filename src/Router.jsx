@@ -79,6 +79,7 @@ const TOOL_MAP = {
   'pomodoro-timer': lazy(() => import('./tools/financial/PomodoroTimer')),
   'projectile-simulator': lazy(() => import('./tools/academic/ProjectileSimulator')),
   'qr-generator': lazy(() => import('./tools/developer/QRGenerator')),
+  'quadratic-solver': lazy(() => import('./tools/academic/QuadraticSolver')),
   'recommendation-letter': lazy(() => import('./tools/documentmaker/RecommendationLetter')),
   'reference-generator': lazy(() => import('./tools/documentmaker/ReferenceGenerator')),
   'research-outline': lazy(() => import('./tools/documentmaker/ResearchPaperOutline')),

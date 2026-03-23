@@ -19,14 +19,14 @@ const InFeedAd = ({ slot, layoutKey="-fg+5n+6t-70+8u" }) => {
 
   if (!ADS_ENABLED) {
     return (
-      <div className="ad-placeholder border border-dashed border-gray-300 dark:border-gray-700 rounded-xl py-4 text-center text-[10px] text-gray-400 my-6">
+      <div className="ad-placeholder border border-dashed border-gray-300 dark:border-gray-700 rounded-xl py-4 text-center text-[10px] text-gray-400 my-6" role="complementary" aria-label="Advertisement placeholder">
         [ADSENSE: IN-FEED SLOT]
       </div>
     );
   }
 
   return (
-    <div className="my-8 w-full overflow-hidden">
+    <div className="my-8 w-full">
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}

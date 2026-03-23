@@ -95,7 +95,7 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
         {/* <AdSlot type="video" /> */}
 
         {/* ── Main Content ── */}
-        <main className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 transition-all duration-300">
+        <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-all duration-300">
           
           {/* Top Banner Ad */}
           <div className="mb-8">
@@ -103,7 +103,7 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
           </div>
 
           {/* Tool content with original custom titles preserved */}
-          <article className="w-full bg-white dark:bg-gray-800/50 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-8 min-h-[400px]">
+          <article className="w-full max-w-7xl mx-auto bg-white dark:bg-gray-800/50 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 lg:p-8 min-h-[400px]">
              {children}
           </article>
 
@@ -114,7 +114,7 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
 
           {/* ── Related Tools ── */}
           {tool && (
-            <div className="mt-12 opacity-95">
+            <div className="mt-12 opacity-95 max-w-7xl mx-auto">
               <RelatedTools
                 currentSlug={tool.slug}
                 category={tool.category}
@@ -124,7 +124,7 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
           )}
 
           {/* Bottom Banner Ad */}
-          <div className="mt-12 border-t border-gray-200 dark:border-gray-800 pt-8">
+          <div className="mt-12 border-t border-gray-200 dark:border-gray-800 pt-8 max-w-7xl mx-auto">
             {/* <AdSlot type="banner" /> */}
           </div>
         </main>
