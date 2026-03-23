@@ -1,17 +1,12 @@
 import React from 'react';
 import Footer from './Footer';
 
-const Layout = ({ children, isDarkMode, onToggleDarkMode }) => {
+const Layout = ({ children, isDarkMode }) => {
   return (
     <div className={`flex flex-col min-h-screen transition-colors duration-300 ${
       isDarkMode ? 'bg-[#020408] text-white' : 'bg-gray-50 text-gray-900'
     }`}>
-      {/* Optional: Add a Global Header here if needed, 
-          but App.jsx currently handles its own header for the dashboard.
-          For tools, we use ToolLayout which has a back button.
-      */}
-      
-      <main className="flex-grow">
+      <main className="flex-grow w-full">
         {children}
       </main>
 

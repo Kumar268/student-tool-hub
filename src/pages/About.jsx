@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { Heart, Target, Zap, Users, Code, BookOpen, Coffee } from 'lucide-react';
 
 const About = ({ isDarkMode }) => {
@@ -12,7 +12,7 @@ const About = ({ isDarkMode }) => {
       </Helmet>
 
       <div className="max-w-4xl mx-auto">
-        <motion.div 
+        <Motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
@@ -27,10 +27,10 @@ const About = ({ isDarkMode }) => {
           <p className="text-xl max-w-2xl mx-auto leading-relaxed opacity-80">
             Student Tool Hub was born out of a simple problem: the student toolbox was scattered across dozens of clunky, ad-heavy, and confusing websites.
           </p>
-        </motion.div>
+        </Motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-          <motion.div 
+          <Motion.div 
             whileHover={{ y: -5 }}
             className={`p-8 rounded-3xl border ${isDarkMode ? 'bg-gray-900/40 border-gray-800' : 'bg-white border-gray-100 shadow-xl'}`}
           >
@@ -41,9 +41,9 @@ const About = ({ isDarkMode }) => {
             <p className="leading-relaxed opacity-70">
               As a developer and a student, I spent thousands of hours searching for reliable GPA calculators, PDF tools, and math solvers. Most were filled with intrusive popups. I decided to build one clean, unified platform for everything.
             </p>
-          </motion.div>
+          </Motion.div>
 
-          <motion.div 
+          <Motion.div 
             whileHover={{ y: -5 }}
             className={`p-8 rounded-3xl border ${isDarkMode ? 'bg-gray-900/40 border-gray-800' : 'bg-white border-gray-100 shadow-xl'}`}
           >
@@ -54,7 +54,7 @@ const About = ({ isDarkMode }) => {
             <p className="leading-relaxed opacity-70">
               Our mission is to provide 100% free, high-quality tools that run entirely in your browser. No signups, no data selling, and no subscription walls. Just pure productivity.
             </p>
-          </motion.div>
+          </Motion.div>
         </div>
 
         <div className={`p-10 md:p-16 rounded-[2.5rem] border backdrop-blur-md overflow-hidden relative mb-20 ${

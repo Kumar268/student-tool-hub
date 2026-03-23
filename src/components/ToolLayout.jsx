@@ -1,16 +1,13 @@
 import React from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { ArrowLeft, Home, Moon, Sun, Share2 } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ArrowLeft, Home, Moon, Sun } from 'lucide-react';
 import RelatedTools from './RelatedTools';
 import { ShareButton } from './ResultActions';
 import SEO from './SEO';
 import { tools } from '../data/tools';
+import AdSlot from './AdSlot';
 
-// ─── AD KILL SWITCH ──────────────────────────────────────
-const ADS_ENABLED = import.meta.env.VITE_ADS_ENABLED === 'true' || false;
-// ─────────────────────────────────────────────────────────
-
-const ToolLayout = ({ children, isDarkMode, onToggleDarkMode, category = 'utility' }) => {
+const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -94,33 +91,42 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode, category = 'utilit
           </div>
         </nav>
 
-        {/* ── Main Content ── */}
-        <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-8">
-          {ADS_ENABLED && (
-            <div className="mb-6 text-center text-xs text-gray-400 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl py-4">
-              Advertisement
-            </div>
-          )}
+        {/* ── Video Ad (Once per session) ── */}
+        <AdSlot type="video" />
 
-          {/* Tool content */}
-          <div className="w-full">
-            {children}
+        {/* ── Main Content ── */}
+        <main className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 transition-all duration-300">
+          
+          {/* Top Banner Ad */}
+          <div className="mb-8">
+            <AdSlot type="banner" />
+          </div>
+
+          {/* Tool content with original custom titles preserved */}
+          <article className="w-full bg-white dark:bg-gray-800/50 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-8 min-h-[400px]">
+             {children}
+          </article>
+
+          {/* Native In-Article Ad */}
+          <div className="my-10">
+            <AdSlot type="native" />
           </div>
 
           {/* ── Related Tools ── */}
           {tool && (
-            <RelatedTools
-              currentSlug={tool.slug}
-              category={tool.category}
-              isDarkMode={isDarkMode}
-            />
-          )}
-
-          {ADS_ENABLED && (
-            <div className="mt-6 text-center text-xs text-gray-400 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl py-4">
-              Advertisement
+            <div className="mt-12 opacity-95">
+              <RelatedTools
+                currentSlug={tool.slug}
+                category={tool.category}
+                isDarkMode={isDarkMode}
+              />
             </div>
           )}
+
+          {/* Bottom Banner Ad */}
+          <div className="mt-12 border-t border-gray-200 dark:border-gray-800 pt-8">
+            <AdSlot type="banner" />
+          </div>
         </main>
 
       </div>

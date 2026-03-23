@@ -1,190 +1,121 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { Search, X, Clock, TrendingUp, Zap } from 'lucide-react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Search, X, ArrowRight } from 'lucide-react';
 import { tools, categories } from '../data/tools';
 
-/**
- * SearchBar Component — Phase 1.1
- * Features:
- * - 300ms debounced instant search
- * - Floating dropdown with results scrolling
- * - Keyboard navigation (↑↓ arrow keys, Enter to select, Esc to close)
- * - Search history (last 5 searches in localStorage)
- * - Popular searches based on analytics
- * - Category filtering with buttons
- * - Text highlighting for matching terms
- * - Mobile-optimized (fullscreen modal on small screens)
- * - Accessibility: ARIA labels, roles, keyboard support
- * - Analytics tracking built-in
- */
 const SearchBar = ({ isDarkMode }) => {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [searchHistory, setSearchHistory] = useState([]);
-  const [popularSearches, setPopularSearches] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
+  
+  const searchRef = useRef(null);
   const inputRef = useRef(null);
-  const dropdownRef = useRef(null);
-  const debounceTimerRef = useRef(null);
+  const resultsRef = useRef(null);
   const navigate = useNavigate();
 
-  // ─── Mobile detection ──────────────────────────────────────────────
+  // Debounce search query (300ms)
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // ─── Load search history & popular searches from localStorage ──────
-  useEffect(() => {
-    const saved = localStorage.getItem('searchHistory');
-    if (saved) setSearchHistory(JSON.parse(saved));
-
-    const popularData = localStorage.getItem('popularSearches');
-    if (popularData) setPopularSearches(JSON.parse(popularData).slice(0, 5));
-  }, []);
-
-  // ─── Debounced search with 300ms delay ────────────────────────────
-  const performSearch = useCallback((searchQuery) => {
-    if (!searchQuery.trim()) {
-      setResults([]);
-      return;
-    }
-
-    setIsLoading(true);
-    debounceTimerRef.current = setTimeout(() => {
-      const queryLower = searchQuery.toLowerCase();
-      const filtered = tools.filter((tool) => {
-        const matchesQuery =
-          tool.name.toLowerCase().includes(queryLower) ||
-          tool.description.toLowerCase().includes(queryLower) ||
-          (tool.tags || []).some((tag) =>
-            tag.toLowerCase().includes(queryLower)
-          );
-
-        const matchesCategory =
-          selectedCategory === 'all' || tool.category === selectedCategory;
-
-        return matchesQuery && matchesCategory;
-      });
-
-      setResults(filtered);
-      setSelectedIndex(-1);
-      setIsLoading(false);
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
     }, 300);
-  }, [selectedCategory]);
 
-  // ─── Handle input change ───────────────────────────────────────────
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setQuery(value);
+    return () => clearTimeout(timer);
+  }, [query]);
 
-    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+  // Filter tools based on search query
+  const filteredTools = useMemo(() => {
+    if (!debouncedQuery.trim()) return [];
 
-    if (!value.trim()) {
-      setResults([]);
-      return;
-    }
-
-    setIsOpen(true);
-    performSearch(value);
-  };
-
-  // ─── Track search analytics ────────────────────────────────────────
-  const trackSearchAnalytics = (searchTerm) => {
-    const existing = JSON.parse(localStorage.getItem('popularSearches') || '[]');
-    const updated = existing
-      .map((item) =>
-        item.term === searchTerm ? { ...item, count: item.count + 1 } : item
-      )
-      .concat(
-        existing.find((item) => item.term === searchTerm)
-          ? []
-          : [{ term: searchTerm, count: 1 }]
+    const searchTerm = debouncedQuery.toLowerCase();
+    
+    return tools.filter(tool => {
+      const matchesName = tool.name.toLowerCase().includes(searchTerm);
+      const matchesCategory = categories
+        .find(cat => cat.id === tool.category)
+        ?.name.toLowerCase()
+        .includes(searchTerm);
+      const matchesTags = tool.tags?.some(tag => 
+        tag.toLowerCase().includes(searchTerm)
       );
+      const matchesDescription = tool.description.toLowerCase().includes(searchTerm);
 
-    updated.sort((a, b) => b.count - a.count);
-    localStorage.setItem('popularSearches', JSON.stringify(updated));
-    setPopularSearches(updated.slice(0, 5));
+      return matchesName || matchesCategory || matchesTags || matchesDescription;
+    }).slice(0, 8); // Limit to 8 results
+  }, [debouncedQuery]);
+
+  // Get category info for a tool
+  const getCategoryInfo = (categoryId) => {
+    return categories.find(cat => cat.id === categoryId) || {};
   };
 
-  // ─── Handle result selection & navigation ──────────────────────────
-  const handleSelectResult = (tool) => {
-    // Track analytics
-    trackSearchAnalytics(tool.name);
-
-    // Update search history
-    const newHistory = [
-      { query: tool.name, timestamp: Date.now() },
-      ...searchHistory.filter((h) => h.query !== tool.name),
-    ].slice(0, 5);
-    localStorage.setItem('searchHistory', JSON.stringify(newHistory));
-    setSearchHistory(newHistory);
-
-    // Navigate to tool
-    navigate(`/tools/${tool.category}/${tool.slug}`);
-
-    // Reset search
-    setQuery('');
-    setIsOpen(false);
-    setResults([]);
+  // Handle input change
+  const handleInputChange = (e) => {
+    setQuery(e.target.value);
+    setIsOpen(true);
     setSelectedIndex(-1);
   };
 
-  // ─── Keyboard navigation ───────────────────────────────────────────
+  // Handle result click
+  const handleResultClick = (tool) => {
+    navigate(`/tools/${tool.category}/${tool.slug}`);
+    setQuery('');
+    setIsOpen(false);
+    setSelectedIndex(-1);
+  };
+
+  // Handle keyboard navigation
   const handleKeyDown = (e) => {
-    if (!isOpen) {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-      return;
-    }
+    if (!isOpen || filteredTools.length === 0) return;
 
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setSelectedIndex((prev) =>
-          prev < results.length - 1 ? prev + 1 : prev
+        setSelectedIndex(prev => 
+          prev < filteredTools.length - 1 ? prev + 1 : prev
         );
         break;
       case 'ArrowUp':
         e.preventDefault();
-        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+        setSelectedIndex(prev => prev > 0 ? prev - 1 : -1);
         break;
       case 'Enter':
         e.preventDefault();
-        if (selectedIndex >= 0 && results[selectedIndex]) {
-          handleSelectResult(results[selectedIndex]);
-        } else if (results.length > 0) {
-          handleSelectResult(results[0]);
+        if (selectedIndex >= 0 && filteredTools[selectedIndex]) {
+          handleResultClick(filteredTools[selectedIndex]);
         }
         break;
       case 'Escape':
         e.preventDefault();
         setIsOpen(false);
+        setQuery('');
         setSelectedIndex(-1);
+        inputRef.current?.blur();
         break;
       default:
         break;
     }
   };
 
-  // ─── Close dropdown on outside click ────────────────────────────────
+  // Scroll selected item into view
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target) &&
-        !inputRef.current?.contains(e.target)
-      ) {
+    if (selectedIndex >= 0 && resultsRef.current) {
+      const selectedElement = resultsRef.current.children[selectedIndex];
+      if (selectedElement) {
+        selectedElement.scrollIntoView({
+          block: 'nearest',
+          behavior: 'smooth'
+        });
+      }
+    }
+  }, [selectedIndex]);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
         setIsOpen(false);
+        setSelectedIndex(-1);
       }
     };
 
@@ -192,67 +123,46 @@ const SearchBar = ({ isDarkMode }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // ─── Highlight matching text ───────────────────────────────────────
-  const highlightMatch = (text, query) => {
-    if (!query.trim()) return text;
-    const regex = new RegExp(`(${query.trim()})`, 'gi');
-    const parts = text.split(regex);
-
-    return parts.map((part, index) =>
-      regex.test(part) ? (
-        <span key={index} className="font-bold text-blue-500">
-          {part}
-        </span>
-      ) : (
-        part
-      )
-    );
-  };
-
-  const clearSearch = () => {
+  // Clear search
+  const handleClear = () => {
     setQuery('');
-    setResults([]);
+    setDebouncedQuery('');
     setIsOpen(false);
+    setSelectedIndex(-1);
     inputRef.current?.focus();
   };
 
-  const clearHistory = (e) => {
-    e.stopPropagation();
-    localStorage.setItem('searchHistory', JSON.stringify([]));
-    setSearchHistory([]);
-  };
-
-  const handleHistoryClick = (historyQuery) => {
-    setQuery(historyQuery);
-    performSearch(historyQuery);
-    setIsOpen(true);
-  };
-
-  const handleCategoryChange = (catId) => {
-    setSelectedCategory(catId);
-    if (query) performSearch(query);
+  // Get category color classes
+  const getCategoryColor = (color) => {
+    const colors = {
+      blue: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
+      green: 'bg-green-500/10 text-green-500 border-green-500/20',
+      orange: 'bg-orange-500/10 text-orange-500 border-orange-500/20',
+      purple: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
+      rose: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
+      pink: 'bg-pink-500/10 text-pink-500 border-pink-500/20',
+      red: 'bg-red-500/10 text-red-500 border-red-500/20',
+      yellow: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+      cyan: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20',
+      indigo: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
+      teal: 'bg-teal-500/10 text-teal-500 border-teal-500/20',
+      emerald: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+    };
+    return colors[color] || colors.blue;
   };
 
   return (
-    <div className="relative w-full max-w-xl">
-      {/* ─── Search Input ─────────────────────────────────────────────────── */}
-      <div
-        className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all duration-200 ${
-          isOpen || query
-            ? isDarkMode
-              ? 'border-blue-500 bg-gray-800 shadow-lg shadow-blue-500/20'
-              : 'border-blue-500 bg-white shadow-lg shadow-blue-500/20'
-            : isDarkMode
-              ? 'border-gray-700 bg-gray-800'
-              : 'border-gray-300 bg-gray-50'
-        }`}
-      >
-        <Search
-          size={18}
-          className={`shrink-0 ${
-            isDarkMode ? 'text-gray-500' : 'text-gray-400'
-          }`}
-        />
+    <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
+      {/* Search Input */}
+      <div className={`relative flex items-center transition-all duration-200 ${
+        isDarkMode 
+          ? 'bg-gray-800/50 border-gray-700 focus-within:border-blue-500/50' 
+          : 'bg-white border-gray-200 focus-within:border-blue-500'
+      } border rounded-lg ${isOpen && filteredTools.length > 0 ? 'rounded-b-none' : ''}`}>
+        <Search className={`absolute left-3 w-5 h-5 ${
+          isDarkMode ? 'text-gray-400' : 'text-gray-500'
+        }`} />
+        
         <input
           ref={inputRef}
           type="text"
@@ -260,290 +170,113 @@ const SearchBar = ({ isDarkMode }) => {
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           onFocus={() => query && setIsOpen(true)}
-          placeholder="Search 56+ tools (Ctrl+K)..."
-          aria-label="Search tools by name, description, or tag"
-          aria-autocomplete="list"
-          aria-expanded={isOpen}
-          aria-controls="search-dropdown"
-          className={`flex-1 outline-none text-sm ${
-            isDarkMode
-              ? 'bg-transparent text-white placeholder-gray-500'
-              : 'bg-transparent text-gray-900 placeholder-gray-400'
+          placeholder="Search tools by name, category, or tags..."
+          className={`w-full pl-11 pr-10 py-3 bg-transparent outline-none text-sm md:text-base ${
+            isDarkMode ? 'text-white placeholder-gray-400' : 'text-gray-900 placeholder-gray-500'
           }`}
         />
+
         {query && (
           <button
-            onClick={clearSearch}
-            aria-label="Clear search"
-            className={`p-1 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors ${
-              isDarkMode ? 'text-gray-400' : 'text-gray-500'
+            onClick={handleClear}
+            className={`absolute right-3 p-1 rounded-full transition-colors ${
+              isDarkMode 
+                ? 'hover:bg-gray-700 text-gray-400 hover:text-gray-200' 
+                : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'
             }`}
+            aria-label="Clear search"
           >
-            <X size={16} />
+            <X className="w-4 h-4" />
           </button>
         )}
-        <span
-          className={`hidden sm:inline text-xs px-2 py-1 rounded font-mono border ${
-            isDarkMode
-              ? 'border-gray-700 text-gray-600'
-              : 'border-gray-300 text-gray-500'
-          }`}
-        >
-          ⌘K
-        </span>
       </div>
 
-      {/* ─── Dropdown Results ─────────────────────────────────────────────── */}
-      {isOpen && (
-        <div
-          ref={dropdownRef}
-          id="search-dropdown"
-          role="listbox"
-          className={`absolute top-full left-0 right-0 mt-2 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto border ${
-            isDarkMode
-              ? 'bg-gray-900 border-gray-700'
+      {/* Results Dropdown */}
+      {isOpen && filteredTools.length > 0 && (
+        <div 
+          ref={resultsRef}
+          className={`absolute z-50 w-full mt-0 max-h-[400px] overflow-y-auto rounded-b-lg border border-t-0 shadow-xl ${
+            isDarkMode 
+              ? 'bg-gray-800/95 border-gray-700 backdrop-blur-sm' 
               : 'bg-white border-gray-200'
           }`}
         >
-          {/* Category Filter Tabs */}
-          {query && results.length > 0 && (
-            <div
-              className={`sticky top-0 flex overflow-x-auto gap-2 p-3 border-b ${
-                isDarkMode
-                  ? 'bg-gray-950 border-gray-700'
-                  : 'bg-gray-50 border-gray-200'
-              }`}
-            >
+          {filteredTools.map((tool, index) => {
+            const category = getCategoryInfo(tool.category);
+            const isSelected = index === selectedIndex;
+
+            return (
               <button
-                onClick={() => handleCategoryChange('all')}
-                className={`px-3 py-1 rounded-full text-sm whitespace-nowrap transition-colors ${
-                  selectedCategory === 'all'
-                    ? isDarkMode
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-blue-600 text-white'
+                key={tool.id}
+                onClick={() => handleResultClick(tool)}
+                className={`w-full px-4 py-3 flex items-start gap-3 transition-colors text-left ${
+                  isSelected
+                    ? isDarkMode 
+                      ? 'bg-blue-500/20 border-l-2 border-blue-500' 
+                      : 'bg-blue-50 border-l-2 border-blue-500'
                     : isDarkMode
-                      ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'hover:bg-gray-700/50 border-l-2 border-transparent'
+                      : 'hover:bg-gray-50 border-l-2 border-transparent'
+                } ${index !== filteredTools.length - 1 ? 'border-b' : ''} ${
+                  isDarkMode ? 'border-b-gray-700' : 'border-b-gray-100'
                 }`}
               >
-                All
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => handleCategoryChange(cat.id)}
-                  className={`px-3 py-1 rounded-full text-sm whitespace-nowrap transition-colors ${
-                    selectedCategory === cat.id
-                      ? isDarkMode
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-blue-600 text-white'
-                      : isDarkMode
-                        ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {cat.icon}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Loading Skeleton */}
-          {isLoading && (
-            <div className="space-y-2 p-3">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className={`h-12 rounded animate-pulse ${
-                    isDarkMode ? 'bg-gray-800' : 'bg-gray-200'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Search Results */}
-          {!isLoading && query && (
-            <>
-              {results.length > 0 ? (
-                <div>
-                  <div
-                    className={`px-3 py-2 text-xs font-semibold uppercase tracking-wider flex items-center gap-1 ${
-                      isDarkMode ? 'text-gray-600' : 'text-gray-500'
-                    }`}
-                  >
-                    <Zap size={12} />
-                    Results ({results.length})
-                  </div>
-                  {results.map((tool, index) => {
-                    const catInfo = categories.find(
-                      (c) => c.id === tool.category
-                    );
-                    return (
-                      <div
-                        key={tool.id}
-                        onClick={() => handleSelectResult(tool)}
-                        role="option"
-                        aria-selected={selectedIndex === index}
-                        className={`px-4 py-3 cursor-pointer transition-colors border-l-4 ${
-                          selectedIndex === index
-                            ? isDarkMode
-                              ? 'bg-gray-800 border-blue-500'
-                              : 'bg-blue-50 border-blue-500'
-                            : isDarkMode
-                              ? 'border-transparent hover:bg-gray-800'
-                              : 'border-transparent hover:bg-gray-50'
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="text-lg mt-0.5">
-                            {catInfo?.icon || '🔧'}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div
-                              className={`font-semibold text-sm ${
-                                isDarkMode ? 'text-white' : 'text-gray-900'
-                              }`}
-                            >
-                              {highlightMatch(tool.name, query)}
-                            </div>
-                            <div
-                              className={`text-xs mt-1 line-clamp-2 ${
-                                isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                              }`}
-                            >
-                              {highlightMatch(tool.description, query)}
-                            </div>
-                            <div className="flex gap-2 mt-2 flex-wrap">
-                              {catInfo && (
-                                <span
-                                  className={`text-xs px-2 py-0.5 rounded ${
-                                    isDarkMode
-                                      ? 'bg-gray-800 text-gray-300'
-                                      : 'bg-gray-200 text-gray-700'
-                                  }`}
-                                >
-                                  {catInfo.name}
-                                </span>
-                              )}
-                              {tool.tags?.[0] && (
-                                <span
-                                  className={`text-xs px-2 py-0.5 rounded ${
-                                    isDarkMode
-                                      ? 'bg-gray-800 text-gray-400'
-                                      : 'bg-gray-100 text-gray-600'
-                                  }`}
-                                >
-                                  {tool.tags[0]}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                {/* Tool Icon/Initial */}
+                <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold ${
+                  getCategoryColor(category.color)
+                } border`}>
+                  {tool.name.charAt(0)}
                 </div>
-              ) : (
-                <div className="p-6 text-center">
-                  <div className="text-4xl mb-3 opacity-30">🔍</div>
-                  <p
-                    className={`text-sm ${
-                      isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                    }`}
-                  >
-                    No tools found for "{query}"
-                  </p>
-                </div>
-              )}
-            </>
-          )}
 
-          {/* History & Popular (no query) */}
-          {!query && (
-            <div>
-              {searchHistory.length > 0 && (
-                <div>
-                  <div
-                    className={`px-3 py-2 text-xs font-semibold uppercase tracking-wider flex items-center justify-between ${
-                      isDarkMode ? 'text-gray-600' : 'text-gray-500'
-                    }`}
-                  >
-                    <span className="flex items-center gap-1">
-                      <Clock size={12} />
-                      Recent
+                {/* Tool Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className={`font-semibold text-sm md:text-base truncate ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      {tool.name}
+                    </h3>
+                    <span className={`flex-shrink-0 px-2 py-0.5 text-xs rounded-full border ${
+                      getCategoryColor(category.color)
+                    }`}>
+                      {category.name}
                     </span>
-                    <button
-                      onClick={clearHistory}
-                      className={`text-xs hover:underline ${
-                        isDarkMode ? 'text-gray-600' : 'text-gray-400'
-                      }`}
-                    >
-                      Clear
-                    </button>
                   </div>
-                  {searchHistory.map((item, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleHistoryClick(item.query)}
-                      className={`px-4 py-2 cursor-pointer transition-colors ${
-                        isDarkMode
-                          ? 'hover:bg-gray-800 text-gray-300'
-                          : 'hover:bg-gray-50 text-gray-700'
-                      }`}
-                    >
-                      <Clock size={14} className="inline mr-2 opacity-50" />
-                      {item.query}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {popularSearches.length > 0 && (
-                <div
-                  className={searchHistory.length > 0 ? 'border-t' : ''}
-                >
-                  <div
-                    className={`px-3 py-2 text-xs font-semibold uppercase tracking-wider ${
-                      isDarkMode ? 'text-gray-600 border-gray-700' : 'text-gray-500'
-                    } ${searchHistory.length > 0 ? 'border-t' : ''}`}
-                  >
-                    <TrendingUp size={12} className="inline mr-1" />
-                    Trending
-                  </div>
-                  {popularSearches.map((item, index) => (
-                    <div
-                      key={index}
-                      onClick={() => setQuery(item.term) || performSearch(item.term) || setIsOpen(true)}
-                      className={`px-4 py-2 cursor-pointer transition-colors flex items-center justify-between ${
-                        isDarkMode
-                          ? 'hover:bg-gray-800 text-gray-300'
-                          : 'hover:bg-gray-50 text-gray-700'
-                      }`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <TrendingUp size={14} className="opacity-50" />
-                        {item.term}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {searchHistory.length === 0 && popularSearches.length === 0 && (
-                <div className="p-6 text-center">
-                  <div className="text-2xl mb-3 opacity-30">⌕</div>
-                  <p
-                    className={`text-sm ${
-                      isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                    }`}
-                  >
-                    Start typing to search tools
+                  <p className={`text-xs md:text-sm line-clamp-1 ${
+                    isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    {tool.description}
                   </p>
                 </div>
-              )}
-            </div>
-          )}
+
+                {/* Arrow Icon */}
+                <ArrowRight className={`flex-shrink-0 w-5 h-5 ${
+                  isSelected 
+                    ? 'text-blue-500' 
+                    : isDarkMode ? 'text-gray-600' : 'text-gray-400'
+                }`} />
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* No Results */}
+      {isOpen && debouncedQuery && filteredTools.length === 0 && (
+        <div className={`absolute z-50 w-full mt-0 p-6 text-center rounded-b-lg border border-t-0 shadow-xl ${
+          isDarkMode 
+            ? 'bg-gray-800/95 border-gray-700 backdrop-blur-sm' 
+            : 'bg-white border-gray-200'
+        }`}>
+          <Search className={`w-12 h-12 mx-auto mb-3 ${
+            isDarkMode ? 'text-gray-600' : 'text-gray-300'
+          }`} />
+          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            No tools found for "<span className="font-semibold">{debouncedQuery}</span>"
+          </p>
+          <p className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+            Try searching by category, name, or tags
+          </p>
         </div>
       )}
     </div>
