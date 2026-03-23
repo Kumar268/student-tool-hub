@@ -7,7 +7,7 @@ import SEO from './SEO';
 import { tools } from '../data/tools';
 import AdSlot from './AdSlot';
 
-const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
+const ToolLayout = ({ children, isDarkMode, onToggleDarkMode, showAds = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -91,30 +91,24 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
           </div>
         </nav>
 
-        {/* ── Video Ad (Once per session) ── */}
-        {/* <AdSlot type="video" /> */}
-
-        {/* ── Main Content ── */}
-        <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-all duration-300">
+        {/* ── Main Content (Full Width) ── */}
+        <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
           
-          {/* Top Banner Ad */}
-          <div className="mb-8">
-            {/* <AdSlot type="banner" /> */}
-          </div>
+          {/* Top Banner Ad - Only for antigravity tools */}
+          {showAds && (
+            <div className="mb-8 max-w-7xl mx-auto">
+              <AdSlot type="banner" />
+            </div>
+          )}
 
           {/* Tool content with original custom titles preserved */}
           <article className="w-full max-w-7xl mx-auto bg-white dark:bg-gray-800/50 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 lg:p-8 min-h-[400px]">
              {children}
           </article>
 
-          {/* Native In-Article Ad */}
-          <div className="my-10">
-            {/* <AdSlot type="native" /> */}
-          </div>
-
           {/* ── Related Tools ── */}
           {tool && (
-            <div className="mt-12 opacity-95 max-w-7xl mx-auto">
+            <div className="mt-12 max-w-7xl mx-auto">
               <RelatedTools
                 currentSlug={tool.slug}
                 category={tool.category}
@@ -123,10 +117,12 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
             </div>
           )}
 
-          {/* Bottom Banner Ad */}
-          <div className="mt-12 border-t border-gray-200 dark:border-gray-800 pt-8 max-w-7xl mx-auto">
-            {/* <AdSlot type="banner" /> */}
-          </div>
+          {/* Bottom Banner Ad - Only for antigravity tools */}
+          {showAds && (
+            <div className="mt-12 border-t border-gray-200 dark:border-gray-800 pt-8 max-w-7xl mx-auto">
+              <AdSlot type="banner" />
+            </div>
+          )}
         </main>
 
       </div>
