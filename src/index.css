@@ -14,6 +14,26 @@
     --color-blue-700: #1d4ed8;
     --color-blue-800: #1e40af;
     --color-blue-900: #1e3a8a;
+
+    /* Theme System Variables (Light default) */
+    --bg-primary: #f9fafb;     /* Light gray background */
+    --bg-secondary: #f3f4f6;   /* Slightly darker for panels */
+    --text-primary: #111827;   /* Dark gray text */
+    --text-secondary: #4b5563; /* Lighter text for secondary info */
+    --border-color: #e5e7eb;   /* Light gray borders */
+    --card-bg: #ffffff;        /* Pure white cards */
+    --input-bg: #f3f4f6;       /* Inputs matching panel bg */
+  }
+
+  /* Dark Theme Variables */
+  .dark {
+    --bg-primary: #0f172a;     /* Deep slate background */
+    --bg-secondary: #1e293b;   /* Slate panels */
+    --text-primary: #f8fafc;   /* Slate 50 text */
+    --text-secondary: #94a3b8; /* Slate 400 for secondary info */
+    --border-color: #334155;   /* Slate 700 borders */
+    --card-bg: #1e293b;        /* Slate 800 cards */
+    --input-bg: #0f172a;       /* Inputs matching deep bg */
   }
 }
 
@@ -26,8 +46,8 @@ html {
 /* Smooth color/opacity transitions globally — excludes transform
    so the 3D tilt hook can own transform timing without fighting this */
 *:not(.crystal-hover):not(.crystalline-surface):not(.crystal-btn) {
-  transition: background-color 0.2s ease, border-color 0.2s ease,
-              color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease,
+              color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
 /* Custom glassmorphic utilities */

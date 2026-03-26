@@ -6,6 +6,7 @@ import { ShareButton }                           from './ResultActions';
 import SEO                                       from './SEO';
 import { tools }                                 from '../data/tools';
 import AdSlot                                    from './AdSlot';
+import VideoAd                                   from './VideoAd';
 
 /*
  * ToolLayout — every tool page gets this exact structure:
@@ -32,7 +33,7 @@ import AdSlot                                    from './AdSlot';
  * All 81 tool files stay untouched. No per-tool editing needed.
  */
 
-const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
+const ToolLayout = ({ title, extraFeatures, children, isDarkMode, onToggleDarkMode }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -132,17 +133,34 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
         <main className="w-full px-4 sm:px-6 lg:px-8 py-6">
           <div className="max-w-7xl mx-auto space-y-6">
 
-            {/* ①  TOP BANNER — visible the moment the page loads */}
+            {/* ①  VIDEO AD — shown only once per session */}
+            <VideoAd />
+
+            {/* ②  TOP BANNER — visible the moment the page loads */}
             <AdSlot type="banner" position="top" />
+
+            {/* ── Tool Custom Title (if provided) ── */}
+            {title && (
+              <h1 className="text-3xl sm:text-4xl px-2 font-bold text-gray-900 dark:text-white mt-4 mb-2">
+                {title}
+              </h1>
+            )}
 
             {/* ── Tool content — all custom titles and styles preserved ── */}
             <article className="w-full bg-white dark:bg-gray-800/50 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 lg:p-8 min-h-[400px]">
               {children}
             </article>
 
-            {/* ②  MIDDLE DISPLAY — after tool content, before related tools.
+            {/* ③  MIDDLE DISPLAY — after tool content, before related tools.
                   This is the "I just got my result" moment — highest ad intent. */}
             <AdSlot type="display" position="middle" />
+
+            {/* ── Optional Extra Features Section ── */}
+            {extraFeatures && (
+              <section className="w-full bg-white dark:bg-gray-800/50 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 p-4 sm:p-6 lg:p-8 mt-6">
+                {extraFeatures}
+              </section>
+            )}
 
             {/* Related tools */}
             {tool && (
@@ -153,8 +171,8 @@ const ToolLayout = ({ children, isDarkMode, onToggleDarkMode }) => {
               />
             )}
 
-            {/* ③  BOTTOM BANNER — after they finish, before leaving */}
-            <div className="border-t border-gray-200 dark:border-gray-800 pt-6">
+            {/* ④  BOTTOM BANNER — after they finish, before leaving */}
+            <div className="border-t border-gray-200 dark:border-gray-800 pt-6 mt-6">
               <AdSlot type="banner" position="bottom" />
             </div>
 
