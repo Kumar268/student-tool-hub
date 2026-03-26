@@ -1,77 +1,121 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ADSENSE_PUB_ID } from '../utils/adsenseService';
-import VideoAd from './monetization/VideoAd';
+
+/*
+ * AdSlot — one AdSense unit.
+ *
+ * Props:
+ *   type     = 'banner' | 'display' | 'native'
+ *   position = 'top' | 'middle' | 'bottom'   (used only for dev label)
+ *
+ * type="banner"   → leaderboard, responsive horizontal  (top & bottom)
+ * type="display"  → medium rectangle, auto responsive   (middle)
+ * type="native"   → in-feed / native format             (in-feed)
+ *
+ * VITE_ADS_ENABLED=false  → shows a clearly sized placeholder (dev mode)
+ * VITE_ADS_ENABLED=true   → shows real AdSense ad
+ *
+ * AdSense policy rules obeyed:
+ *   ✓  No overflow:hidden on wrapper (would clip iframes)
+ *   ✓  No backdrop-filter on wrapper
+ *   ✓  <ins> style is ONLY display:block
+ *   ✓  "Advertisement" label above every slot
+ */
 
 const ADS_ENABLED = import.meta.env.VITE_ADS_ENABLED === 'true';
 
-const AdSlot = ({ type = 'display', className = '', style = {} }) => {
+const SLOT_IDS = {
+  banner:  import.meta.env.VITE_BANNER_AD_SLOT  || '',
+  display: import.meta.env.VITE_DISPLAY_AD_SLOT || '',
+  native:  import.meta.env.VITE_NATIVE_AD_SLOT  || '',
+};
+
+// Dev placeholder min-heights so you can see exactly where ads will sit
+const DEV_HEIGHT = {
+  banner:  90,
+  display: 250,
+  native:  150,
+};
+
+const AdSlot = ({ type = 'display', position = '', className = '' }) => {
   const pushed = useRef(false);
-  const [slotId, setSlotId] = useState('');
 
   useEffect(() => {
-    // Determine slot ID based on type
-    let id = '';
-    switch (type) {
-      case 'banner':
-        id = import.meta.env.VITE_BANNER_AD_SLOT;
-        break;
-      case 'native':
-        id = import.meta.env.VITE_NATIVE_AD_SLOT;
-        break;
-      case 'display':
-      default:
-        id = import.meta.env.VITE_DISPLAY_AD_SLOT;
-        break;
+    if (!ADS_ENABLED || pushed.current) return;
+    pushed.current = true;
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.warn('[AdSlot]', e);
     }
-    setSlotId(id);
+  }, []);
 
-    if (ADS_ENABLED && !pushed.current && type !== 'video') {
-      try {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-        pushed.current = true;
-      } catch (e) {
-        console.warn('[AdSlot] AdSense push failed:', e);
-      }
-    }
-  }, [type]);
+  const posLabel = position ? ` · ${position}` : '';
+  const label = (
+    <p style={{
+      fontSize: 9,
+      textTransform: 'uppercase',
+      letterSpacing: '.16em',
+      textAlign: 'center',
+      userSelect: 'none',
+      marginBottom: 4,
+      color: 'rgba(148,163,184,.4)',
+    }}>
+      Advertisement
+    </p>
+  );
 
-  if (!ADS_ENABLED && type !== 'video') {
+  /* ── Dev placeholder ── */
+  if (!ADS_ENABLED) {
     return (
-      <div className={`ad-placeholder border border-dashed border-gray-300 dark:border-gray-700 rounded-xl py-6 text-center text-xs text-gray-400 ${className}`} style={style}>
-        [ADSENSE: {type.toUpperCase()} SLOT]
+      <div className={`w-full ${className}`}>
+        {label}
+        <div style={{
+          width: '100%',
+          minHeight: DEV_HEIGHT[type] || 90,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: '1px dashed rgba(148,163,184,.3)',
+          borderRadius: 12,
+          background: 'rgba(148,163,184,.04)',
+        }}>
+          <span style={{
+            fontFamily: 'monospace',
+            fontSize: 11,
+            color: 'rgba(148,163,184,.4)',
+          }}>
+            AdSense · {type.toUpperCase()}{posLabel}
+          </span>
+        </div>
       </div>
     );
   }
 
-  if (type === 'video') {
-    return (
-      <VideoAd 
-        videoSrc={import.meta.env.VITE_VIDEO_AD_URL} 
-        adLink="#" 
-        isEnabled={ADS_ENABLED}
-      />
-    );
-  }
-
-  // Refined ad format based on type
-  const format = type === 'banner' ? 'horizontal' : (type === 'native' ? 'fluid' : 'auto');
+  /* ── Live AdSense unit ── */
+  const format    = type === 'banner'  ? 'horizontal'
+                  : type === 'native'  ? 'fluid'
+                  :                      'auto';
+  const extraAttr = type === 'native'
+    ? { 'data-ad-layout-key': '-6t+ed+2i-1n-4w' }
+    : {};
 
   return (
-    <div className={`my-10 w-full flex flex-col items-center ${className}`} style={style}>
-        <span className="text-[10px] text-gray-400 dark:text-gray-600 uppercase tracking-[0.2em] mb-2 select-none font-medium">
-          Advertisement
-        </span>
-        <div className="w-full min-h-[50px]">
-          <ins
-            className="adsbygoogle"
-            style={{ display: 'block' }}
-            data-ad-client={ADSENSE_PUB_ID}
-            data-ad-slot={slotId}
-            data-ad-format={format}
-            data-full-width-responsive="true"
-            {...(type === 'native' ? { 'data-ad-layout-key': "-6t+ed+2i-1n-4w" } : {})}
-          />
-        </div>
+    <div className={`w-full ${className}`}>
+      {label}
+      {/*
+        ⚠ DO NOT add overflow:hidden, backdrop-filter, or pointer-events
+           to this wrapper — AdSense will clip iframes (policy violation).
+      */}
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block' }}
+        data-ad-client={ADSENSE_PUB_ID}
+        data-ad-slot={SLOT_IDS[type]}
+        data-ad-format={format}
+        data-full-width-responsive="true"
+        {...extraAttr}
+      />
     </div>
   );
 };

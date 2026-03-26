@@ -167,16 +167,12 @@ const AppRouter = () => {
             {/* ── Tool routes (primary: /tools/:category/:slug) ── */}
             {tools.map(tool => {
               const Component = TOOL_MAP[tool.slug] || ComingSoon;
-              // Determine if tool should show ads (add antigravity category when needed)
-              const showAds = tool.category === 'antigravity';
               const TrackAndRender = () => {
                 useEffect(() => { trackToolVisit(tool.slug); }, []);
                 return (
-                  <ToolLayout 
-                    isDarkMode={isDarkMode} 
-                    onToggleDarkMode={toggleDarkMode} 
-                    category={tool.category}
-                    showAds={showAds}
+                  <ToolLayout
+                    isDarkMode={isDarkMode}
+                    onToggleDarkMode={toggleDarkMode}
                   >
                     <Suspense fallback={<ToolSkeleton />}>
                       <Component isDarkMode={isDarkMode} />
@@ -196,17 +192,14 @@ const AppRouter = () => {
             {/* ── Tool routes (fallback: /tool/:slug) ── */}
             {tools.map(tool => {
               const Component = TOOL_MAP[tool.slug] || ComingSoon;
-              const showAds = tool.category === 'antigravity';
               return (
                 <Route
                   key={`${tool.slug}-fallback`}
                   path={`/tool/${tool.slug}`}
                   element={
-                    <ToolLayout 
-                      isDarkMode={isDarkMode} 
-                      onToggleDarkMode={toggleDarkMode} 
-                      category={tool.category}
-                      showAds={showAds}
+                    <ToolLayout
+                      isDarkMode={isDarkMode}
+                      onToggleDarkMode={toggleDarkMode}
                     >
                       <Suspense fallback={<ToolSkeleton />}>
                         <Component isDarkMode={isDarkMode} />
