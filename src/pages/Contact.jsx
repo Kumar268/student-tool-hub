@@ -12,9 +12,11 @@ const Contact = ({ isDarkMode }) => {
     setStatus('sending');
     
     try {
-      // REPLACE 'YOUR_FORMSPREE_ID' with your actual Formspree form ID
-      // Get it from: https://formspree.io/forms
-      const response = await fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
+      // Get FormspreeID from environment variables
+      const formspreeId = import.meta.env.VITE_FORMSPREE_ID || 'YOUR_FORM_ID';
+      
+      // Submit to Formspree endpoint
+      const response = await fetch(`https://formspree.io/f/${formspreeId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,6 +27,7 @@ const Contact = ({ isDarkMode }) => {
       if (response.ok) {
         setStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
+        // Auto-clear success message after 5 seconds
         setTimeout(() => setStatus(null), 5000);
       } else {
         setStatus('error');

@@ -1,5 +1,7 @@
-# StudentToolHub ads.txt
-# For Google AdSense
-# REPLACE pub-XXXXXXXXXXXXXXXX with your actual AdSense publisher ID (numbers only, no 'ca-' prefix)
+# StudentToolHub ads.txt - For Google AdSense
+# Replace pub-XXXXXXXXXXXXXXXX with your actual AdSense publisher ID
+# (numbers only, no 'ca-' prefix)
+# Your full publisher ID is: ca-pub-XXXXXXXXXXXXXXXX
+# But ads.txt uses only: pub-XXXXXXXXXXXXXXXX
 
 google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

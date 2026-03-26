@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { ThemeProvider } from './context/ThemeContext';
 import App from './App';
 import Layout from './components/Layout';
 import ToolLayout from './components/ToolLayout';
@@ -69,11 +70,14 @@ const TOOL_MAP = {
   'nutrition-calc': lazy(() => import('./tools/health/NutritionCalc')),
   'nutrition-calculator': lazy(() => import('./tools/health/NutritionCalc')),
   'password-generator': lazy(() => import('./tools/developer/PasswordGenerator')),
+  // ─── PDF Tools (6 tools) ───────────────────────────────────────
   'pdf-compressor': lazy(() => import('./tools/pdf/PDFCompressor')),
   'pdf-merger-splitter': lazy(() => import('./tools/pdf/PDFMergeSplit')),
   'pdf-splitter': lazy(() => import('./tools/pdf/PDFMergeSplit')),
   'pdf-to-word': lazy(() => import('./tools/pdf/PDFToWord')),
   'pdf-unlock': lazy(() => import('./tools/pdf/PDFUnlock')),
+  'word-to-pdf': lazy(() => import('./tools/pdf/WordToPDF')),
+  // ──────────────────────────────────────────────────────────────
   'percentage-calc': lazy(() => import('./tools/utility/PercentageCalc')),
   'plagiarism-check': lazy(() => import('./tools/text/PlagiarismCheck')),
   'pomodoro-timer': lazy(() => import('./tools/financial/PomodoroTimer')),
@@ -103,7 +107,6 @@ const TOOL_MAP = {
   'unit-converter': lazy(() => import('./tools/academic/UnitConverter')),
   'voice-recorder': lazy(() => import('./tools/audio/VoiceRecorder')),
   'word-counter': lazy(() => import('./tools/text/WordCounter')),
-  'word-to-pdf': lazy(() => import('./tools/pdf/WordToPDF')),
 };
 // ───────────────────────────────────────────────────────────────────────────
 
@@ -138,9 +141,10 @@ const AppRouter = () => {
   return (
     <HelmetProvider>
       <PremiumProvider>
-        <Router>
-          <PageViewTracker />
-          <CookieConsent isDarkMode={isDarkMode} />
+        <ThemeProvider>
+          <Router>
+            <PageViewTracker />
+            <CookieConsent isDarkMode={isDarkMode} />
 
           <Routes>
             {/* ── Home / Dashboard ── */}
@@ -225,6 +229,7 @@ const AppRouter = () => {
             <Route path="*" element={<NotFound isDarkMode={isDarkMode} />} />
           </Routes>
         </Router>
+        </ThemeProvider>
       </PremiumProvider>
     </HelmetProvider>
   );
