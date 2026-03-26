@@ -531,14 +531,10 @@ function SideItem({ catId, active, onClick }) {
 export default function App({ isDarkMode, onToggleDarkMode }) {
   const { categoryId } = useParams();
   const navigate = useNavigate();
-  const [cat,    setCat]    = useState(categoryId || 'all');
+  const selectedCategory = categoryId || 'all';
   const [query,  setQuery]  = useState('');
   const [drawer, setDrawer] = useState(false);
   const [mobSearch, setMobSearch] = useState(false);
-
-  useEffect(() => {
-    if (categoryId && categoryId !== cat) setCat(categoryId);
-  }, [categoryId]);
 
   useEffect(() => {
     const fn = e => { if (e.key === 'Escape') setDrawer(false); };
@@ -547,18 +543,18 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
   }, []);
 
   const goTo = useCallback((id) => {
-    setCat(id); setDrawer(false);
+    setDrawer(false);
     navigate(id === 'all' ? '/' : `/category/${id}`);
   }, [navigate]);
 
   const filtered = useMemo(() => tools.filter(t =>
-    (cat === 'all' || t.category === cat) &&
+    (selectedCategory === 'all' || t.category === selectedCategory) &&
     (!query || t.name.toLowerCase().includes(query.toLowerCase()) ||
                t.description.toLowerCase().includes(query.toLowerCase()))
-  ), [cat, query]);
+  ), [selectedCategory, query]);
 
-  const meta = CAT[cat] || CAT.all;
-  const seo  = CAT_SEO[cat] || CAT_SEO.all;
+  const meta = CAT[selectedCategory] || CAT.all;
+  const seo  = CAT_SEO[selectedCategory] || CAT_SEO.all;
   const allCats = useMemo(() => [{ id:'all' }, ...categories], []);
   const typeText = useTypewriter(['STUDY SMARTER','WORK FASTER','CALCULATE FREE','NO SIGN UP','ALWAYS FREE']);
 
@@ -570,7 +566,7 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="canonical" href={`https://yourdomain.com${cat==='all'?'/':'/category/'+cat}`} />
+        <link rel="canonical" href={`https://yourdomain.com${selectedCategory==='all'?'/':'/category/'+selectedCategory}`} />
       </Helmet>
 
       <style>{CSS}</style>
@@ -673,7 +669,7 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
           const cnt = c.id==='all' ? tools.length : tools.filter(t=>t.category===c.id).length;
           if (cnt===0 && c.id!=='all') return null;
           return (
-            <button key={c.id} className={`cat-pill ${cat===c.id?'on':''}`}
+            <button key={c.id} className={`cat-pill ${selectedCategory===c.id?'on':''}`}
               style={{ '--ac': m.color }}
               onClick={() => goTo(c.id)}>
               {m.label}
@@ -682,7 +678,7 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
         })}
       </div>
 
-      {cat === 'all' && !query && (
+      {selectedCategory === 'all' && !query && (
         <section className="hero-wrap" style={{
           position:'relative',zIndex:1,
           padding:'clamp(28px,5vw,60px) clamp(14px,4vw,36px) clamp(22px,3.5vw,44px)',
@@ -791,7 +787,7 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
             ◈ NAVIGATE
           </div>
           {allCats.map(c => (
-            <SideItem key={c.id} catId={c.id} active={cat===c.id} onClick={() => goTo(c.id)}/>
+            <SideItem key={c.id} catId={c.id} active={selectedCategory===c.id} onClick={() => goTo(c.id)}/>
           ))}
           {/* <AdSlot slot="3456789012" style={{ marginTop: 'auto', minHeight: 250 }} /> */}
         </aside>
@@ -818,7 +814,7 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
               color:'#e2eaf4',letterSpacing:'.04em',
               display:'flex',alignItems:'baseline',gap:10,flexWrap:'wrap',
             }}>
-              {query ? `"${query.toUpperCase()}"` : (cat==='all' ? 'ALL TOOLS' : meta.label)}
+              {query ? `"${query.toUpperCase()}"` : (selectedCategory==='all' ? 'ALL TOOLS' : meta.label)}
               <span style={{ color:meta.color,fontSize:'.65em' }}>
                 [{String(filtered.length).padStart(3,'0')}]
               </span>
@@ -894,7 +890,7 @@ export default function App({ isDarkMode, onToggleDarkMode }) {
             style={{ width:'100%' }}/>
         </div>
         {allCats.map(c => (
-          <SideItem key={c.id} catId={c.id} active={cat===c.id} onClick={() => goTo(c.id)}/>
+          <SideItem key={c.id} catId={c.id} active={selectedCategory===c.id} onClick={() => goTo(c.id)}/>
         ))}
         {/* <AdSlot slot="4567890123" style={{ marginTop: 'auto', minHeight: 90 }} /> */}
       </div>

@@ -174,21 +174,38 @@ const PomodoroTimer = ({ isDarkMode: ext } = {}) => {
   const offset    = CIRC * progress;      // full → 0
 
   useEffect(() => {
-    // ✅ FIXED: Handle timer interval and completion separately to avoid cascading renders
-    if (active && timeLeft > 0) {
-      ref.current = setInterval(() => setTimeLeft(t => t - 1), 1000);
-    } else if (timeLeft === 0 && active) {
-      // Timer completed - batch all state updates
+    // ✅ FIXED: Separate timer tick from completion logic
+    if (!active || timeLeft === 0) {
       clearInterval(ref.current);
-      // These will be batched into a single render in React 18+
-      setActive(false);
-      setDone(true);
-      if (mode === 'work') setSessions(s => s + 1);
-      // Separate async callback (not batched, which is fine for delayed state)
-      setTimeout(() => setDone(false), 1800);
+      return;
     }
+    
+    ref.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) {
+          // Timer will hit 0 on next render
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    
     return () => clearInterval(ref.current);
-  }, [active, timeLeft, mode]);
+  }, [active, timeLeft]);
+
+  // ✅ FIXED: Separate effect for handling completion
+  useEffect(() => {
+    if (timeLeft === 0 && active) {
+      // Use setTimeout to defer state updates to next tick
+      const timer = setTimeout(() => {
+        setActive(false);
+        setDone(true);
+        if (mode === 'work') setSessions(s => s + 1);
+        setTimeout(() => setDone(false), 1800);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [timeLeft, active, mode]);
 
   const switchMode = (m) => {
     setMode(m); setActive(false); setTimeLeft(custom[m] * 60); setDone(false);

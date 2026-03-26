@@ -18,6 +18,7 @@ import { tools } from './data/tools';
 import { trackToolVisit } from './hooks/useToolHistory';
 import { PremiumProvider } from './contexts/PremiumContext';
 import { pageview, initGA } from './utils/analytics';
+import { useAdSense } from './utils/adsenseService';
 
 // ─── Lazy tool imports ──────────────────────────────────────────────────────
 const ComingSoon = lazy(() => import('./tools/ComingSoonTemplate'));
@@ -120,7 +121,8 @@ const PageViewTracker = () => {
 };
 
 /** ✅ FIXED: Tool Route Wrapper with tracking — moved OUTSIDE map to fix Hooks violation */
-const ToolRouteWrapper = ({ tool, Component, isDarkMode, onToggleDarkMode }) => {
+// eslint-disable-next-line no-unused-vars
+const ToolRouteWrapper = ({ tool, Component: ToolComponent, isDarkMode, onToggleDarkMode }) => {
   useEffect(() => {
     trackToolVisit(tool.slug);
   }, [tool.slug]);
@@ -128,7 +130,7 @@ const ToolRouteWrapper = ({ tool, Component, isDarkMode, onToggleDarkMode }) => 
   return (
     <ToolLayout isDarkMode={isDarkMode} onToggleDarkMode={onToggleDarkMode}>
       <Suspense fallback={<ToolSkeleton />}>
-        <Component isDarkMode={isDarkMode} />
+        <ToolComponent isDarkMode={isDarkMode} />
       </Suspense>
     </ToolLayout>
   );
@@ -139,6 +141,9 @@ const AppRouter = () => {
     const saved = localStorage.getItem('darkMode');
     return saved !== null ? saved === 'true' : true;
   });
+
+  // ✅ useAdSense called at component root level (top-level hook)
+  useAdSense();
 
   useEffect(() => {
     initGA();
@@ -185,7 +190,7 @@ const AppRouter = () => {
 
             {/* ── Tool routes (primary: /tools/:category/:slug) ── */}
             {tools.map(tool => {
-              const Component = TOOL_MAP[tool.slug] || ComingSoon;
+              const LoadedComponent = TOOL_MAP[tool.slug] || ComingSoon;
               return (
                 <Route
                   key={tool.slug}
@@ -193,7 +198,7 @@ const AppRouter = () => {
                   element={
                     <ToolRouteWrapper
                       tool={tool}
-                      Component={Component}
+                      Component={LoadedComponent}
                       isDarkMode={isDarkMode}
                       onToggleDarkMode={toggleDarkMode}
                     />
@@ -204,7 +209,7 @@ const AppRouter = () => {
 
             {/* ── Tool routes (fallback: /tool/:slug) ── */}
             {tools.map(tool => {
-              const Component = TOOL_MAP[tool.slug] || ComingSoon;
+              const LoadedComponent = TOOL_MAP[tool.slug] || ComingSoon;
               return (
                 <Route
                   key={`${tool.slug}-fallback`}
@@ -212,7 +217,7 @@ const AppRouter = () => {
                   element={
                     <ToolRouteWrapper
                       tool={tool}
-                      Component={Component}
+                      Component={LoadedComponent}
                       isDarkMode={isDarkMode}
                       onToggleDarkMode={toggleDarkMode}
                     />

@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 // Initialize Google AdSense
 export const ADSENSE_PUB_ID = import.meta.env.VITE_ADSENSE_PUB_ID || 'YOUR_ADSENSE_PUBLISHER_ID';
 

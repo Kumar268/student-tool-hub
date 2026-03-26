@@ -28,13 +28,13 @@ export default defineConfig([
   },
   // Node.js scripts configuration
   {
-    files: ['scripts/**/*.js', 'scripts/**/*.cjs'],
+    files: ['scripts/**/*.js', 'scripts/**/*.cjs', 'analyze-hooks.js'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
         ...globals.node,
       },
-      sourceType: 'commonjs',
+      sourceType: 'module',
     },
     rules: {
       'no-console': 'off',
