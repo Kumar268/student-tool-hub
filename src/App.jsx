@@ -358,13 +358,20 @@ function Counter({ to, pre = '', suf = '', dur = 1600 }) {
   const [n, set] = useState(0);
   const [go, setGo] = useState(false);
   const ref = useRef();
+  
+  // ✅ FIXED: IntersectionObserver effect — triggers animation state only
   useEffect(() => {
     const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { setGo(true); obs.disconnect(); }
+      if (e.isIntersecting) { 
+        setGo(true); 
+        obs.disconnect(); 
+      }
     }, { threshold: .4 });
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
+  
+  // ✅ FIXED: Separate animation loop effect — uses callback to batch updates smoothly
   useEffect(() => {
     if (!go) return;
     let start = null;
@@ -373,6 +380,9 @@ function Counter({ to, pre = '', suf = '', dur = 1600 }) {
       const p = Math.min((ts - start) / dur, 1);
       set(Math.floor((1 - Math.pow(1 - p, 3)) * to));
       if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [go, to, dur]);
     };
     requestAnimationFrame(step);
   }, [go, to, dur]);

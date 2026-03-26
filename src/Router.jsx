@@ -119,6 +119,21 @@ const PageViewTracker = () => {
   return null;
 };
 
+/** ✅ FIXED: Tool Route Wrapper with tracking — moved OUTSIDE map to fix Hooks violation */
+const ToolRouteWrapper = ({ tool, Component, isDarkMode, onToggleDarkMode }) => {
+  useEffect(() => {
+    trackToolVisit(tool.slug);
+  }, [tool.slug]);
+
+  return (
+    <ToolLayout isDarkMode={isDarkMode} onToggleDarkMode={onToggleDarkMode}>
+      <Suspense fallback={<ToolSkeleton />}>
+        <Component isDarkMode={isDarkMode} />
+      </Suspense>
+    </ToolLayout>
+  );
+};
+
 const AppRouter = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode');
@@ -171,24 +186,18 @@ const AppRouter = () => {
             {/* ── Tool routes (primary: /tools/:category/:slug) ── */}
             {tools.map(tool => {
               const Component = TOOL_MAP[tool.slug] || ComingSoon;
-              const TrackAndRender = () => {
-                useEffect(() => { trackToolVisit(tool.slug); }, []);
-                return (
-                  <ToolLayout
-                    isDarkMode={isDarkMode}
-                    onToggleDarkMode={toggleDarkMode}
-                  >
-                    <Suspense fallback={<ToolSkeleton />}>
-                      <Component isDarkMode={isDarkMode} />
-                    </Suspense>
-                  </ToolLayout>
-                );
-              };
               return (
                 <Route
                   key={tool.slug}
                   path={`/tools/${tool.category}/${tool.slug}`}
-                  element={<TrackAndRender />}
+                  element={
+                    <ToolRouteWrapper
+                      tool={tool}
+                      Component={Component}
+                      isDarkMode={isDarkMode}
+                      onToggleDarkMode={toggleDarkMode}
+                    />
+                  }
                 />
               );
             })}
@@ -201,14 +210,12 @@ const AppRouter = () => {
                   key={`${tool.slug}-fallback`}
                   path={`/tool/${tool.slug}`}
                   element={
-                    <ToolLayout
+                    <ToolRouteWrapper
+                      tool={tool}
+                      Component={Component}
                       isDarkMode={isDarkMode}
                       onToggleDarkMode={toggleDarkMode}
-                    >
-                      <Suspense fallback={<ToolSkeleton />}>
-                        <Component isDarkMode={isDarkMode} />
-                      </Suspense>
-                    </ToolLayout>
+                    />
                   }
                 />
               );
