@@ -1018,9 +1018,10 @@ const QuantumTruthTableGenerator = ({ isDarkMode: initialDarkMode = true }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className={`mt-12 pt-12 border-t border-cyan-900/30 ${dark ? 'text-gray-400' : 'text-gray-600'}`}
+            className={`mt-12 pt-12 ${dark ? 'text-gray-400' : 'text-gray-600'}`}
           >
-            <div className="max-w-4xl mx-auto space-y-8 prose prose-cyan dark:prose-invert">
+            <div className="w-full bg-gray-50 dark:bg-gray-900">
+              <div className={`w-full max-w-7xl mx-auto px-4 py-8 space-y-8 prose prose-cyan dark:prose-invert border-t border-cyan-900/30`}>
               <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 flex items-center gap-2 uppercase tracking-wide">
                 <Cpu className="w-8 h-8 text-cyan-500" />
                 Quantum Logic & Boolean Algebra Complete Guide
@@ -1128,6 +1129,7 @@ const QuantumTruthTableGenerator = ({ isDarkMode: initialDarkMode = true }) => {
                   <Atom className="w-6 h-6 mx-auto mb-2" />
                   Quantum Ad Node 2
                 </div>
+              </div>
               </div>
             </div>
           </motion.article>

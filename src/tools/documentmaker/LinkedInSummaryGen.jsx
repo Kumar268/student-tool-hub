@@ -383,7 +383,8 @@ Output: 4 bullets, each starting with • on a new line.`;
     <>
       <style>{STYLES}</style>
       <div className={cls}>
-        {dark&&<div className="scanline"/>}
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {dark&&<div className="scanline"/>}
 
         {/* TOPBAR */}
         <div className="topbar">
@@ -894,6 +895,7 @@ Output: 4 bullets, each starting with • on a new line.`;
 
             </AnimatePresence>
           </div>
+        </div>
         </div>
       </div>
     </>

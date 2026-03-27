@@ -402,9 +402,10 @@ export default function PDFMergeSplit() {
     <>
       <style>{STYLES}</style>
       <div className={cls}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
 
-        {/* TOPBAR */}
-        <div className="topbar">
+          {/* TOPBAR */}
+          <div className="topbar">
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{
               width: 30, height: 30, borderRadius: dark ? 3 : 8, flexShrink: 0,
@@ -573,9 +574,9 @@ export default function PDFMergeSplit() {
                             </div>
                             <div style={{ display: 'flex', gap: 3 }}>
                               <button className="btn-sm" onClick={() => moveMerge(i, -1)} disabled={i === 0}
-                                style={{ opacity: i===0?.3:1, padding: '3px 7px' }}>↑</button>
+                                style={{ opacity: i === 0 ? 0.3 : 1, padding: '3px 7px' }}>↑</button>
                               <button className="btn-sm" onClick={() => moveMerge(i, 1)} disabled={i === mergeFiles.length - 1}
-                                style={{ opacity: i===mergeFiles.length-1?.3:1, padding: '3px 7px' }}>↓</button>
+                                style={{ opacity: i === mergeFiles.length - 1 ? 0.3 : 1, padding: '3px 7px' }}>↓</button>
                               <button className="btn-danger" onClick={() => removeMerge(f.id)}>×</button>
                             </div>
                           </div>

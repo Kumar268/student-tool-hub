@@ -1037,6 +1037,7 @@ Give specific writing guidance: what to argue, what evidence to include, how to 
             </AnimatePresence>
           </div>
         </div>
+        </div>
       </div>
     </>
   );

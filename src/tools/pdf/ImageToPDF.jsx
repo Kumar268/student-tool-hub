@@ -487,8 +487,9 @@ export default function ImageToPDF() {
     <>
       <style>{STYLES}</style>
       <div className={cls}>
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
 
-        {/* TOPBAR */}
+          {/* TOPBAR */}
         <div className="topbar">
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{
@@ -1201,6 +1202,7 @@ export default function ImageToPDF() {
 
             </AnimatePresence>
           </div>
+        </div>
         </div>
       </div>
     </>

@@ -727,5 +727,50 @@ export const tools = [
     icon: 'TrendingUp',
     slug: 'sip-calculator',
     tags: ['finance', 'investment', 'sip', 'compound-interest']
+  },
+  {
+    id: 82,
+    name: 'Date Difference',
+    description: 'Calculate exact days, weeks and months between two dates',
+    category: 'utility',
+    icon: 'CalendarDays',
+    slug: 'date-difference',
+    tags: ['date', 'calculator', 'days', 'time']
+  },
+  {
+    id: 83,
+    name: 'Quadratic Solver',
+    description: 'Solve quadratic equations ax² + bx + c = 0 with step-by-step working',
+    category: 'academic',
+    icon: 'Sigma',
+    slug: 'quadratic-solver',
+    tags: ['quadratic', 'algebra', 'equation', 'roots', 'math']
+  },
+  {
+    id: 84,
+    name: 'Salary Calculator',
+    description: 'Calculate take-home salary after tax deductions for Indian CTC packages',
+    category: 'financial',
+    icon: 'IndianRupee',
+    slug: 'salary-calculator',
+    tags: ['salary', 'tax', 'ctc', 'income', 'finance']
+  },
+  {
+    id: 85,
+    name: 'Scientific Calculator',
+    description: 'Full-featured scientific calculator with trigonometry, logarithms and constants',
+    category: 'academic',
+    icon: 'Calculator',
+    slug: 'scientific-calculator',
+    tags: ['calculator', 'math', 'science', 'trigonometry']
+  },
+  {
+    id: 86,
+    name: 'Typing Speed Test',
+    description: 'Test and improve your typing speed in Words Per Minute (WPM)',
+    category: 'niche',
+    icon: 'Keyboard',
+    slug: 'typing-speed-test',
+    tags: ['typing', 'speed', 'wpm', 'test', 'practice']
   }
 ];

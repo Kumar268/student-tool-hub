@@ -55,10 +55,10 @@ export default ${compName};
 `;
 
       fs.writeFileSync(fullPath, template);
-      console.log(\`Created missing component: \${fullPath}\`);
+      console.log(`Created missing component: ${fullPath}`);
       createdCount++;
     }
   }
 }
 
-console.log(\`Successfully created \${createdCount} missing components.\`);
+console.log(`Successfully created ${createdCount} missing components.`);

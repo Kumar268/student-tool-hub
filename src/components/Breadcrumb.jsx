@@ -17,7 +17,7 @@ import { tools, categories } from '../data/tools';
 const Breadcrumb = ({ isDarkMode }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { toolId, category } = useParams();
+  const { toolId } = useParams();
 
   // Parse route and build breadcrumb items
   const getBreadcrumbItems = () => {

@@ -955,7 +955,7 @@ export default function ScientificCalculator() {
                           </span>
                           <button onClick={()=>{navigator.clipboard?.writeText(result);setCopied(true);setTimeout(()=>setCopied(false),1500);}}
                             style={{fontFamily:"'DM Mono',monospace",fontSize:9,color:copied?'var(--lo)':'var(--tx3)',
-                              background:'transparent',border:'none',cursor:'pointer',padding:'2px 6px',
+                              background:'transparent',cursor:'pointer',padding:'2px 6px',
                               borderRadius:3,border:dk?'1px solid rgba(245,158,11,.1)':'1px solid var(--bdr)'}}>
                             {copied?'✓':'⎘'}
                           </button>

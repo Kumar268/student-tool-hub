@@ -694,7 +694,8 @@ export default function ResumeMaker() {
     <>
       <style>{STYLES}</style>
       <div className={cls}>
-        {dark && <div className="scanline" />}
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {dark && <div className="scanline" />}
 
         {/* TOPBAR */}
         <div className="topbar">
@@ -1219,6 +1220,7 @@ export default function ResumeMaker() {
 
             </AnimatePresence>
           </div>
+        </div>
         </div>
       </div>
     </>

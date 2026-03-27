@@ -353,7 +353,8 @@ Background: ${data.background||''}`;
     <>
       <style>{STYLES}</style>
       <div className={cls} style={{animation:dark?'flicker 8s infinite':'none'}}>
-        {dark&&<div className="scanline"/>}
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {dark&&<div className="scanline"/>}
 
         {/* TOPBAR */}
         <div className="topbar">
@@ -800,6 +801,7 @@ Background: ${data.background||''}`;
 
             </AnimatePresence>
           </div>
+        </div>
         </div>
       </div>
     </>

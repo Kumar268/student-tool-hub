@@ -56,7 +56,8 @@ const QuadraticSolver = ({ isDarkMode }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="w-full bg-gray-50 dark:bg-gray-900">
+      <div className="w-full max-w-7xl mx-auto px-4 py-8 space-y-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -262,6 +263,7 @@ const QuadraticSolver = ({ isDarkMode }) => {
           </p>
         </div>
       </motion.div>
+      </div>
     </div>
   );
 };

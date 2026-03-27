@@ -192,7 +192,7 @@ try {
 
   test(
     'sitemap.xml is valid XML (has urlset)',
-    /\<urlset[\s\>]/.test(sitemapContent),
+    /<urlset[\s>]/i.test(sitemapContent),
     'Must contain <urlset> tag'
   );
 
@@ -253,7 +253,6 @@ test(
   'Clean build directory required'
 );
 
-const distSize = sitemapContent.length + robotsContent.length;
 test(
   'File sizes are reasonable',
   sitemapContent.length > 100 && robotsContent.length > 50,

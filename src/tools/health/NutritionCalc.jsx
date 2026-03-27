@@ -466,8 +466,8 @@ const NutritionTracker = ({ isDarkMode }) => {
                 </div>
 
                 {/* SEO & Educational Content Section */}
-                <div className={`mt-24 pt-12 border-t border-cyan-900/30 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    <div className="max-w-4xl mx-auto space-y-8 prose prose-cyan dark:prose-invert">
+                <div className="w-full bg-gray-50 dark:bg-gray-900">
+                  <div className={`w-full max-w-7xl mx-auto px-4 py-8 space-y-8 prose prose-cyan dark:prose-invert border-t border-cyan-900/30 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center gap-2">
                             <Zap className="w-6 h-6 text-cyan-500" />
                             Optimizing Biomechanical Performance: A Nutrition Guide
@@ -528,6 +528,7 @@ const NutritionTracker = ({ isDarkMode }) => {
                             <p>Keywords: nutrition tracker, calorie counter, macro calculator, diet planner, fitness app, health tech, track calories, daily macros, iron man hud UI design, react nutrition app.</p>
                         </div>
                     </div>
+                  </div>
                 </div>
 
             </div>

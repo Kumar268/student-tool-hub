@@ -413,7 +413,8 @@ Each on a new line. No numbers, no bullets. Just the phrases. Make them varied â
     <>
       <style>{STYLES}</style>
       <div className={cls}>
-        {dark&&<div className="scanline"/>}
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {dark&&<div className="scanline"/>}
 
         {/* TOPBAR */}
         <div className="topbar">

@@ -47,17 +47,6 @@ const isLowEnd = () => {
   return cores <= 2 || mem <= 1;
 };
 
-// ─── PERF: throttle to rAF ───────────────────────────────────────
-function rafThrottle(fn) {
-  let ticking = false;
-  return (...args) => {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(() => { fn(...args); ticking = false; });
-    }
-  };
-}
-
 // ─── Global CSS — GPU-composited animations only ─────────────────
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap&display=swap');
@@ -383,9 +372,6 @@ function Counter({ to, pre = '', suf = '', dur = 1600 }) {
     };
     requestAnimationFrame(step);
   }, [go, to, dur]);
-    };
-    requestAnimationFrame(step);
-  }, [go, to, dur]);
   return <span ref={ref}>{pre}{n}{suf}</span>;
 }
 
@@ -528,7 +514,7 @@ function SideItem({ catId, active, onClick }) {
 }
 
 // ─── Main App ─────────────────────────────────────────────────────
-export default function App({ isDarkMode, onToggleDarkMode }) {
+export default function App() {
   const { categoryId } = useParams();
   const navigate = useNavigate();
   const selectedCategory = categoryId || 'all';

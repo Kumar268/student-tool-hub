@@ -483,7 +483,8 @@ ${data.jobDesc?`Job description excerpt:\n${data.jobDesc}`:''}`;
     <>
       <style>{STYLES}</style>
       <div className={cls}>
-        {dark&&<div className="scanline"/>}
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {dark&&<div className="scanline"/>}
 
         {/* TOPBAR */}
         <div className="topbar">
@@ -988,6 +989,7 @@ ${data.jobDesc?`Job description excerpt:\n${data.jobDesc}`:''}`;
 
             </AnimatePresence>
           </div>
+        </div>
         </div>
       </div>
     </>

@@ -411,7 +411,8 @@ Return exactly 5 subject lines, one per line. No numbers, no bullets.`;
     <>
       <style>{STYLES}</style>
       <div className={cls}>
-        {dark&&<div className="scanline"/>}
+        <div style={{ maxWidth: 1400, margin: '0 auto', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {dark&&<div className="scanline"/>}
 
         {/* TICKER */}
         <div className="ticker-wrap" style={{
@@ -497,7 +498,7 @@ Return exactly 5 subject lines, one per line. No numbers, no bullets.`;
               {INTERNSHIP_TYPES.map(it=>(
                 <button key={it.id} onClick={()=>set('internType',it.id)} style={{
                   width:'100%',display:'flex',alignItems:'center',gap:7,
-                  padding:'5px 8px',marginBottom:3,background:'transparent',cursor:'pointer',
+                  padding:'5px 8px',marginBottom:3,cursor:'pointer',
                   border:data.internType===it.id?'1px solid var(--acc)':(dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'),
                   borderRadius:dark?3:7,
                   background:data.internType===it.id?(dark?'rgba(163,230,53,.06)':'rgba(58,92,0,.04)'):'transparent',
@@ -528,7 +529,7 @@ Return exactly 5 subject lines, one per line. No numbers, no bullets.`;
                 <div className="slbl">Sign-off</div>
                 {SIGN_OFFS.map(s=>(
                   <button key={s} onClick={()=>set('signOff',s)} style={{
-                    width:'100%',padding:'5px 8px',marginBottom:3,background:'transparent',cursor:'pointer',
+                    width:'100%',padding:'5px 8px',marginBottom:3,cursor:'pointer',
                     border:data.signOff===s?'1px solid var(--acc)':(dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'),
                     borderRadius:dark?2:6,textAlign:'left',
                     fontFamily:"'Syne',sans-serif",fontSize:10,
@@ -1012,6 +1013,7 @@ Return exactly 5 subject lines, one per line. No numbers, no bullets.`;
 
             </AnimatePresence>
           </div>
+        </div>
         </div>
       </div>
     </>

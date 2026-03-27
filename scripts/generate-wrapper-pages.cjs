@@ -148,43 +148,6 @@ function slugToName(slug) {
 }
 
 // Generate wrapper page template
-function generateWrapperPageTemplate(componentName, toolName, slug) {
-  return `import React from 'react';
-import ToolPageLayout from '@/components/ToolPageLayout';
-import ${componentName} from '@/tools/**CATEGORY**/${componentName}';
-
-function ${componentName}Extras() {
-  return (
-    <div>
-      <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Related Tips</h3>
-      <ul className="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
-        <li>Explore related tools in this category to streamline your work.</li>
-        <li>Save your results for future reference.</li>
-      </ul>
-    </div>
-  );
-}
-
-export default function ${componentName}Page() {
-  return (
-    <ToolPageLayout
-      title="${toolName}"
-      icon="⚙️"
-      extraFeatures={<${componentName}Extras />}
-      adClient={import.meta.env.VITE_ADSENSE_PUB_ID}
-      adSlots={{
-        video: import.meta.env.VITE_VIDEO_AD_SLOT,
-        top: import.meta.env.VITE_BANNER_AD_SLOT,
-        middle: import.meta.env.VITE_DISPLAY_AD_SLOT,
-        bottom: import.meta.env.VITE_BANNER_AD_SLOT,
-      }}
-    >
-      <${componentName} isDarkMode={false} />
-    </ToolPageLayout>
-  );
-}
-`;
-}
 
 // Create pages directory if it doesn't exist
 if (!fs.existsSync(pagesDir)) {

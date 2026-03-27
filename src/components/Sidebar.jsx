@@ -220,37 +220,43 @@ const Sidebar = ({ selectedCategory, isDarkMode, isOpen, onToggle }) => {
             <NavLink
               to="/"
               end
-              className={({ isActive }) => `group relative flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out ${
-                isActive || selectedCategory === 'all'
-                  ? isDarkMode
-                    ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30 shadow-lg shadow-blue-500/10'
-                    : 'bg-blue-50 text-blue-600 border border-blue-200 shadow-lg shadow-blue-500/10'
-                  : isDarkMode
-                    ? 'text-gray-300 hover:bg-gray-800/50 hover:text-white border border-transparent'
-                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 border border-transparent'
-              }`}
             >
-              {/* Active Indicator */}
-              {((isActive) || selectedCategory === 'all') && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-500 rounded-r-full transition-all duration-300" />
-              )}
-              
-              <div className={`p-1.5 rounded-lg transition-all duration-300 group-hover:scale-110 ${
-                (isActive) || selectedCategory === 'all'
-                  ? 'bg-blue-500/20'
-                  : isDarkMode
-                    ? 'bg-gray-700/50 group-hover:bg-blue-500/20'
-                    : 'bg-gray-100 group-hover:bg-blue-50'
-              }`}>
-                <Home size={18} className={
-                  (isActive) || selectedCategory === 'all'
-                    ? 'text-blue-400'
-                    : isDarkMode
-                      ? 'text-gray-400 group-hover:text-blue-400'
-                      : 'text-gray-500 group-hover:text-blue-500'
-                } />
-              </div>
-              <span className="font-medium">All Tools</span>
+              {({ isActive }) => {
+                const isCurrentActive = isActive || selectedCategory === 'all';
+                return (
+                  <div className={`group relative flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out ${
+                    isCurrentActive
+                      ? isDarkMode
+                        ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30 shadow-lg shadow-blue-500/10'
+                        : 'bg-blue-50 text-blue-600 border border-blue-200 shadow-lg shadow-blue-500/10'
+                      : isDarkMode
+                        ? 'text-gray-300 hover:bg-gray-800/50 hover:text-white border border-transparent'
+                        : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 border border-transparent'
+                  }`}>
+                    {/* Active Indicator */}
+                    {isCurrentActive && (
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-500 rounded-r-full transition-all duration-300" />
+                    )}
+                    
+                    <div className={`p-1.5 rounded-lg transition-all duration-300 group-hover:scale-110 ${
+                      isCurrentActive
+                        ? 'bg-blue-500/20'
+                        : isDarkMode
+                          ? 'bg-gray-700/50 group-hover:bg-blue-500/20'
+                          : 'bg-gray-100 group-hover:bg-blue-50'
+                    }`}>
+                      <Home size={18} className={
+                        isCurrentActive
+                          ? 'text-blue-400'
+                          : isDarkMode
+                            ? 'text-gray-400 group-hover:text-blue-400'
+                            : 'text-gray-500 group-hover:text-blue-500'
+                      } />
+                    </div>
+                    <span className="font-medium">All Tools</span>
+                  </div>
+                );
+              }}
             </NavLink>
 
             {/* Category Links */}
