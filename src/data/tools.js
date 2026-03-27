@@ -711,7 +711,7 @@ export const tools = [
     tags: ['age', 'date', 'calculator']
   },
   {
-    id: 74,
+    id: 80,
     name: 'Password Generator',
     description: 'Generate secure, random passwords with custom parameters',
     category: 'developer',
@@ -720,48 +720,12 @@ export const tools = [
     tags: ['security', 'password', 'generator']
   },
   {
-    id: 75,
+    id: 81,
     name: 'SIP Calculator',
     description: 'Calculate returns on Systematic Investment Plan (SIP)',
     category: 'financial',
     icon: 'TrendingUp',
     slug: 'sip-calculator',
     tags: ['finance', 'investment', 'sip', 'compound-interest']
-  },
-  {
-    id: 76,
-    name: 'Scientific Calculator',
-    description: 'Advanced calculator with trigonometry, logs, and more',
-    category: 'academic',
-    icon: 'Calculator',
-    slug: 'scientific-calculator',
-    tags: ['math', 'science', 'calculator']
-  },
-  {
-    id: 77,
-    name: 'Typing Speed Test',
-    description: 'Test and improve your Words Per Minute (WPM)',
-    category: 'niche',
-    icon: 'Keyboard',
-    slug: 'typing-speed-test',
-    tags: ['typing', 'speed', 'test', 'wpm']
-  },
-  {
-    id: 78,
-    name: 'Date Difference',
-    description: 'Calculate the exact number of days between two dates',
-    category: 'utility',
-    icon: 'CalendarRange',
-    slug: 'date-difference',
-    tags: ['date', 'time', 'calculator']
-  },
-  {
-    id: 79,
-    name: 'Salary Calculator',
-    description: 'Calculate take-home pay after taxes and deductions',
-    category: 'financial',
-    icon: 'Wallet',
-    slug: 'salary-calculator',
-    tags: ['finance', 'salary', 'tax', 'income']
   }
 ];
