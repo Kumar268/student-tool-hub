@@ -12,7 +12,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Quantum sound effects
-const playQuantumBeep = (frequency = 1200) => {
+const playQuantumBeep = (frequency = 1200, onError = null) => {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = ctx.createOscillator();
@@ -26,7 +26,10 @@ const playQuantumBeep = (frequency = 1200) => {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
     osc.start();
     osc.stop(ctx.currentTime + 0.1);
-  } catch (e) { }
+  } catch (e) {
+    console.warn('⚠️ QUANTUM AUDIO CONTEXT ERROR:', e.message);
+    if (onError) onError(e);
+  }
 };
 
 const QUANTUM_STYLES = `
@@ -448,40 +451,55 @@ const QuantumTruthTableGenerator = ({ isDarkMode: initialDarkMode = true }) => {
   const exportCSV = () => {
     if (tableData.rows.length === 0) return;
     
-    const header = [...variables, 'RESULT', 'QUANTUM_STATE'].join(',');
-    const csvRows = tableData.rows.map(r => {
-      return [...variables.map(v => r[v]), r._result, r._quantumState || 'collapsed'].join(',');
-    });
-    
-    const blob = new Blob([[header, ...csvRows].join('\n')], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `quantum-truth-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    
-    setSystemMsg('📊 QUANTUM DATA EXPORTED TO MATRIX');
-    playQuantumBeep(660);
+    try {
+      const header = [...variables, 'RESULT', 'QUANTUM_STATE'].join(',');
+      const csvRows = tableData.rows.map(r => {
+        return [...variables.map(v => r[v]), r._result, r._quantumState || 'collapsed'].join(',');
+      });
+      
+      const blob = new Blob([[header, ...csvRows].join('\n')], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `quantum-truth-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      
+      setSystemMsg('📊 QUANTUM DATA EXPORTED TO MATRIX');
+      playQuantumBeep(660);
+    } catch (e) {
+      console.error('❌ CSV EXPORT FAILED:', e.message);
+      setSystemMsg(`⚠️ EXPORT ERROR: ${e.message}`);
+      playQuantumBeep(220, (err) => console.error('Audio also failed:', err.message));
+    }
   };
 
   const exportJSON = () => {
     if (tableData.rows.length === 0) return;
     
-    const data = {
-      expression,
-      variables,
-      timestamp: new Date().toISOString(),
-      quantumState,
-      energyLevel,
-      rows: tableData.rows
-    };
-    
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `quantum-logic-${Date.now()}.json`;
-    a.click();
+    try {
+      const data = {
+        expression,
+        variables,
+        timestamp: new Date().toISOString(),
+        quantumState,
+        energyLevel,
+        rows: tableData.rows
+      };
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `quantum-logic-${Date.now()}.json`;
+      a.click();
+      
+      setSystemMsg('💾 QUANTUM LOGIC MATRIX SAVED');
+      playQuantumBeep(880);
+    } catch (e) {
+      console.error('❌ JSON EXPORT FAILED:', e.message);
+      setSystemMsg(`⚠️ SAVE ERROR: ${e.message}`);
+      playQuantumBeep(220, (err) => console.error('Audio also failed:', err.message));
+    }
   };
 
   // Add to favorites

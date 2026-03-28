@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 /* ════════════════════════════════════════════════════════════
    STYLES
@@ -16,7 +16,7 @@ html,body{overflow-x:hidden;font-family:'Inter',sans-serif}
 .fade-in{animation:fadeUp .22s ease both}
 
 /* ── NEON ROOT ─────────────────────── */
-.ft{background:#03030d;color:#cdd6ff;min-height:100vh;
+.ft{background:#03030d;color:#cdd6ff;
   background-image:linear-gradient(rgba(0,255,200,.01) 1px,transparent 1px),
     linear-gradient(90deg,rgba(0,255,200,.01) 1px,transparent 1px);
   background-size:30px 30px;animation:gridmove 16s linear infinite}
@@ -97,9 +97,9 @@ html,body{overflow-x:hidden;font-family:'Inter',sans-serif}
 .ft-tag-yellow{background:rgba(255,215,0,.07);border-color:rgba(255,215,0,.22);color:#fbbf24}
 
 /* ── NORMAL ROOT ─────────────────── */
-.nm{background:#080d18;color:#e2e8f8;min-height:100vh}
+.nm{background:#080d18;color:#e2e8f8}
 .nm-bar{height:32px;background:#0e1420;border-bottom:1.5px solid #1a2540;
-  position:sticky;top:0;z-index:300;display:flex;align-items:center;padding:0 10px;gap:6px}
+  position:relative;z-index:300;display:flex;align-items:center;padding:0 10px;gap:6px}
 .nm-logo{display:flex;align-items:center;gap:5px}
 .nm-logo-icon{width:20px;height:20px;border-radius:5px;
   background:linear-gradient(135deg,#059669,#0891b2);
@@ -239,9 +239,8 @@ function parseCompound(s) {
   return atoms;
 }
 
-// GCD and LCM helpers
+// GCD helper
 function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a; }
-function lcm(a, b) { return a / gcd(a, b) * b; }
 function gcdArr(arr) { return arr.reduce((g, v) => gcd(g, Math.abs(v)), 0); }
 
 // Gaussian elimination on rational matrix
@@ -476,10 +475,8 @@ function useKatex() {
 
 function KTeX({ latex, display = false, neon }) {
   if (window.katex) {
-    try {
-      const h = window.katex.renderToString(latex, { displayMode: display, throwOnError: false });
-      return <span dangerouslySetInnerHTML={{ __html: h }} style={{ color: neon ? '#eef2ff' : '#e2e8f8' }} />;
-    } catch (e) {}
+    const h = window.katex.renderToString(latex, { displayMode: display, throwOnError: false });
+    return <span dangerouslySetInnerHTML={{ __html: h }} style={{ color: neon ? '#eef2ff' : '#e2e8f8' }} />;
   }
   return <code style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: display ? 16 : 12, color: neon ? '#00ffb4' : '#34d399' }}>{latex}</code>;
 }
@@ -610,7 +607,6 @@ export default function ChemistryBalancer() {
   const inputRef = useRef();
   const katex = useKatex();
   const neon = mode === 'futuristic';
-  const s = neon;
 
   const result = useMemo(() => balanceEquation(equation), [equation]);
 
@@ -629,35 +625,18 @@ export default function ChemistryBalancer() {
     { id: 'article',  label: 'Learn',       ico: 'book' },
   ];
 
-  // ── topbar colour vars
-  const accent = neon ? '#00ffb4' : '#34d399';
-
   return (
     <>
       <style>{STYLES}</style>
       <AnimatePresence mode="wait">
-        {neon ? (
-          <motion.div key="n" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .22 }}>
-            <div className="ft">
-              <div className="scanline" />
-              <AppShell neon equation={equation} setEquation={setEquation} result={result}
-                showElements={showElements} setShowElements={setShowElements}
-                activeTab={activeTab} setActiveTab={setActiveTab}
-                inputRef={inputRef} insertAt={insertAt} katex={katex}
-                onSwitch={() => setMode('normal')} TABS={TABS} />
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div key="m" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .22 }}>
-            <div className="nm">
-              <AppShell neon={false} equation={equation} setEquation={setEquation} result={result}
-                showElements={showElements} setShowElements={setShowElements}
-                activeTab={activeTab} setActiveTab={setActiveTab}
-                inputRef={inputRef} insertAt={insertAt} katex={katex}
-                onSwitch={() => setMode('futuristic')} TABS={TABS} />
-            </div>
-          </motion.div>
-        )}
+        <div key={neon ? "n" : "m"} className={neon ? "ft" : "nm"}>
+          {neon && <div className="scanline" />}
+          <AppShell neon={neon} equation={equation} setEquation={setEquation} result={result}
+            showElements={showElements} setShowElements={setShowElements}
+            activeTab={activeTab} setActiveTab={setActiveTab}
+            inputRef={inputRef} insertAt={insertAt} katex={katex}
+            onSwitch={() => setMode(neon ? 'normal' : 'futuristic')} TABS={TABS} />
+        </div>
       </AnimatePresence>
     </>
   );
@@ -714,14 +693,14 @@ function AppShell({ neon, equation, setEquation, result, showElements, setShowEl
       </div>
 
       {/* ── BODY ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 272px', minHeight: 'calc(100vh - 68px)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 272px', minHeight: 0 }}>
 
         {/* ── LEFT ── */}
         <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 13 }}>
 
           <AnimatePresence mode="wait">
             {activeTab === 'balancer' && (
-              <motion.div key="bal" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
+              <div key="bal" style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
                 {/* hint */}
                 <div className={s ? 'ft-hint' : 'nm-hint'} style={{ display: 'flex', alignItems: 'flex-start', gap: 7 }}>
                   {I.info(12)}
@@ -751,7 +730,7 @@ function AppShell({ neon, equation, setEquation, result, showElements, setShowEl
 
                   <AnimatePresence>
                     {showElements && (
-                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: 'hidden', marginTop: 8 }}>
+                      <div style={{ overflow: 'hidden', marginTop: 8 }}>
                         <div className={s ? 'ft-card' : 'nm-card'} style={{ padding: 10 }}>
                           <div style={{ fontSize: 8.5, fontWeight: 700, color: s ? 'rgba(0,255,180,.4)' : '#34d399', letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 8 }}>
                             Click element to insert · Numbers and parentheses: type manually
@@ -777,7 +756,7 @@ function AppShell({ neon, equation, setEquation, result, showElements, setShowEl
                             ))}
                           </div>
                         </div>
-                      </motion.div>
+                      </div>
                     )}
                   </AnimatePresence>
                 </div>
@@ -791,7 +770,7 @@ function AppShell({ neon, equation, setEquation, result, showElements, setShowEl
 
                 {/* RESULT */}
                 {!result.error && result.balanced && (
-                  <motion.div key={result.balanced} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} className="fade-in">
+                  <div key={result.balanced} className="fade-in">
                     {/* Balanced equation box */}
                     <div className={s ? 'ft-result-box' : 'nm-result-box'}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
@@ -878,25 +857,25 @@ function AppShell({ neon, equation, setEquation, result, showElements, setShowEl
                       </div>
                       <Steps steps={result.steps} neon={s} katex={katex} />
                     </div>
-                  </motion.div>
+                  </div>
                 )}
 
                 <div className={s ? 'ft-ad' : 'nm-ad'} style={{ height: 90, marginTop: 4 }}>
                   <span>Advertisement</span>
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {activeTab === 'guide' && (
-              <motion.div key="guide" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <div key="guide">
                 <HowToUse neon={s} />
-              </motion.div>
+              </div>
             )}
 
             {activeTab === 'article' && (
-              <motion.div key="art" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <div key="art">
                 <Article neon={s} katex={katex} />
-              </motion.div>
+              </div>
             )}
           </AnimatePresence>
         </div>

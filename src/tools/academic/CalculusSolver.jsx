@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+// eslint-disable-next-line no-unused-vars
+import { AnimatePresence, motion } from 'framer-motion';
 import * as math from 'mathjs';
 
 /* ══════════════════════════════════════════════════
@@ -19,10 +20,7 @@ const STYLES = `
   /* NEON THEME */
   .n {--c1:#00d4ff;--c2:#7b2fff;--c3:#ff6b35;--ok:#00e676;--bg:#060612;--s1:#0d0d1f;--s2:#12122a;
     --txt:#eef2ff;--sub:#6b7bb8;--bdr:#1c1c3a;--accent:#00d4ff;
-    font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;
-    background-image:linear-gradient(rgba(0,212,255,.012) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(0,212,255,.012) 1px,transparent 1px);
-    background-size:32px 32px;animation:gridmove 16s linear infinite}
+    font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--txt)}
 
   .n .panel{background:linear-gradient(145deg,rgba(13,13,31,.97),rgba(9,9,22,1));
     border:1px solid var(--bdr);border-radius:6px;position:relative;overflow:hidden}
@@ -73,7 +71,7 @@ const STYLES = `
   .n .lbl{font-size:9px;font-weight:700;color:rgba(0,212,255,.5);letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px}
 
   /* NORMAL THEME */
-  .m {font-family:'Space Grotesk',sans-serif;background:#f0f4ff;color:#1e2448;min-height:100vh}
+  .m {font-family:'Space Grotesk',sans-serif;background:#f0f4ff;color:#1e2448}
   .m .panel{background:#fff;border:1.5px solid #dde3f5;border-radius:10px;
     box-shadow:0 2px 12px rgba(99,102,241,.06)}
   .m .btn-primary{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;
@@ -163,7 +161,7 @@ const KM = { 'π': 'pi', 'e': 'e', 'i': 'i', '∞': 'Infinity', 'ln(': 'log(' };
 ══════════════════════════════════════════════ */
 function ordStr(n) { return ['', '1st', '2nd', '3rd', '4th', '5th'][n] || n + 'th'; }
 function fact(n) { if (n <= 1) return 1; return n * fact(n - 1); }
-function safeTeX(s) { try { return math.parse(s).toTex(); } catch (e) { return String(s); } }
+function safeTeX(s) { try { return math.parse(s).toTex(); } catch { return String(s); } }
 
 function solveDeriv(expr, v, order) {
   let cur = expr; const steps = [];
@@ -233,7 +231,9 @@ function solveLimit(expr, v, val, dir) {
       steps.push({ t: 'Answer', d: 'Limit found directly', l: `\\lim_{${v}\\to ${val}} ${safeTeX(expr)} = ${r}`, last: true });
       return { result: r, steps };
     }
-  } catch (e) { }
+  } catch {
+    // Ignore evaluation errors
+  }
   const eps = 1e-9; const L = f.evaluate({ [v]: a - eps }); const R = f.evaluate({ [v]: a + eps });
   steps.push({ t: 'Indeterminate', d: 'Using numerical approach', l: `\\text{Direct substitution fails}` });
   let result;
@@ -254,7 +254,9 @@ function solveTaylor(expr, v, center, numT) {
       const fa = math.compile(cur).evaluate({ [v]: a }); const c = fa / fact(n);
       if (isFinite(c) && !isNaN(c)) coeffs.push({ n, c });
       if (n < numT - 1) cur = math.simplify(math.derivative(cur, v)).toString();
-    } catch (e) { break; }
+    } catch {
+      break;
+    }
   }
   const tl = coeffs.map(({ n, c }) => {
     if (Math.abs(c) < 1e-10) return null;
@@ -281,7 +283,9 @@ function solveODE(odeExpr, v, y0, x0, xEnd) {
       x += h;
       xs.push(+x.toFixed(4));
       ys.push(+y.toFixed(6));
-    } catch (e) { break; }
+    } catch {
+      break;
+    }
   }
   steps.push({ t: 'RK4 Method', d: `Step h=${h.toFixed(4)}`, l: `y_{n+1}=y_n+\\frac{h}{6}(k_1+2k_2+2k_3+k_4)` });
   steps.push({ t: 'Answer', d: `y(${xEnd}) ≈ ${ys[ys.length - 1].toFixed(5)}`, l: `y(${xEnd})\\approx ${ys[ys.length - 1].toFixed(5)}`, last: true });
@@ -307,7 +311,7 @@ function solveMatrix(rows) {
   for (let i = n - 1; i >= 0; i--) { x[i] = aug[i][n]; for (let j = i + 1; j < n; j++) x[i] -= aug[i][j] * x[j]; x[i] /= aug[i][i]; }
   steps.push({ t: 'Row Echelon', d: 'After elimination', l: `\\begin{bmatrix}${aug.map(r => r.map(v => +v.toFixed(2)).join('&')).join('\\\\')}\\end{bmatrix}` });
   steps.push({ t: 'Answer', d: 'Back substitution', l: x.map((v, i) => `x_{${i + 1}}=${v.toFixed(4)}`).join(',\\;'), last: true });
-  let det = null; try { det = detM(A); } catch (e) { }
+  let det = null; try { det = detM(A); } catch { }
   return { result: x.map((v, i) => `x${i + 1}=${v.toFixed(4)}`).join(', ') + (det != null ? ` | det=${det.toFixed(4)}` : ''), x, det, steps };
 }
 
@@ -382,8 +386,16 @@ function Graph3D({ expr, variable, xRange = [-5, 5], neon, extraExprs = [] }) {
         const verts = []; const cols = []; const idx = []; const zv = [];
         for (let iy = 0; iy <= GRID; iy++) for (let ix = 0; ix <= GRID; ix++) {
           const x = xn + (xx - xn) * ix / GRID; const y = xn + (xx - xn) * iy / GRID;
-          let z = 0; try { z = f.evaluate({ [v]: x, x, y, __Y__: y }); } catch (e) { }
-          zv.push(isFinite(z) && Math.abs(z) < 1e6 ? z : 0);
+          let z = 0;
+          try {
+            z = f.evaluate({ [v]: x, x, y, __Y__: y });
+          } catch {
+            z = 0;
+          }
+          if (!isFinite(z) || Math.abs(z) >= 1e6) {
+            z = 0;
+          }
+          zv.push(z);
         }
         const zmn = Math.min(...zv); const zmx = Math.max(...zv); const zr = Math.max(zmx - zmn, 1e-4);
         for (let iy = 0; iy <= GRID; iy++) for (let ix = 0; ix <= GRID; ix++) {
@@ -397,7 +409,9 @@ function Graph3D({ expr, variable, xRange = [-5, 5], neon, extraExprs = [] }) {
           const a = iy * (GRID + 1) + ix; idx.push(a, a + 1, a + GRID + 1, a + 1, a + GRID + 2, a + GRID + 1);
         }
         return { v: new Float32Array(verts), c: new Float32Array(cols), i: new Uint16Array(idx), n: idx.length };
-      } catch (e) { return null; }
+      } catch {
+        return null;
+      }
     }
 
     const gm = allE.map(e => buildMesh(e, variable)).filter(Boolean).map(m => {
@@ -600,7 +614,7 @@ function Steps({ steps, neon, katex }) {
     try {
       const h = window.katex.renderToString(l, { throwOnError: false, displayMode: false });
       return <span dangerouslySetInnerHTML={{ __html: h }} style={{ color: neon ? '#eef2ff' : '#1e2448' }} />;
-    } catch (e) {
+    } catch {
       return <code>{l}</code>;
     }
   }
@@ -633,7 +647,7 @@ function Steps({ steps, neon, katex }) {
 /* ══════════════════════════════════════════════
    COPY BTN
 ══════════════════════════════════════════════ */
-function CopyBtn({ text, neon }) {
+function CopyBtn({ text }) {
   const [ok, setOk] = useState(false);
   return (
     <button onClick={() => { navigator.clipboard.writeText(text).catch(() => { }); setOk(true); setTimeout(() => setOk(false), 1500); }}
@@ -647,14 +661,14 @@ function CopyBtn({ text, neon }) {
    RESULT BOX
 ══════════════════════════════════════════════ */
 function ResultBox({ result, katex, neon }) {
-  let l = ''; try { l = math.parse(result).toTex(); } catch (e) { l = result || '—'; }
+  let l = ''; try { l = math.parse(result).toTex(); } catch { l = result || '—'; }
   
   function rTeX(lt) {
     if (!katex || !window.katex) return <code style={{ fontFamily: 'Fira Code,monospace', color: neon ? '#00d4ff' : '#5b21b6', fontSize: 14 }}>{lt}</code>;
     try {
       const h = window.katex.renderToString(lt, { displayMode: true, throwOnError: false });
       return <span dangerouslySetInnerHTML={{ __html: h }} style={{ color: neon ? '#eef2ff' : '#1e2448' }} />;
-    } catch (e) {
+    } catch {
       return <code>{lt}</code>;
     }
   }
@@ -841,13 +855,13 @@ function useSolver() {
           const y = f.evaluate({ [v]: x }); 
           xs.push(x); 
           ys.push(isFinite(y) ? y : NaN); 
-        } catch (_) { 
+        } catch { 
           xs.push(x); 
           ys.push(NaN); 
         }
       }
       return { xs, ys, label: e.slice(0, 18) };
-    } catch (e) { 
+    } catch { 
       return null; 
     }
   }
@@ -943,7 +957,7 @@ export default function CalculusSolver() {
         background: neon ? 'rgba(6,6,18,.97)' : '#fff',
         borderBottom: neon ? '1px solid #1c1c3a' : '1px solid #dde3f5',
         padding: '0 16px', display: 'flex', alignItems: 'center', gap: 10, height: 44,
-        position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(12px)',
+        position: 'relative', zIndex: 50,
         boxShadow: neon ? '0 1px 0 #1c1c3a' : '0 1px 12px rgba(0,0,0,.06)'
       }}>
         {/* Logo — minimal */}
@@ -1020,7 +1034,7 @@ export default function CalculusSolver() {
       </div>
 
       {/* BODY — 2-column */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 276px', minHeight: 'calc(100vh - 130px)', gap: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 276px', minHeight: 0, gap: 0 }}>
 
         {/* LEFT: solver area */}
         <div style={{ padding: '14px 14px 14px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>

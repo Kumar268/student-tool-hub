@@ -26,7 +26,7 @@ html,body{overflow-x:hidden;font-family:'Inter',sans-serif}
   --acc:#00f0ff;--acc2:#b000e0;--acc3:#f59e0b;
   --ok:#22c55e;--err:#f43f5e;
   --txt:#f0f4ff;--txt2:#a8b8d8;--txt3:#5a6a96;
-  min-height:100vh;background:var(--bg);color:var(--txt);
+  background:var(--bg);color:var(--txt);
   background-image:linear-gradient(rgba(0,240,255,.011) 1px,transparent 1px),
     linear-gradient(90deg,rgba(0,240,255,.011) 1px,transparent 1px);
   background-size:40px 40px;animation:gridmove 14s linear infinite
@@ -109,7 +109,7 @@ html,body{overflow-x:hidden;font-family:'Inter',sans-serif}
   --acc:#4f46e5;--acc2:#7c3aed;--acc3:#d97706;
   --ok:#16a34a;--err:#dc2626;
   --txt:#111827;--txt2:#374151;--txt3:#6b7280;
-  min-height:100vh;background:var(--bg);color:var(--txt)
+  background:var(--bg);color:var(--txt)
 }
 .light .panel{background:var(--surface);border:1.5px solid var(--bdr);
   border-radius:12px;box-shadow:0 2px 14px rgba(79,70,229,.07)}
@@ -177,7 +177,7 @@ html,body{overflow-x:hidden;font-family:'Inter',sans-serif}
   color:var(--acc);margin-bottom:6px}
 
 /* shared */
-.topbar{height:38px;position:sticky;top:0;z-index:300;
+.topbar{height:38px;position:relative;z-index:300;
   display:flex;align-items:center;padding:0 12px;gap:7px;backdrop-filter:blur(14px)}
 .dark .topbar{background:rgba(2,2,16,.97);border-bottom:1px solid var(--bdr)}
 .light .topbar{background:rgba(255,255,255,.97);border-bottom:1.5px solid var(--bdr);
@@ -722,7 +722,7 @@ export default function IntegralCalculator() {
         </div>
 
         {/* BODY */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 276px', minHeight: 'calc(100vh - 80px)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 276px', minHeight: 0 }}>
 
           {/* LEFT */}
           <div style={{ padding: '15px 17px', display: 'flex', flexDirection: 'column', gap: 13 }}>

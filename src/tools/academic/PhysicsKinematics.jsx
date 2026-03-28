@@ -25,7 +25,7 @@ html,body{overflow-x:hidden;font-family:'Inter',sans-serif}
   --acc:#00f0ff;--acc2:#b000e0;--acc3:#f59e0b;
   --ok:#22c55e;--err:#f43f5e;
   --txt:#f0f4ff;--txt2:#a8b8d8;--txt3:#556080;
-  min-height:100vh;background:var(--bg);color:var(--txt);
+  background:var(--bg);color:var(--txt);
   background-image:linear-gradient(rgba(0,240,255,.01) 1px,transparent 1px),
     linear-gradient(90deg,rgba(0,240,255,.01) 1px,transparent 1px);
   background-size:40px 40px;animation:gridmove 14s linear infinite
@@ -132,7 +132,7 @@ html,body{overflow-x:hidden;font-family:'Inter',sans-serif}
   border-radius:10px;padding:12px 14px;box-shadow:0 4px 16px rgba(79,70,229,.12)}
 
 /* shared */
-.topbar{height:38px;position:sticky;top:0;z-index:300;display:flex;align-items:center;padding:0 12px;gap:7px;backdrop-filter:blur(14px)}
+.topbar{height:38px;position:relative;z-index:300;display:flex;align-items:center;padding:0 12px;gap:7px;backdrop-filter:blur(14px)}
 .dark .topbar{background:rgba(2,2,16,.97);border-bottom:1px solid var(--bdr)}
 .light .topbar{background:rgba(255,255,255,.97);border-bottom:1.5px solid var(--bdr);box-shadow:0 1px 8px rgba(79,70,229,.07)}
 .prose p{font-size:13.5px;line-height:1.78;margin-bottom:12px;color:inherit}

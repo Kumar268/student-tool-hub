@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart3, LineChart, TrendingUp, Calculator, Copy, Check,
   ChevronDown, ChevronUp, Info, Zap, Target, Activity,
-  RefreshCw, Download, Hash, BarChart, Layers, Sigma
+  RefreshCw, Download, Hash, BarChart, Layers, Sigma,
+  Maximize2, Minimize2
 } from 'lucide-react';
 import {
   Chart as ChartJS, CategoryScale, LinearScale, BarElement,

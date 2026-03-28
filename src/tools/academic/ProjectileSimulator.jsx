@@ -610,6 +610,7 @@ export default function ProjectileSimulator(){
   const [curTime,setCurTime]=useState(0);
   const [expanded,setExpanded]=useState(false);
   const timeRef=useRef(0);
+  const idCounterRef=useRef(0); // ✅ Stable ID generator
 
   const phys=useMemo(()=>computePhysics(velocity,angle,height,gravity,airResistance,dragCoeff),[velocity,angle,height,gravity,airResistance,dragCoeff]);
 
@@ -626,7 +627,9 @@ export default function ProjectileSimulator(){
   const saveScenario=()=>{
     if(!phys) return;
     const name=saveName.trim()||`Scenario ${savedScenarios.length+1}`;
-    setSavedScenarios(prev=>[...prev,{id:Date.now(),name,v:velocity,a:angle,h:height,g:gravity,phys}]);
+    // ✅ Use stable ref counter instead of Date.now()
+    const id=++idCounterRef.current;
+    setSavedScenarios(prev=>[...prev,{id,name,v:velocity,a:angle,h:height,g:gravity,phys}]);
     setSaveName('');
   };
 

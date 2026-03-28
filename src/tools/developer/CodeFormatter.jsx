@@ -312,6 +312,7 @@ export default function CodeFormatter() {
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
   const [copied, setCopied] = useState(false);
+  const [copyErr, setCopyErr] = useState('');
   const [tab, setTab] = useState('format');
   const [minified, setMinified] = useState('');
   const [minErr, setMinErr] = useState('');
@@ -377,8 +378,16 @@ export default function CodeFormatter() {
   }, [compareA, compareB]);
 
   const copy = (text) => {
-    try { navigator.clipboard.writeText(text); } catch {}
-    setCopied(true); setTimeout(() => setCopied(false), 1400);
+    setCopyErr('');
+    try {
+      navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1400);
+    } catch (e) {
+      console.error('❌ Clipboard copy failed:', e.message);
+      setCopyErr(`Copy failed: ${e.message}`);
+      setTimeout(() => setCopyErr(''), 2000);
+    }
   };
 
   const lineCount = input.split('\n').length;
@@ -551,8 +560,8 @@ export default function CodeFormatter() {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
                         <div className="lbl" style={{ margin: 0 }}>Formatted output</div>
                         <button className="btn-g" onClick={() => copy(output)} disabled={!output}
-                          style={{ fontSize: 9, borderColor: copied ? 'var(--acc)' : '', color: copied ? 'var(--acc)' : '' }}>
-                          {copied ? '✓ Copied' : '⎘ Copy'}
+                          style={{ fontSize: 9, borderColor: copyErr ? 'var(--err)' : (copied ? 'var(--acc)' : ''), color: copyErr ? 'var(--err)' : (copied ? 'var(--acc)' : '') }}>
+                          {copyErr ? '✗ ' + copyErr.split(':')[1]?.trim() : (copied ? '✓ Copied' : '⎘ Copy')}
                         </button>
                       </div>
                       <div className="code-wrap">
