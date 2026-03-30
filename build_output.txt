@@ -1,0 +1,85 @@
+﻿[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 61 modules transformed.
+node.exe : [31mΓ£ù[39m 
+Build failed in 2.36s
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+    + CategoryInfo          
+    : NotSpecified: ([31m  
+  Γ£ù[39m Build failed i   
+ n 2.36s:String) [], Rem    
+oteException
+    + FullyQualifiedErrorId 
+    : NativeCommandError
+ 
+[31merror during build:
+[31m[vite:esbuild] 
+Transform failed with 1 
+error:
+C:/Users/Aman kumar/OneDrive
+/Pictures/main/student/Stude
+ntToolHub/src/tools/health/N
+utritionCalc.jsx:536:14: 
+ERROR: Unterminated regular 
+expression[31m
+file: [36mC:/Users/Aman kum
+ar/OneDrive/Pictures/main/st
+udent/StudentToolHub/src/too
+ls/health/NutritionCalc.jsx:
+536:14[31m
+[33m
+[33mUnterminated regular 
+expression[33m
+534 |              </div>
+535 |  
+536 |          </div>
+    |                ^
+537 |      );
+538 |  };
+[31m
+    at failureErrorWithLog 
+(C:\Users\Aman kumar\OneDriv
+e\Pictures\main\student\Stud
+entToolHub\node_modules\esbu
+ild\lib\main.js:1467:15)
+    at C:\Users\Aman kumar\O
+neDrive\Pictures\main\studen
+t\StudentToolHub\node_module
+s\esbuild\lib\main.js:736:50
+    at responseCallbacks.<co
+mputed> (C:\Users\Aman kumar
+\OneDrive\Pictures\main\stud
+ent\StudentToolHub\node_modu
+les\esbuild\lib\main.js:603:
+9)
+    at handleIncomingPacket 
+(C:\Users\Aman kumar\OneDriv
+e\Pictures\main\student\Stud
+entToolHub\node_modules\esbu
+ild\lib\main.js:658:12)
+    at 
+Socket.readFromStdout 
+(C:\Users\Aman kumar\OneDriv
+e\Pictures\main\student\Stud
+entToolHub\node_modules\esbu
+ild\lib\main.js:581:7)
+    at Socket.emit 
+(node:events:508:28)
+    at addChunk (node:intern
+al/streams/readable:559:12)
+    at readableAddChunkPushB
+yteMode (node:internal/strea
+ms/readable:510:3)
+    at Readable.push (node:i
+nternal/streams/readable:390
+:5)
+    at Pipe.onStreamRead (no
+de:internal/stream_base_comm
+ons:189:23)[39m

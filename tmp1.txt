@@ -1,0 +1,5 @@
+﻿1: import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+2: import { motion, AnimatePresence } from 'framer-motion';
+3: import {
+4:   BarChart3, LineChart, TrendingUp, Calculator, Copy, Check,
+5:   ChevronDown, ChevronUp, Info, Zap, Target, Activity,

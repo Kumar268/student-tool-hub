@@ -1,0 +1,16 @@
+﻿=== src/tools/academic/BasicStats.jsx (lines 1-15) ===
+1: import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+2: import { motion, AnimatePresence } from 'framer-motion';
+3: import {
+4:   BarChart3, LineChart, TrendingUp, Calculator, Copy, Check,
+5:   ChevronDown, ChevronUp, Info, Zap, Target, Activity,
+6:   RefreshCw, Download, Hash, BarChart, Layers, Sigma,
+7:   Maximize2, Minimize2
+8: } from 'lucide-react';
+9: import {
+10:   Chart as ChartJS, CategoryScale, LinearScale, BarElement,
+11:   PointElement, LineElement, Title, Tooltip, Legend, Filler, ArcElement
+12: } from 'chart.js';
+13: import { Bar, Line, Scatter } from 'react-chartjs-2';
+14: 
+15: ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement,

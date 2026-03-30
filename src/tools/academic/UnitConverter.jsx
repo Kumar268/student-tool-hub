@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { Calculator, ArrowRight, RefreshCw, BookOpen } from 'lucide-react';
-import { motion } from 'framer-motion';
 import SolutionStep from '../../components/SolutionStep';
 import { BlockMath } from 'react-katex';
 

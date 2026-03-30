@@ -142,9 +142,6 @@ const AppRouter = () => {
     return saved !== null ? saved === 'true' : true;
   });
 
-  // ✅ useAdSense called at component root level (top-level hook)
-  useAdSense();
-
   useEffect(() => {
     initGA();
     if (isDarkMode) {
@@ -247,4 +244,11 @@ const AppRouter = () => {
   );
 };
 
-export default AppRouter;
+
+// ─── AppWrapper: calls useAdSense at top level, then renders AppRouter ───────
+const AppWrapper = () => {
+  useAdSense();
+  return <AppRouter />;
+};
+
+export default AppWrapper;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion as Motion } from 'framer-motion';
 import { Heart, Target, Zap, Users, Code, BookOpen, Coffee } from 'lucide-react';
 
 const About = ({ isDarkMode }) => {
