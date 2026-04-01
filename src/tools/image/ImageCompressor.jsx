@@ -318,7 +318,7 @@ export default function App() {
     const img = new Image();
     img.onload = () => { setDims({ w: img.naturalWidth, h: img.naturalHeight }); runEst(f, quality); };
     img.src = url;
-  }, [origUrl, quality, clearOut, runEst]); // eslint-disable-line
+  }, [origUrl, quality, clearOut, runEst]);
 
   const onQ = (q) => { setQuality(q); clearOut(); if (file) runEst(file, q); };
   const onFmt = (m) => { setFmt(m); clearOut(); };

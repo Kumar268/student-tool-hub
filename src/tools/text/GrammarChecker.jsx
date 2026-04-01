@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo, useCallback, useEffect } from 'react';
+import React, { useState, useRef, memo, useCallback } from 'react';
 import { 
   Sparkles, Copy, BookOpen, Zap, Wand2, Brain,
   AlertCircle, CheckCircle, XCircle, TrendingUp, 
@@ -23,7 +23,7 @@ const FuturisticGrammarChecker = ({ isDarkMode, copyResult, showToast }) => {
     readability: 0
   });
   const [suggestions, setSuggestions] = useState([]);
-  const [selectedIssue, setSelectedIssue] = useState(null);
+  const [, setSelectedIssue] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [filterSeverity, setFilterSeverity] = useState('all');
@@ -33,7 +33,7 @@ const FuturisticGrammarChecker = ({ isDarkMode, copyResult, showToast }) => {
   const [realTimeScore, setRealTimeScore] = useState(100);
   
   const textareaRef = useRef(null);
-  const canvasRef = useRef(null);
+  const _canvasRef = useRef(null);
 
   // Comprehensive grammar and style rules
   const grammarRules = {

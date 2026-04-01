@@ -247,12 +247,15 @@ function playNote(midiNote, duration=0.65, type='triangle', vol=0.18) {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+duration);
     osc.connect(gain); gain.connect(ctx.destination);
     osc.start(); osc.stop(ctx.currentTime+duration);
-  } catch {}
+  } catch (error) {
+    console.error(error);
+  }
 }
 function playChord(midiNotes, stagger=55) {
   midiNotes.forEach((n,i)=>setTimeout(()=>playNote(n,1.3),i*stagger));
 }
 function playMetClick(accent=false) {
+  // Global function for one-off plays if needed
   try {
     const ctx = getAudio();
     const osc = ctx.createOscillator();
@@ -263,7 +266,9 @@ function playMetClick(accent=false) {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.04);
     osc.connect(gain); gain.connect(ctx.destination);
     osc.start(); osc.stop(ctx.currentTime+0.05);
-  } catch {}
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 const TABS = [
@@ -323,6 +328,34 @@ const Piano = ({highlighted, dark, playNote})=>{
   );
 };
 
+/* ─── SUB-COMPONENTS ─────────────────────────────────────────── */
+const SC = ({lbl,val,sub,col,span}) => (
+  <div className="scard" style={span?{gridColumn:`span ${span}`}:{}}>
+    <div style={{fontFamily:"'DM Mono',monospace",fontSize:8,letterSpacing:'.16em',textTransform:'uppercase',color:'var(--tx3)'}}>{lbl}</div>
+    <div style={{fontFamily:"'Syne',sans-serif",fontWeight:900,fontSize:22,color:col||'var(--acc)',lineHeight:1.1,letterSpacing:'-.02em'}}>{val}</div>
+    {sub&&<div style={{fontFamily:"'DM Mono',monospace",fontSize:9.5,color:'var(--tx2)'}}>{sub}</div>}
+  </div>
+);
+
+/* Animated birthday ring */
+const BirthdayRing = ({pct, days, size=170}) => {
+  const r=size/2-10,c=Math.PI*2*r,off=c-(pct/100)*c;
+  return (
+    <div style={{position:'relative',width:size,height:size,margin:'0 auto'}}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{transform:'rotate(-90deg)'}}>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="var(--s3)" strokeWidth="8"/>
+        <Motion.circle cx={size/2} cy={size/2} r={r} fill="none" stroke="var(--acc)" strokeWidth="8"
+          strokeDasharray={c} initial={{strokeDashoffset:c}} animate={{strokeDashoffset:off}}
+          transition={{duration:1.5,ease:"easeOut"}} strokeLinecap="round"/>
+      </svg>
+      <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:28,fontWeight:900,color:'var(--tx)'}}>{pct}%</div>
+        <div style={{fontFamily:"'DM Mono',monospace",fontSize:9,color:'var(--tx2)',marginTop:-2}}>{days}d left</div>
+      </div>
+    </div>
+  );
+};
+
 export default function MusicTheoryCalc({isDarkMode:ext}={}) {
   const [dark, setDark] = useState(ext!==undefined?ext:true);
   const cls = dark?'dk':'lt';
@@ -338,13 +371,12 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
 
   /* BPM state */
   const [bpm,          setBpm]         = useState(120);
-  const [_tapTimes,    setTapTimes]    = useState([]);
+  const [,    setTapTimes]    = useState([]);
   const [tapFlash,     setTapFlash]    = useState(false);
   const [metroOn,      setMetroOn]     = useState(false);
   const [metroBeat,    setMetroBeat]   = useState(0);
   const [metroSig,     setMetroSig]    = useState(4);
   const metroRef = useRef(null);
-  const _beatRef  = useRef(0);
 
   /* Transpose state */
   const [trpInput,  setTrpInput]  = useState('C  E  G  Am  F');
@@ -354,7 +386,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
   const [trpSemi,   setTrpSemi]   = useState(0);
 
   /* Ear training state */
-  const [earPhase,     setEarPhase]     = useState('idle'); // idle | playing | answered
+  const [earPhase,     setPhase]        = useState('idle'); // idle | playing | answered
   const [earInterval,  setEarInterval]  = useState(null);
   const [earGuess,     setEarGuess]     = useState(null);
   const [earScore,     setEarScore]     = useState({correct:0,total:0});
@@ -362,7 +394,6 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
 
   /* Nashville state */
   const [nashKey,  setNashKey]  = useState('C');
-  const [_nashMode, _setNashMode] = useState('major');
 
   /* ── derived ── */
   const scaleData  = SCALES[scaleType];
@@ -387,6 +418,20 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
     return new Set();
   },[tab,scaleNotes,chordNotes,note1,note2]);
 
+  const playMetClick = useCallback((accent=false) => {
+    try {
+      const ctx = getAudio();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = accent ? 1200 : 900;
+      gain.gain.setValueAtTime(accent ? 0.22 : 0.13, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.04);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime+0.05);
+    } catch {}
+  }, []);
+
   /* ── metronome ── */
   useEffect(()=>{
     if(metroOn){
@@ -403,7 +448,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
       clearInterval(metroRef.current);
     }
     return ()=>clearInterval(metroRef.current);
-  },[metroOn,bpm,metroSig]);
+  },[metroOn,bpm,metroSig,playMetClick]);
 
   /* ── tap tempo ── */
   const handleTap = useCallback(()=>{
@@ -449,7 +494,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
     const iv = EAR_INTERVALS[Math.floor(Math.random()*EAR_INTERVALS.length)];
     setEarInterval(iv);
     setEarGuess(null);
-    setEarPhase('playing');
+    setPhase('playing');
     const root = 60;
     const upper = root + iv.semitones;
     if(earDirection==='ascending'){
@@ -475,7 +520,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
 
   const guessEar = useCallback((guess)=>{
     setEarGuess(guess);
-    setEarPhase('answered');
+    setPhase('answered');
     setEarScore(s=>({
       correct: s.correct+(guess.semitones===earInterval.semitones?1:0),
       total: s.total+1,
@@ -685,320 +730,320 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
 
             <AnimatePresence mode="wait">
 
-              {/* ═══ SCALES ═══ */}
-              {tab==='scale'&&(
-                <Motion.div key="sc" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
-                  <div className="panel" style={{padding:'18px 20px'}}>
-                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
-                      <div style={{display:'flex',alignItems:'center',gap:9}}>
-                        <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,border:dark?'1px solid rgba(20,255,180,.25)':'1.5px solid rgba(13,51,32,.2)',background:dark?'rgba(20,255,180,.06)':'rgba(13,51,32,.05)'}}>🎼</div>
-                        <div style={{fontFamily:"'Fraunces',serif",fontSize:16,fontWeight:700,color:'var(--tx)'}}>Scale builder</div>
-                      </div>
-                      <button onClick={playScale} style={playBtnStyle()}
-                        onMouseEnter={e=>e.currentTarget.style.background=dark?'rgba(20,255,180,.08)':'rgba(13,51,32,.06)'}
-                        onMouseLeave={e=>e.currentTarget.style.background='transparent'}>▶ play scale</button>
-                    </div>
-                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:18}}>
-                      <div><label className="lbl">Root note</label><select className="fi" value={rootNote} onChange={e=>setRootNote(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
-                      <div><label className="lbl">Scale type</label><select className="fi" value={scaleType} onChange={e=>setScaleType(e.target.value)}>{Object.keys(SCALES).map(s=><option key={s}>{s}</option>)}</select></div>
-                    </div>
-                    <AnimatePresence mode="wait">
-                      <Motion.div key={rootNote+scaleType} initial={{opacity:0}} animate={{opacity:1}}
-                        style={{display:'flex',flexWrap:'wrap',gap:8,marginBottom:14}}>
-                        {scaleNotes.map((note,i)=>(
-                          <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
-                            <div className={`note-pill${i===0?' root':''}`} onClick={()=>playNote(NOTES.indexOf(note)+60)} style={{animationDelay:`${i*40}ms`}}>{note}</div>
-                            <span style={{fontFamily:"'Fira Code',monospace",fontSize:8,color:'var(--txm)'}}>{scaleData.degrees[i]||''}</span>
-                          </div>
-                        ))}
-                      </Motion.div>
-                    </AnimatePresence>
-                    <div style={{display:'flex',gap:4,marginBottom:14,flexWrap:'wrap'}}>
-                      {scaleData.intervals.map((iv,i)=>{
-                        const next=scaleData.intervals[i+1]??12;
-                        const step=next-iv;
-                        return <div key={i} style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--acc)',padding:'2px 7px',borderRadius:2,background:dark?'rgba(20,255,180,.07)':'rgba(13,51,32,.06)'}}>{step===2?'W':step===1?'H':'W+H'}</div>;
-                      })}
-                    </div>
-                    <Piano highlighted={activeNotes} dark={dark} playNote={playNote}/>
-                    <div style={{marginTop:14,fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--tx2)',padding:'9px 13px',borderRadius:dark?3:7,border:dark?'1px solid rgba(20,255,180,.1)':'1.5px solid var(--bdr)',background:dark?'rgba(0,0,0,.4)':'rgba(245,251,248,.9)'}}>
-                      {rootNote} {scaleType}: {scaleNotes.join(' – ')}{'\n'}Semitones: {scaleData.intervals.join(', ')}
-                    </div>
-                  </div>
-                  <div className="panel" style={{padding:'16px 18px'}}>
-                    <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>All scales in {rootNote}</div>
-                    {Object.entries(SCALES).map(([name,data])=>{
-                      const ri=NOTES.indexOf(rootNote);
-                      const notes=data.intervals.map(iv=>NOTES[(ri+iv)%12]);
-                      return (
-                        <div key={name} onClick={()=>setScaleType(name)}
-                          style={{display:'flex',alignItems:'center',gap:10,padding:'7px 10px',marginBottom:4,cursor:'pointer',borderRadius:dark?3:8,transition:'all .12s',border:scaleType===name?(dark?'1px solid var(--acc)':'1.5px solid var(--acc)'):(dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'),background:scaleType===name?(dark?'rgba(20,255,180,.05)':'rgba(13,51,32,.04)'):'transparent'}}
-                          onMouseEnter={e=>{if(scaleType!==name)e.currentTarget.style.borderColor='rgba(20,255,180,.3)';}}
-                          onMouseLeave={e=>{if(scaleType!==name)e.currentTarget.style.borderColor=dark?'var(--bdr)':'var(--bdr)';}}>
-                          <span style={{fontFamily:"'Outfit',sans-serif",fontSize:11.5,fontWeight:600,color:'var(--tx)',width:140}}>{name}</span>
-                          <span style={{fontFamily:"'Fira Code',monospace",fontSize:10,color:'var(--txm)',flex:1}}>{notes.join(' · ')}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </Motion.div>
-              )}
+                          {/* ═══ SCALES ═══ */}
+                          {tab==='scale'&&(
+                            <Motion.div key="sc" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                              <div className="panel" style={{padding:'18px 20px'}}>
+                                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+                                  <div style={{display:'flex',alignItems:'center',gap:9}}>
+                                    <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,border:dark?'1px solid rgba(20,255,180,.25)':'1.5px solid rgba(13,51,32,.2)',background:dark?'rgba(20,255,180,.06)':'rgba(13,51,32,.05)'}}>🎼</div>
+                                    <div style={{fontFamily:"'Fraunces',serif",fontSize:16,fontWeight:700,color:'var(--tx)'}}>Scale builder</div>
+                                  </div>
+                                  <button onClick={playScale} style={playBtnStyle()}
+                                    onMouseEnter={e=>e.currentTarget.style.background=dark?'rgba(20,255,180,.08)':'rgba(13,51,32,.06)'}
+                                    onMouseLeave={e=>e.currentTarget.style.background='transparent'}>▶ play scale</button>
+                                </div>
+                                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:18}}>
+                                  <div><label className="lbl">Root note</label><select className="fi" value={rootNote} onChange={e=>setRootNote(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
+                                  <div><label className="lbl">Scale type</label><select className="fi" value={scaleType} onChange={e=>setScaleType(e.target.value)}>{Object.keys(SCALES).map(s=><option key={s}>{s}</option>)}</select></div>
+                                </div>
+                                <AnimatePresence mode="wait">
+                                  <Motion.div key={rootNote+scaleType} initial={{opacity:0}} animate={{opacity:1}}
+                                    style={{display:'flex',flexWrap:'wrap',gap:8,marginBottom:14}}>
+                                    {scaleNotes.map((note,i)=>(
+                                      <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+                                        <div className={`note-pill${i===0?' root':''}`} onClick={()=>playNote(NOTES.indexOf(note)+60)} style={{animationDelay:`${i*40}ms`}}>{note}</div>
+                                        <span style={{fontFamily:"'Fira Code',monospace",fontSize:8,color:'var(--txm)'}}>{scaleData.degrees[i]||''}</span>
+                                      </div>
+                                    ))}
+                                  </Motion.div>
+                                </AnimatePresence>
+                                <div style={{display:'flex',gap:4,marginBottom:14,flexWrap:'wrap'}}>
+                                  {scaleData.intervals.map((iv,i)=>{
+                                    const next=scaleData.intervals[i+1]??12;
+                                    const step=next-iv;
+                                    return <div key={i} style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--acc)',padding:'2px 7px',borderRadius:2,background:dark?'rgba(20,255,180,.07)':'rgba(13,51,32,.06)'}}>{step===2?'W':step===1?'H':'W+H'}</div>;
+                                  })}
+                                </div>
+                                <Piano highlighted={activeNotes} dark={dark} playNote={playNote}/>
+                                <div style={{marginTop:14,fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--tx2)',padding:'9px 13px',borderRadius:dark?3:7,border:dark?'1px solid rgba(20,255,180,.1)':'1.5px solid var(--bdr)',background:dark?'rgba(0,0,0,.4)':'rgba(245,251,248,.9)'}}>
+                                  {rootNote} {scaleType}: {scaleNotes.join(' – ')}{'\n'}Semitones: {scaleData.intervals.join(', ')}
+                                </div>
+                              </div>
+                              <div className="panel" style={{padding:'16px 18px'}}>
+                                <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>All scales in {rootNote}</div>
+                                {Object.entries(SCALES).map(([name,data])=>{
+                                  const ri=NOTES.indexOf(rootNote);
+                                  const notes=data.intervals.map(iv=>NOTES[(ri+iv)%12]);
+                                  return (
+                                    <div key={name} onClick={()=>setScaleType(name)}
+                                      style={{display:'flex',alignItems:'center',gap:10,padding:'7px 10px',marginBottom:4,cursor:'pointer',borderRadius:dark?3:8,transition:'all .12s',border:scaleType===name?(dark?'1px solid var(--acc)':'1.5px solid var(--acc)'):(dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'),background:scaleType===name?(dark?'rgba(20,255,180,.05)':'rgba(13,51,32,.04)'):'transparent'}}
+                                      onMouseEnter={e=>{if(scaleType!==name)e.currentTarget.style.borderColor='rgba(20,255,180,.3)';}}
+                                      onMouseLeave={e=>{if(scaleType!==name)e.currentTarget.style.borderColor=dark?'var(--bdr)':'var(--bdr)';}}>
+                                      <span style={{fontFamily:"'Outfit',sans-serif",fontSize:11.5,fontWeight:600,color:'var(--tx)',width:140}}>{name}</span>
+                                      <span style={{fontFamily:"'Fira Code',monospace",fontSize:10,color:'var(--txm)',flex:1}}>{notes.join(' · ')}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </Motion.div>
+                          )}
 
-              {/* ═══ CHORDS ═══ */}
-              {tab==='chord'&&(
-                <Motion.div key="ch" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
-                  <div className="panel" style={{padding:'18px 20px'}}>
-                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
-                      <div style={{display:'flex',alignItems:'center',gap:9}}>
-                        <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,border:dark?'1px solid rgba(167,139,250,.3)':'1.5px solid rgba(91,33,182,.2)',background:dark?'rgba(167,139,250,.08)':'rgba(91,33,182,.05)'}}>🎹</div>
-                        <div style={{fontFamily:"'Fraunces',serif",fontSize:16,fontWeight:700,color:'var(--tx)'}}>Chord builder</div>
-                      </div>
-                      <button onClick={playChordFn} style={playBtnStyle('purple')}
-                        onMouseEnter={e=>e.currentTarget.style.background=dark?'rgba(167,139,250,.08)':'rgba(91,33,182,.06)'}
-                        onMouseLeave={e=>e.currentTarget.style.background='transparent'}>▶ play chord</button>
-                    </div>
-                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:18}}>
-                      <div><label className="lbl">Root note</label><select className="fi" value={rootNote} onChange={e=>setRootNote(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
-                      <div><label className="lbl">Chord type</label><select className="fi" value={chordType} onChange={e=>setChordType(e.target.value)}>{Object.keys(CHORDS).map(c=><option key={c}>{c}</option>)}</select></div>
-                    </div>
-                    <AnimatePresence mode="wait">
-                      <Motion.div key={rootNote+chordType} initial={{opacity:0}} animate={{opacity:1}} style={{display:'flex',flexWrap:'wrap',gap:10,marginBottom:16}}>
-                        {chordNotes.map((note,i)=>(
-                          <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
-                            <div className={`chord-pill${i===0?' root':''}`} onClick={()=>playNote(NOTES.indexOf(note)+60)} style={{animationDelay:`${i*60}ms`}}>{note}</div>
-                            <span style={{fontFamily:"'Fira Code',monospace",fontSize:8.5,color:'var(--txm)'}}>{['Root','3rd','5th','7th','9th'][i]}</span>
-                          </div>
-                        ))}
-                        <div style={{marginLeft:'auto',display:'flex',flexDirection:'column',alignItems:'flex-end',justifyContent:'center'}}>
-                          <div style={{fontFamily:"'Fira Code',monospace",fontSize:28,fontWeight:500,color:'var(--acc4)',lineHeight:1}}>{rootNote}{chordData.symbol}</div>
-                          <div style={{fontFamily:"'Outfit',sans-serif",fontSize:11,color:'var(--txm)',marginTop:3}}>{chordType}</div>
-                        </div>
-                      </Motion.div>
-                    </AnimatePresence>
-                    <Piano highlighted={activeNotes} dark={dark} playNote={playNote}/>
-                    <div style={{marginTop:14,fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--tx2)',padding:'9px 13px',borderRadius:dark?3:7,border:dark?'1px solid rgba(167,139,250,.12)':'1.5px solid rgba(91,33,182,.1)',background:dark?'rgba(167,139,250,.04)':'rgba(91,33,182,.03)'}}>
-                      {`${rootNote}${chordData.symbol}: ${chordNotes.join(' + ')}\nIntervals: ${chordData.intervals.join(' – ')} semitones`}
-                    </div>
-                  </div>
-                  <div className="panel" style={{padding:'16px 18px'}}>
-                    <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>All chords in {rootNote}</div>
-                    <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:6}}>
-                      {Object.entries(CHORDS).map(([name,data])=>{
-                        const ri=NOTES.indexOf(rootNote);
-                        const notes=data.intervals.map(iv=>NOTES[(ri+iv)%12]);
-                        return (
-                          <div key={name} onClick={()=>setChordType(name)}
-                            style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'8px 11px',cursor:'pointer',borderRadius:dark?3:8,transition:'all .12s',border:chordType===name?(dark?'1px solid var(--acc4)':'1.5px solid var(--acc4)'):(dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'),background:chordType===name?(dark?'rgba(167,139,250,.06)':'rgba(91,33,182,.04)'):'transparent'}}>
-                            <div>
-                              <span style={{fontFamily:"'Fira Code',monospace",fontSize:13,color:'var(--acc4)'}}>{rootNote}{data.symbol}</span>
-                              <span style={{fontFamily:"'Outfit',sans-serif",fontSize:10,color:'var(--txm)',marginLeft:6}}>{name}</span>
-                            </div>
-                            <span style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--txm)'}}>{notes.join(' ')}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </Motion.div>
-              )}
+                          {/* ═══ CHORDS ═══ */}
+                          {tab==='chord'&&(
+                            <Motion.div key="ch" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                              <div className="panel" style={{padding:'18px 20px'}}>
+                                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+                                  <div style={{display:'flex',alignItems:'center',gap:9}}>
+                                    <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,border:dark?'1px solid rgba(167,139,250,.3)':'1.5px solid rgba(91,33,182,.2)',background:dark?'rgba(167,139,250,.08)':'rgba(91,33,182,.05)'}}>🎹</div>
+                                    <div style={{fontFamily:"'Fraunces',serif",fontSize:16,fontWeight:700,color:'var(--tx)'}}>Chord builder</div>
+                                  </div>
+                                  <button onClick={playChordFn} style={playBtnStyle('purple')}
+                                    onMouseEnter={e=>e.currentTarget.style.background=dark?'rgba(167,139,250,.08)':'rgba(91,33,182,.06)'}
+                                    onMouseLeave={e=>e.currentTarget.style.background='transparent'}>▶ play chord</button>
+                                </div>
+                                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:18}}>
+                                  <div><label className="lbl">Root note</label><select className="fi" value={rootNote} onChange={e=>setRootNote(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
+                                  <div><label className="lbl">Chord type</label><select className="fi" value={chordType} onChange={e=>setChordType(e.target.value)}>{Object.keys(CHORDS).map(c=><option key={c}>{c}</option>)}</select></div>
+                                </div>
+                                <AnimatePresence mode="wait">
+                                  <Motion.div key={rootNote+chordType} initial={{opacity:0}} animate={{opacity:1}} style={{display:'flex',flexWrap:'wrap',gap:10,marginBottom:16}}>
+                                    {chordNotes.map((note,i)=>(
+                                      <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+                                        <div className={`chord-pill${i===0?' root':''}`} onClick={()=>playNote(NOTES.indexOf(note)+60)} style={{animationDelay:`${i*60}ms`}}>{note}</div>
+                                        <span style={{fontFamily:"'Fira Code',monospace",fontSize:8.5,color:'var(--txm)'}}>{['Root','3rd','5th','7th','9th'][i]}</span>
+                                      </div>
+                                    ))}
+                                    <div style={{marginLeft:'auto',display:'flex',flexDirection:'column',alignItems:'flex-end',justifyContent:'center'}}>
+                                      <div style={{fontFamily:"'Fira Code',monospace",fontSize:28,fontWeight:500,color:'var(--acc4)',lineHeight:1}}>{rootNote}{chordData.symbol}</div>
+                                      <div style={{fontFamily:"'Outfit',sans-serif",fontSize:11,color:'var(--txm)',marginTop:3}}>{chordType}</div>
+                                    </div>
+                                  </Motion.div>
+                                </AnimatePresence>
+                                <Piano highlighted={activeNotes} dark={dark} playNote={playNote}/>
+                                <div style={{marginTop:14,fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--tx2)',padding:'9px 13px',borderRadius:dark?3:7,border:dark?'1px solid rgba(167,139,250,.12)':'1.5px solid rgba(91,33,182,.1)',background:dark?'rgba(167,139,250,.04)':'rgba(91,33,182,.03)'}}>
+                                  {`${rootNote}${chordData.symbol}: ${chordNotes.join(' + ')}\nIntervals: ${chordData.intervals.join(' – ')} semitones`}
+                                </div>
+                              </div>
+                              <div className="panel" style={{padding:'16px 18px'}}>
+                                <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>All chords in {rootNote}</div>
+                                <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:6}}>
+                                  {Object.entries(CHORDS).map(([name,data])=>{
+                                    const ri=NOTES.indexOf(rootNote);
+                                    const notes=data.intervals.map(iv=>NOTES[(ri+iv)%12]);
+                                    return (
+                                      <div key={name} onClick={()=>setChordType(name)}
+                                        style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'8px 11px',cursor:'pointer',borderRadius:dark?3:8,transition:'all .12s',border:chordType===name?(dark?'1px solid var(--acc4)':'1.5px solid var(--acc4)'):(dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'),background:chordType===name?(dark?'rgba(167,139,250,.06)':'rgba(91,33,182,.04)'):'transparent'}}>
+                                        <div>
+                                          <span style={{fontFamily:"'Fira Code',monospace",fontSize:13,color:'var(--acc4)'}}>{rootNote}{data.symbol}</span>
+                                          <span style={{fontFamily:"'Outfit',sans-serif",fontSize:10,color:'var(--txm)',marginLeft:6}}>{name}</span>
+                                        </div>
+                                        <span style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--txm)'}}>{notes.join(' ')}</span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            </Motion.div>
+                          )}
 
-              {/* ═══ INTERVALS ═══ */}
-              {tab==='interval'&&(
-                <Motion.div key="iv" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
-                  <div className="panel" style={{padding:'18px 20px'}}>
-                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
-                      <div style={{display:'flex',alignItems:'center',gap:9}}>
-                        <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Fira Code',monospace",fontSize:14,color:'var(--acc)',border:dark?'1px solid rgba(20,255,180,.25)':'1.5px solid rgba(13,51,32,.2)',background:dark?'rgba(20,255,180,.06)':'rgba(13,51,32,.05)'}}>↕</div>
-                        <div style={{fontFamily:"'Fraunces',serif",fontSize:16,fontWeight:700,color:'var(--tx)'}}>Interval finder</div>
-                      </div>
-                      <button onClick={playIntervalFn} style={playBtnStyle()}
-                        onMouseEnter={e=>e.currentTarget.style.background=dark?'rgba(20,255,180,.08)':'rgba(13,51,32,.06)'}
-                        onMouseLeave={e=>e.currentTarget.style.background='transparent'}>▶ play</button>
-                    </div>
-                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:20}}>
-                      <div><label className="lbl">First note</label><select className="fi" value={note1} onChange={e=>setNote1(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
-                      <div><label className="lbl">Second note</label><select className="fi" value={note2} onChange={e=>setNote2(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
-                    </div>
-                    <AnimatePresence mode="wait">
-                      <Motion.div key={note1+note2} className="int-display" initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}}>
-                        <div style={{fontFamily:"'Fraunces',serif",fontSize:32,fontWeight:700,color:'var(--acc)',lineHeight:1,marginBottom:7}}>{intervalData.name}</div>
-                        <div style={{fontFamily:"'Fira Code',monospace",fontSize:13,color:'var(--acc4)',marginBottom:6}}>{intervalData.abbr}</div>
-                        <div style={{fontFamily:"'Outfit',sans-serif",fontSize:13,color:'var(--tx2)',marginBottom:3}}>{intervalData.semitones} semitone{intervalData.semitones!==1?'s':''} · {note1} to {note2}</div>
-                        <div style={{fontFamily:"'Outfit',sans-serif",fontSize:12,color:'var(--txm)'}}>{intervalData.consonance}</div>
-                      </Motion.div>
-                    </AnimatePresence>
-                    <Piano highlighted={activeNotes} dark={dark} playNote={playNote}/>
-                  </div>
-                  <div className="panel" style={{padding:'16px 18px'}}>
-                    <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>All intervals</div>
-                    {INTERVALS.map(iv=>(
-                      <div key={iv.semitones} onClick={()=>setNote2(NOTES[(NOTES.indexOf(note1)+iv.semitones)%12])}
-                        style={{display:'flex',alignItems:'center',gap:10,padding:'7px 10px',marginBottom:3,cursor:'pointer',borderRadius:dark?3:8,transition:'all .12s',border:intervalData.semitones===iv.semitones?(dark?'1px solid var(--acc)':'1.5px solid var(--acc)'):(dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'),background:intervalData.semitones===iv.semitones?(dark?'rgba(20,255,180,.05)':'rgba(13,51,32,.04)'):'transparent'}}
-                        onMouseEnter={e=>{if(intervalData.semitones!==iv.semitones)e.currentTarget.style.borderColor='rgba(20,255,180,.25)';}}
-                        onMouseLeave={e=>{if(intervalData.semitones!==iv.semitones)e.currentTarget.style.borderColor=dark?'var(--bdr)':'var(--bdr)';}}>
-                        <span style={{fontFamily:"'Fira Code',monospace",fontSize:10,color:'var(--acc4)',width:24}}>{iv.abbr}</span>
-                        <span style={{fontFamily:"'Outfit',sans-serif",fontSize:11.5,fontWeight:500,color:'var(--tx)',flex:1}}>{iv.name}</span>
-                        <span style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--txm)',width:16,textAlign:'right'}}>{iv.semitones}</span>
-                        <span style={{fontFamily:"'Outfit',sans-serif",fontSize:10,color:'var(--txm)',width:160,textAlign:'right'}}>{iv.consonance}</span>
-                      </div>
-                    ))}
-                  </div>
-                </Motion.div>
-              )}
+                          {/* ═══ INTERVALS ═══ */}
+                          {tab==='interval'&&(
+                            <Motion.div key="iv" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                              <div className="panel" style={{padding:'18px 20px'}}>
+                                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+                                  <div style={{display:'flex',alignItems:'center',gap:9}}>
+                                    <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Fira Code',monospace",fontSize:14,color:'var(--acc)',border:dark?'1px solid rgba(20,255,180,.25)':'1.5px solid rgba(13,51,32,.2)',background:dark?'rgba(20,255,180,.06)':'rgba(13,51,32,.05)'}}>↕</div>
+                                    <div style={{fontFamily:"'Fraunces',serif",fontSize:16,fontWeight:700,color:'var(--tx)'}}>Interval finder</div>
+                                  </div>
+                                  <button onClick={playIntervalFn} style={playBtnStyle()}
+                                    onMouseEnter={e=>e.currentTarget.style.background=dark?'rgba(20,255,180,.08)':'rgba(13,51,32,.06)'}
+                                    onMouseLeave={e=>e.currentTarget.style.background='transparent'}>▶ play</button>
+                                </div>
+                                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:20}}>
+                                  <div><label className="lbl">First note</label><select className="fi" value={note1} onChange={e=>setNote1(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
+                                  <div><label className="lbl">Second note</label><select className="fi" value={note2} onChange={e=>setNote2(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
+                                </div>
+                                <AnimatePresence mode="wait">
+                                  <Motion.div key={note1+note2} className="int-display" initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}}>
+                                    <div style={{fontFamily:"'Fraunces',serif",fontSize:32,fontWeight:700,color:'var(--acc)',lineHeight:1,marginBottom:7}}>{intervalData.name}</div>
+                                    <div style={{fontFamily:"'Fira Code',monospace",fontSize:13,color:'var(--acc4)',marginBottom:6}}>{intervalData.abbr}</div>
+                                    <div style={{fontFamily:"'Outfit',sans-serif",fontSize:13,color:'var(--tx2)',marginBottom:3}}>{intervalData.semitones} semitone{intervalData.semitones!==1?'s':''} · {note1} to {note2}</div>
+                                    <div style={{fontFamily:"'Outfit',sans-serif",fontSize:12,color:'var(--txm)'}}>{intervalData.consonance}</div>
+                                  </Motion.div>
+                                </AnimatePresence>
+                                <Piano highlighted={activeNotes} dark={dark} playNote={playNote}/>
+                              </div>
+                              <div className="panel" style={{padding:'16px 18px'}}>
+                                <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>All intervals</div>
+                                {INTERVALS.map(iv=>(
+                                  <div key={iv.semitones} onClick={()=>setNote2(NOTES[(NOTES.indexOf(note1)+iv.semitones)%12])}
+                                    style={{display:'flex',alignItems:'center',gap:10,padding:'7px 10px',marginBottom:3,cursor:'pointer',borderRadius:dark?3:8,transition:'all .12s',border:intervalData.semitones===iv.semitones?(dark?'1px solid var(--acc)':'1.5px solid var(--acc)'):(dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'),background:intervalData.semitones===iv.semitones?(dark?'rgba(20,255,180,.05)':'rgba(13,51,32,.04)'):'transparent'}}
+                                    onMouseEnter={e=>{if(intervalData.semitones!==iv.semitones)e.currentTarget.style.borderColor='rgba(20,255,180,.25)';}}
+                                    onMouseLeave={e=>{if(intervalData.semitones!==iv.semitones)e.currentTarget.style.borderColor=dark?'var(--bdr)':'var(--bdr)';}}>
+                                    <span style={{fontFamily:"'Fira Code',monospace",fontSize:10,color:'var(--acc4)',width:24}}>{iv.abbr}</span>
+                                    <span style={{fontFamily:"'Outfit',sans-serif",fontSize:11.5,fontWeight:500,color:'var(--tx)',flex:1}}>{iv.name}</span>
+                                    <span style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--txm)',width:16,textAlign:'right'}}>{iv.semitones}</span>
+                                    <span style={{fontFamily:"'Outfit',sans-serif",fontSize:10,color:'var(--txm)',width:160,textAlign:'right'}}>{iv.consonance}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </Motion.div>
+                          )}
 
-              {/* ═══ PROGRESSIONS ═══ */}
-              {tab==='progression'&&(
-                <Motion.div key="pg" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
-                  <div className="panel" style={{padding:'18px 20px'}}>
-                    <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:16}}>
-                      <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,border:dark?'1px solid rgba(251,191,36,.3)':'1.5px solid rgba(146,64,14,.2)',background:dark?'rgba(251,191,36,.07)':'rgba(146,64,14,.04)'}}>♪</div>
-                      <div style={{fontFamily:"'Fraunces',serif",fontSize:16,fontWeight:700,color:'var(--tx)'}}>Chord progressions</div>
-                    </div>
-                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14}}>
-                      <div><label className="lbl">Key</label><select className="fi" value={progKey} onChange={e=>setProgKey(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
-                      <div><label className="lbl">Progression</label><select className="fi" value={progType} onChange={e=>setProgType(e.target.value)}>{Object.keys(PROGRESSIONS).map(p=><option key={p}>{p}</option>)}</select></div>
-                    </div>
-                    <div style={{padding:'10px 13px',borderRadius:dark?3:8,marginBottom:14,border:dark?'1px solid rgba(251,191,36,.15)':'1.5px solid rgba(146,64,14,.12)',background:dark?'rgba(251,191,36,.04)':'rgba(146,64,14,.03)'}}>
-                      <div style={{fontFamily:"'Fraunces',serif",fontSize:13,fontWeight:600,color:dark?'#fbbf24':'#92400e',marginBottom:2}}>{PROGRESSIONS[progType].name}</div>
-                      <div style={{fontFamily:"'Outfit',sans-serif",fontSize:12,color:'var(--tx2)'}}>{PROGRESSIONS[progType].desc}</div>
-                    </div>
-                    <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
-                      {progData.degrees.map((deg,i)=>{
-                        const ri=NOTES.indexOf(progKey);
-                        const noteIdx=(ri+MAJ_SCALE_INTERVALS[deg%7])%12;
-                        const noteName=NOTES[noteIdx];
-                        const quality=['','m','m','','','m','°'][deg]||'';
-                        const isActive=activeProgChord===i;
-                        return (
-                          <div key={i} className={`prog-card${isActive?' active-chord':''}`} style={{flex:'1 1 80px',minWidth:80}}
-                            onClick={()=>{
-                              setActiveProgChord(i);
-                              const base=NOTES.indexOf(noteName)+60;
-                              const ivs=quality==='m'?[0,3,7]:quality==='°'?[0,3,6]:[0,4,7];
-                              playChord(ivs.map(iv=>base+iv),40);
-                            }}>
-                            <div style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--txm)',marginBottom:4}}>{'I II III IV V VI VII'.split(' ')[deg]}</div>
-                            <div style={{fontFamily:"'Fraunces',serif",fontSize:22,fontWeight:700,color:isActive?'var(--acc)':'var(--tx)',lineHeight:1,marginBottom:3}}>{noteName}</div>
-                            <div style={{fontFamily:"'Fira Code',monospace",fontSize:11,color:isActive?'var(--acc)':dark?'#a78bfa':'#5b21b6'}}>{noteName}{quality}</div>
-                            <div style={{fontFamily:"'Outfit',sans-serif",fontSize:9,color:'var(--txm)',marginTop:4}}>{quality===''?'major':quality==='m'?'minor':'dim'}</div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div className="panel" style={{padding:'16px 18px'}}>
-                    <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>All progressions in {progKey}</div>
-                    {Object.entries(PROGRESSIONS).map(([prog,data])=>{
-                      const ri=NOTES.indexOf(progKey);
-                      const chords=data.degrees.map(d=>{const n=NOTES[(ri+MAJ_SCALE_INTERVALS[d%7])%12];const q=['','m','m','','','m','°'][d]||'';return n+q;});
-                      return (
-                        <div key={prog} onClick={()=>setProgType(prog)}
-                          style={{display:'flex',alignItems:'center',gap:10,padding:'8px 11px',marginBottom:4,cursor:'pointer',borderRadius:dark?3:8,transition:'all .12s',border:progType===prog?(dark?'1px solid rgba(251,191,36,.5)':'1.5px solid rgba(146,64,14,.4)'):(dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'),background:progType===prog?(dark?'rgba(251,191,36,.05)':'rgba(146,64,14,.03)'):'transparent'}}
-                          onMouseEnter={e=>{if(progType!==prog)e.currentTarget.style.borderColor='rgba(251,191,36,.25)';}}
-                          onMouseLeave={e=>{if(progType!==prog)e.currentTarget.style.borderColor=dark?'var(--bdr)':'var(--bdr)';}}>
-                          <div style={{flex:1}}>
-                            <div style={{fontFamily:"'Outfit',sans-serif",fontSize:11.5,fontWeight:600,color:'var(--tx)'}}>{data.name}</div>
-                            <div style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--txm)',marginTop:1}}>{prog}</div>
-                          </div>
-                          <div style={{fontFamily:"'Fira Code',monospace",fontSize:10,color:dark?'#fbbf24':'#92400e'}}>{chords.join(' – ')}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </Motion.div>
-              )}
+                          {/* ═══ PROGRESSIONS ═══ */}
+                          {tab==='progression'&&(
+                            <Motion.div key="pg" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                              <div className="panel" style={{padding:'18px 20px'}}>
+                                <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:16}}>
+                                  <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,border:dark?'1px solid rgba(251,191,36,.3)':'1.5px solid rgba(146,64,14,.2)',background:dark?'rgba(251,191,36,.07)':'rgba(146,64,14,.04)'}}>♪</div>
+                                  <div style={{fontFamily:"'Fraunces',serif",fontSize:16,fontWeight:700,color:'var(--tx)'}}>Chord progressions</div>
+                                </div>
+                                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:14}}>
+                                  <div><label className="lbl">Key</label><select className="fi" value={progKey} onChange={e=>setProgKey(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
+                                  <div><label className="lbl">Progression</label><select className="fi" value={progType} onChange={e=>setProgType(e.target.value)}>{Object.keys(PROGRESSIONS).map(p=><option key={p}>{p}</option>)}</select></div>
+                                </div>
+                                <div style={{padding:'10px 13px',borderRadius:dark?3:8,marginBottom:14,border:dark?'1px solid rgba(251,191,36,.15)':'1.5px solid rgba(146,64,14,.12)',background:dark?'rgba(251,191,36,.04)':'rgba(146,64,14,.03)'}}>
+                                  <div style={{fontFamily:"'Fraunces',serif",fontSize:13,fontWeight:600,color:dark?'#fbbf24':'#92400e',marginBottom:2}}>{PROGRESSIONS[progType].name}</div>
+                                  <div style={{fontFamily:"'Outfit',sans-serif",fontSize:12,color:'var(--tx2)'}}>{PROGRESSIONS[progType].desc}</div>
+                                </div>
+                                <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+                                  {progData.degrees.map((deg,i)=>{
+                                    const ri=NOTES.indexOf(progKey);
+                                    const noteIdx=(ri+MAJ_SCALE_INTERVALS[deg%7])%12;
+                                    const noteName=NOTES[noteIdx];
+                                    const quality=['','m','m','','','m','°'][deg]||'';
+                                    const isActive=activeProgChord===i;
+                                    return (
+                                      <div key={i} className={`prog-card${isActive?' active-chord':''}`} style={{flex:'1 1 80px',minWidth:80}}
+                                        onClick={()=>{
+                                          setActiveProgChord(i);
+                                          const base=NOTES.indexOf(noteName)+60;
+                                          const ivs=quality==='m'?[0,3,7]:quality==='°'?[0,3,6]:[0,4,7];
+                                          playChord(ivs.map(iv=>base+iv),40);
+                                        }}>
+                                        <div style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--txm)',marginBottom:4}}>{'I II III IV V VI VII'.split(' ')[deg]}</div>
+                                        <div style={{fontFamily:"'Fraunces',serif",fontSize:22,fontWeight:700,color:isActive?'var(--acc)':'var(--tx)',lineHeight:1,marginBottom:3}}>{noteName}</div>
+                                        <div style={{fontFamily:"'Fira Code',monospace",fontSize:11,color:isActive?'var(--acc)':dark?'#a78bfa':'#5b21b6'}}>{noteName}{quality}</div>
+                                        <div style={{fontFamily:"'Outfit',sans-serif",fontSize:9,color:'var(--txm)',marginTop:4}}>{quality===''?'major':quality==='m'?'minor':'dim'}</div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                              <div className="panel" style={{padding:'16px 18px'}}>
+                                <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>All progressions in {progKey}</div>
+                                {Object.entries(PROGRESSIONS).map(([prog,data])=>{
+                                  const ri=NOTES.indexOf(progKey);
+                                  const chords=data.degrees.map(d=>{const n=NOTES[(ri+MAJ_SCALE_INTERVALS[d%7])%12];const q=['','m','m','','','m','°'][d]||'';return n+q;});
+                                  return (
+                                    <div key={prog} onClick={()=>setProgType(prog)}
+                                      style={{display:'flex',alignItems:'center',gap:10,padding:'8px 11px',marginBottom:4,cursor:'pointer',borderRadius:dark?3:8,transition:'all .12s',border:progType===prog?(dark?'1px solid rgba(251,191,36,.5)':'1.5px solid rgba(146,64,14,.4)'):(dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'),background:progType===prog?(dark?'rgba(251,191,36,.05)':'rgba(146,64,14,.03)'):'transparent'}}
+                                      onMouseEnter={e=>{if(progType!==prog)e.currentTarget.style.borderColor='rgba(251,191,36,.25)';}}
+                                      onMouseLeave={e=>{if(progType!==prog)e.currentTarget.style.borderColor=dark?'var(--bdr)':'var(--bdr)';}}>
+                                      <div style={{flex:1}}>
+                                        <div style={{fontFamily:"'Outfit',sans-serif",fontSize:11.5,fontWeight:600,color:'var(--tx)'}}>{data.name}</div>
+                                        <div style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--txm)',marginTop:1}}>{prog}</div>
+                                      </div>
+                                      <div style={{fontFamily:"'Fira Code',monospace",fontSize:10,color:dark?'#fbbf24':'#92400e'}}>{chords.join(' – ')}</div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </Motion.div>
+                          )}
 
-              {/* ═══ BPM & TEMPO ═══ */}
-              {tab==='bpm'&&(
-                <Motion.div key="bpm" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
-                  <div className="panel" style={{padding:'18px 20px'}}>
-                    <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:20}}>
-                      <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,border:dark?'1px solid rgba(251,191,36,.3)':'1.5px solid rgba(146,64,14,.2)',background:dark?'rgba(251,191,36,.07)':'rgba(146,64,14,.04)'}}>🥁</div>
-                      <div style={{fontFamily:"'Fraunces',serif",fontSize:16,fontWeight:700,color:'var(--tx)'}}>BPM tap tempo & metronome</div>
-                    </div>
+                          {/* ═══ BPM & TEMPO ═══ */}
+                          {tab==='bpm'&&(
+                            <Motion.div key="bpm" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                              <div className="panel" style={{padding:'18px 20px'}}>
+                                <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:20}}>
+                                  <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,border:dark?'1px solid rgba(251,191,36,.3)':'1.5px solid rgba(146,64,14,.2)',background:dark?'rgba(251,191,36,.07)':'rgba(146,64,14,.04)'}}>🥁</div>
+                                  <div style={{fontFamily:"'Fraunces',serif",fontSize:16,fontWeight:700,color:'var(--tx)'}}>BPM tap tempo & metronome</div>
+                                </div>
 
-                    <div style={{display:'flex',gap:24,alignItems:'center',flexWrap:'wrap',marginBottom:22}}>
-                      {/* tap button */}
-                      <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:10}}>
-                        <button className={`tap-btn${tapFlash?' tapped':''}`} onClick={handleTap}>
-                          <span style={{fontFamily:"'Fira Code',monospace",fontSize:40,fontWeight:500,color:'var(--acc)',lineHeight:1}}>{bpm}</span>
-                          <span style={{fontFamily:"'Outfit',sans-serif",fontSize:10,color:'var(--txm)'}}>BPM</span>
-                          <span style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--tx3)',marginTop:2}}>tap to set</span>
-                        </button>
-                        <button className="gbtn" onClick={()=>{setTapTimes([]);}} style={{fontSize:9}}>reset taps</button>
-                      </div>
+                                <div style={{display:'flex',gap:24,alignItems:'center',flexWrap:'wrap',marginBottom:22}}>
+                                  {/* tap button */}
+                                  <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:10}}>
+                                    <button className={`tap-btn${tapFlash?' tapped':''}`} onClick={handleTap}>
+                                      <span style={{fontFamily:"'Fira Code',monospace",fontSize:40,fontWeight:500,color:'var(--acc)',lineHeight:1}}>{bpm}</span>
+                                      <span style={{fontFamily:"'Outfit',sans-serif",fontSize:10,color:'var(--txm)'}}>BPM</span>
+                                      <span style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--tx3)',marginTop:2}}>tap to set</span>
+                                    </button>
+                                    <button className="gbtn" onClick={()=>{setTapTimes([]);}} style={{fontSize:9}}>reset taps</button>
+                                  </div>
 
-                      {/* BPM slider + metronome */}
-                      <div style={{flex:1,minWidth:200}}>
-                        <label className="lbl">Set BPM manually</label>
-                        <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:14}}>
-                          <input type="range" min="20" max="300" value={bpm} onChange={e=>setBpm(Number(e.target.value))}
-                            style={{flex:1,WebkitAppearance:'none',appearance:'none',height:4,borderRadius:2,outline:'none',cursor:'pointer',
-                              background:dark?'rgba(20,255,180,.15)':'rgba(13,51,32,.12)'}}/>
-                          <input type="number" min="20" max="300" value={bpm} onChange={e=>setBpm(Number(e.target.value))}
-                            style={{width:60,outline:'none',fontFamily:"'Fira Code',monospace",fontSize:13,padding:'5px 8px',textAlign:'center',
-                              background:dark?'rgba(0,0,0,.4)':'#f5fbf8',
-                              border:dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)',
-                              borderRadius:dark?3:6,color:'var(--acc)'}}/>
-                        </div>
+                                  {/* BPM slider + metronome */}
+                                  <div style={{flex:1,minWidth:200}}>
+                                    <label className="lbl">Set BPM manually</label>
+                                    <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:14}}>
+                                      <input type="range" min="20" max="300" value={bpm} onChange={e=>setBpm(Number(e.target.value))}
+                                        style={{flex:1,WebkitAppearance:'none',appearance:'none',height:4,borderRadius:2,outline:'none',cursor:'pointer',
+                                          background:dark?'rgba(20,255,180,.15)':'rgba(13,51,32,.12)'}}/>
+                                      <input type="number" min="20" max="300" value={bpm} onChange={e=>setBpm(Number(e.target.value))}
+                                        style={{width:60,outline:'none',fontFamily:"'Fira Code',monospace",fontSize:13,padding:'5px 8px',textAlign:'center',
+                                          background:dark?'rgba(0,0,0,.4)':'#f5fbf8',
+                                          border:dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)',
+                                          borderRadius:dark?3:6,color:'var(--acc)'}}/>
+                                    </div>
 
-                        {/* Tempo name bar */}
-                        <div style={{marginBottom:14}}>
-                          <label className="lbl">Tempo marking</label>
-                          <div style={{fontFamily:"'Fraunces',serif",fontSize:22,fontWeight:700,color:dark?'#fbbf24':'#92400e'}}>{getTempoName(bpm)}</div>
-                        </div>
+                                    {/* Tempo name bar */}
+                                    <div style={{marginBottom:14}}>
+                                      <label className="lbl">Tempo marking</label>
+                                      <div style={{fontFamily:"'Fraunces',serif",fontSize:22,fontWeight:700,color:dark?'#fbbf24':'#92400e'}}>{getTempoName(bpm)}</div>
+                                    </div>
 
-                        {/* Metronome controls */}
-                        <label className="lbl">Metronome ({metroSig}/4)</label>
-                        <div style={{display:'flex',gap:8,marginBottom:10}}>
-                          {Array.from({length:metroSig},(_,i)=>(
-                            <div key={i} className={`beat-dot${metroOn&&metroBeat===i?' on':''}`}
-                              style={{width:14,height:14,borderRadius:'50%',transition:'all .08s'}}/>
-                          ))}
-                        </div>
-                        <button onClick={()=>setMetroOn(m=>!m)}
-                          style={{display:'flex',alignItems:'center',gap:8,padding:'10px 22px',cursor:'pointer',
-                            fontFamily:"'Outfit',sans-serif",fontSize:12,fontWeight:700,letterSpacing:'.04em',
-                            border:'none',borderRadius:dark?3:8,
-                            background:metroOn?(dark?'rgba(255,107,107,.15)':'rgba(153,27,27,.08)'):(dark?'rgba(20,255,180,.12)':'rgba(13,51,32,.1)'),
-                            color:metroOn?(dark?'#ff6b6b':'#991b1b'):'var(--acc)',
-                            boxShadow:metroOn?(dark?'0 0 20px rgba(255,107,107,.2)':'none'):(dark?'0 0 20px rgba(20,255,180,.15)':'none'),
-                            transition:'all .2s'}}>
-                          {metroOn?'⏹ stop metronome':'▶ start metronome'}
-                        </button>
-                      </div>
-                    </div>
+                                    {/* Metronome controls */}
+                                    <label className="lbl">Metronome ({metroSig}/4)</label>
+                                    <div style={{display:'flex',gap:8,marginBottom:10}}>
+                                      {Array.from({length:metroSig},(_,i)=>(
+                                        <div key={i} className={`beat-dot${metroOn&&metroBeat===i?' on':''}`}
+                                          style={{width:14,height:14,borderRadius:'50%',transition:'all .08s'}}/>
+                                      ))}
+                                    </div>
+                                    <button onClick={()=>setMetroOn(m=>!m)}
+                                      style={{display:'flex',alignItems:'center',gap:8,padding:'10px 22px',cursor:'pointer',
+                                        fontFamily:"'Outfit',sans-serif",fontSize:12,fontWeight:700,letterSpacing:'.04em',
+                                        border:'none',borderRadius:dark?3:8,
+                                        background:metroOn?(dark?'rgba(255,107,107,.15)':'rgba(153,27,27,.08)'):(dark?'rgba(20,255,180,.12)':'rgba(13,51,32,.1)'),
+                                        color:metroOn?(dark?'#ff6b6b':'#991b1b'):'var(--acc)',
+                                        boxShadow:metroOn?(dark?'0 0 20px rgba(255,107,107,.2)':'none'):(dark?'0 0 20px rgba(20,255,180,.15)':'none'),
+                                        transition:'all .2s'}}>
+                                      {metroOn?'⏹ stop metronome':'▶ start metronome'}
+                                    </button>
+                                  </div>
+                                </div>
 
-                    {/* Common BPM presets */}
-                    <label className="lbl" style={{marginBottom:8}}>Genre presets</label>
-                    <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
-                      {[['Hip Hop',85],['R&B',95],['Pop',110],['House',128],['Techno',140],['Drum & Bass',174],['Waltz',92,'3/4'],['Bossa Nova',130],['Blues',72],['Reggae',80],['Punk',160],['Metal',200]].map(([name,b,sig])=>(
-                        <button key={name} className="gbtn" onClick={()=>{setBpm(b);if(sig==='3/4')setMetroSig(3);else setMetroSig(4);}}
-                          style={{fontSize:10,gap:5}}>
-                          {name} <span style={{color:'var(--acc)'}}>{b}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                                {/* Common BPM presets */}
+                                <label className="lbl" style={{marginBottom:8}}>Genre presets</label>
+                                <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
+                                  {[['Hip Hop',85],['R&B',95],['Pop',110],['House',128],['Techno',140],['Drum & Bass',174],['Waltz',92,'3/4'],['Bossa Nova',130],['Blues',72],['Reggae',80],['Punk',160],['Metal',200]].map(([name,b,sig])=>(
+                                    <button key={name} className="gbtn" onClick={()=>{setBpm(b);if(sig==='3/4')setMetroSig(3);else setMetroSig(4);}}
+                                      style={{fontSize:10,gap:5}}>
+                                      {name} <span style={{color:'var(--acc)'}}>{b}</span>
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
 
-                  {/* Note durations */}
-                  <div className="panel" style={{padding:'16px 18px'}}>
-                    <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>
-                      Note durations at {bpm} BPM
-                    </div>
-                    {getDurations(bpm).map(({name,ms})=>(
-                      <div key={name} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'7px 10px',marginBottom:3,borderRadius:dark?3:8,border:dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)',background:dark?'rgba(0,0,0,.25)':'rgba(245,251,248,.9)'}}>
-                        <span style={{fontFamily:"'Outfit',sans-serif",fontSize:12,color:'var(--tx)'}}>{name}</span>
-                        <div style={{display:'flex',gap:14}}>
-                          <span style={{fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--acc)'}}>{ms.toFixed(0)} ms</span>
-                          <span style={{fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--txm)'}}>{(ms/1000).toFixed(3)} s</span>
-                          <span style={{fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--acc4)'}}>{(1000/ms).toFixed(2)} Hz</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </Motion.div>
-              )}
+                              {/* Note durations */}
+                              <div className="panel" style={{padding:'16px 18px'}}>
+                                <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>
+                                  Note durations at {bpm} BPM
+                                </div>
+                                {getDurations(bpm).map(({name,ms})=>(
+                                  <div key={name} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'7px 10px',marginBottom:3,borderRadius:dark?3:8,border:dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)',background:dark?'rgba(0,0,0,.25)':'rgba(245,251,248,.9)'}}>
+                                    <span style={{fontFamily:"'Outfit',sans-serif",fontSize:12,color:'var(--tx)'}}>{name}</span>
+                                    <div style={{display:'flex',gap:14}}>
+                                      <span style={{fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--acc)'}}>{ms.toFixed(0)} ms</span>
+                                      <span style={{fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--txm)'}}>{(ms/1000).toFixed(3)} s</span>
+                                      <span style={{fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--acc4)'}}>{(1000/ms).toFixed(2)} Hz</span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </Motion.div>
+                          )}
 
               {/* ═══ TRANSPOSE ═══ */}
               {tab==='transpose'&&(

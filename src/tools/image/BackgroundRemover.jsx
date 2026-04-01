@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 /* ═══════════════════════════════════════════════════════
    EXTERNAL SCRIPT LOADER — @imgly/background-removal CDN
@@ -266,22 +266,6 @@ function useBGRemover() {
     script.onload = () => { window.__bgRemovalLib = window.BackgroundRemoval || window.bgRemoval; setLibLoaded(true); };
     script.onerror = () => { setLibError(true); };
     document.head.appendChild(script);
-  }, []);
-
-  const animateProgress = useCallback((targetPct, msg, delay=0) => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        setStageMsg(msg);
-        const step = () => {
-          setProgress(p => {
-            if (p >= targetPct) { resolve(); return p; }
-            requestAnimationFrame(step);
-            return Math.min(p + 0.8, targetPct);
-          });
-        };
-        requestAnimationFrame(step);
-      }, delay);
-    });
   }, []);
 
   const loadImage = useCallback((file) => {

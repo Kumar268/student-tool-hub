@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { PDFDocument } from "https://esm.sh/pdf-lib@1.17.1";
 
 /* ═══════════════════════════════════════════════════════════════

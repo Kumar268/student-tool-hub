@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 /* ═══════════════════════════════════════════════════════════════
    TYPING SPEED TEST — Document Tools Series #9
@@ -289,7 +289,7 @@ export default function TypingSpeedTest({isDarkMode:ext}={}) {
       clearInterval(timerRef.current);
       setPhase('done');
     }
-  },[phase, paragraph, duration]);
+  },[phase, paragraph]);
 
   /* ── save to history on done ── */
   useEffect(()=>{

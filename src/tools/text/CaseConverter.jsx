@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo, useCallback, useEffect } from 'react';
+import React, { useState, useRef, memo, useCallback, useEffect, useMemo } from 'react';
 import { 
   Sparkles, Copy, BookOpen, RefreshCw, Zap, Wand2, 
   Eye, EyeOff, History, Trash, Download, Type, 
@@ -11,7 +11,7 @@ const FuturisticCaseConverter = ({ isDarkMode, copyResult, showToast }) => {
   const [stats, setStats] = useState({ words: 0, chars: 0, lines: 0, readingTime: 0 });
   const [history, setHistory] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [, setShowAdvanced] = useState(false);
   const [selectedFont, setSelectedFont] = useState('font-sans');
   const [transformMode, setTransformMode] = useState('standard');
   const [isGlowing, setIsGlowing] = useState(false);
@@ -20,7 +20,7 @@ const FuturisticCaseConverter = ({ isDarkMode, copyResult, showToast }) => {
   const canvasRef = useRef(null);
 
   // Advanced case transformations
-  const caseTransformations = {
+  const caseTransformations = useMemo(() => ({
     // Standard transformations
     standard: {
       upper: (text) => text.toUpperCase(),
@@ -73,7 +73,7 @@ const FuturisticCaseConverter = ({ isDarkMode, copyResult, showToast }) => {
         return scriptMap[c.toLowerCase()] || c;
       }),
     }
-  };
+  }), []);
 
   // Update statistics in real-time
   useEffect(() => {
@@ -161,7 +161,7 @@ const FuturisticCaseConverter = ({ isDarkMode, copyResult, showToast }) => {
         setIsProcessing(false);
       }
     }, 300); // Simulate processing for effect
-  }, [text, showToast, triggerParticleEffect]);
+  }, [text, showToast, triggerParticleEffect, caseTransformations]);
 
   // Restore from history
   const restoreFromHistory = useCallback((historyItem) => {
@@ -331,7 +331,7 @@ const FuturisticCaseConverter = ({ isDarkMode, copyResult, showToast }) => {
 
         {/* Transformation buttons grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 mb-4">
-          {Object.entries(caseTransformations[transformMode] || caseTransformations.standard).map(([type, _]) => (
+          {Object.entries(caseTransformations[transformMode] || caseTransformations.standard).map(([type]) => (
             <button
               key={type}
               onClick={() => transformText(type, transformMode)}
