@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "postbuild": "node scripts/generate-og-image.cjs && node scripts/generate-sitemap.cjs && node scripts/update-robots.cjs",
+    "postbuild": "echo 'Skipping postbuild scripts for Vercel'",
     "generate:og-image": "node scripts/generate-og-image.cjs",
     "verify-robots": "node scripts/verify-robots.js",
     "final-check": "npm run build && node scripts/final-check.js",
