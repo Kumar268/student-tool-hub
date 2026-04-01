@@ -284,7 +284,7 @@ export default function App() {
   useEffect(() => () => {
     if (origUrl) URL.revokeObjectURL(origUrl);
     if (compUrl) URL.revokeObjectURL(compUrl);
-  }, []); // eslint-disable-line
+  }, [origUrl, compUrl]);
 
   const clearOut = useCallback(() => {
     if (compUrl) URL.revokeObjectURL(compUrl);
@@ -381,7 +381,6 @@ export default function App() {
     return neon ? "#ff003c" : "#ef4444";
   };
 
-  const barColor = (bytes, neon) => sizeColor(bytes, neon);
   const barWidth = (bytes) => {
     if (!bytes || !origSize) return "0%";
     return `${Math.min(100, (bytes / origSize) * 100).toFixed(1)}%`;

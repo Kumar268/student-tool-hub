@@ -462,9 +462,8 @@ const PDFCompressor = ({ isDarkMode: ext } = {}) => {
           </div>
         </div>
       </div>
-    </div>
-  </>
-);
-}
+    </>
+  );
+};
 
 export default memo(PDFCompressor);

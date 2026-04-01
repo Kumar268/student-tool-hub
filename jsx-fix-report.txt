@@ -1,0 +1,985 @@
+🔧 COMPREHENSIVE JSX FIX SCRIPT
+🔧 Fixing: Unclosed divs + Fragments + Full-width layout
+🔧 Started: 31/3/2026, 7:31:33 pm
+
+======================================================================
+
+📊 Found 91 JSX files to process
+
+
+======================================================================
+📄 src\tools\academic\BasicStats.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\academic\CalculusSolver.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\academic\ChemistryBalancer.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\academic\CircuitDesigner.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\academic\DerivativeSolver.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\academic\EconomicsElasticity.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\academic\GPACalculator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\academic\IntegralCalculator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\academic\MatrixAlgebra.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\academic\PercentageCalc.jsx
+======================================================================
+ℹ️  No changes needed
+
+======================================================================
+📄 src\tools\academic\PhysicsKinematics.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\academic\ProjectileSimulator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\academic\QuadraticSolver.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\academic\scientificCalc.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\academic\ScientificCalculator.jsx
+======================================================================
+ℹ️  No changes needed
+
+======================================================================
+📄 src\tools\academic\ScientificNotation.jsx
+======================================================================
+✅ Changes applied:
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\academic\UnitConverter.jsx
+======================================================================
+ℹ️  No changes needed
+
+======================================================================
+📄 src\tools\audio\AudioConverter.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\audio\AudioToText.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\audio\TextToSpeech.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\audio\VoiceRecorder.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\ComingSoonTemplate.jsx
+======================================================================
+ℹ️  No changes needed
+
+======================================================================
+📄 src\tools\developer\CarbonFootprint.jsx
+======================================================================
+✅ Changes applied:
+
+======================================================================
+📄 src\tools\developer\CodeFormatter.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\developer\ColorPicker.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 4 unclosed div(s)
+   • Added 4 closing div(s)
+
+======================================================================
+📄 src\tools\developer\CSSMinifier.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\developer\HTMLPreviewer.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\developer\MusicTheoryCalc.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\developer\PasswordGenerator.jsx
+======================================================================
+ℹ️  No changes needed
+
+======================================================================
+📄 src\tools\developer\QRGenerator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\developer\RSADemo.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\developer\TruthTableGenerator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\AssignmentCoverPage.jsx
+======================================================================
+ℹ️  No changes needed
+
+======================================================================
+📄 src\tools\documentmaker\BiodataMaker.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\biographyGenerator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\CoverLetterGenerator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\CVMaker.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\InternshipApplication.jsx
+======================================================================
+ℹ️  No changes needed
+
+======================================================================
+📄 src\tools\documentmaker\InternshipLetter.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\JobApplicationTracker.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\LabReportBuilder.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\LinkedInSummaryGen.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\RecommendationLetter.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\ReferenceGenerator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\ResearchPaperOutline.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\ResumeMaker.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\ScholarshipLatter.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\documentmaker\SOPGenerator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\financial\EMILoanCalc.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\financial\HousingCalc.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\financial\MovingCosts.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\financial\PomodoroTimer.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\financial\salaryTax.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\financial\ScholarshipROICalc.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\financial\SIPCalculator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\financial\StudentBudgeting.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\financial\StudentLoanRepayment.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\financial\TextbookResale.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\health\agecalc.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\health\BMIAndCalorie.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\health\NutritionCalc.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\image\BackgroundRemover.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\image\FormatConverter.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\image\ImageCompressor.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\image\ImageEditor.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\image\ImageResizer.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 2 unclosed div(s)
+   • Added 2 closing div(s)
+
+======================================================================
+📄 src\tools\image\ImageToPDF.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 2 extra closing div(s) found
+
+======================================================================
+📄 src\tools\image\ScreenshotMockup.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\niche\AstronomyCalc.jsx
+======================================================================
+✅ Changes applied:
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\niche\BinaryConverter.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\niche\MusicTheoryCalc.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\niche\TypingSpeedTest.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\pdf\ImageToPDF.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\pdf\PDFCompressor.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\pdf\PDFMergeSplit.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 3 extra closing div(s) found
+
+======================================================================
+📄 src\tools\pdf\PDFToWord.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\pdf\PDFUnlock.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\pdf\WordToPDF.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\text\CaseConverter.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\text\GrammarChecker.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\text\PlagiarismCheck.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 1 extra closing div(s) found
+
+======================================================================
+📄 src\tools\text\TextFormatter.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Warning: 2 extra closing div(s) found
+
+======================================================================
+📄 src\tools\text\wordCount.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 1 unclosed div(s)
+   • Added 1 closing div(s)
+
+======================================================================
+📄 src\tools\text\WordCounter.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\utility\AgeCalculator.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\utility\AssignmentTracker.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Found 2 unclosed div(s)
+   • Added 2 closing div(s)
+
+======================================================================
+📄 src\tools\utility\DateDifference.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\utility\ExamWeighting.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\utility\FinalGradeCalc.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\utility\PercentageCalc.jsx
+======================================================================
+✅ Changes applied:
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+   • Fixed fragment closure after closing tag
+
+======================================================================
+📄 src\tools\utility\StudyPlanner.jsx
+======================================================================
+ℹ️  No changes needed
+
+======================================================================
+
+📊 FINAL SUMMARY
+======================================================================
+Total files processed: 91
+Files fixed: 83
+Files unchanged: 8
+Errors encountered: 0
+Total changes applied: 509
+
+✨ Script completed: 31/3/2026, 7:31:34 pm
+======================================================================

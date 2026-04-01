@@ -245,7 +245,7 @@ export default function PDFMergeSplit() {
 
   /* ── Reorder/Delete state ── */
   const [roFile, setRoFile]         = useState(null);
-  const [, setRoPageCount] = useState(0);
+  const [roPageCount, setRoPageCount] = useState(0);
   const [roOrder, setRoOrder]       = useState([]); // [{origIdx, rotation, deleted}]
   const [roSel, setRoSel]           = useState(null);
   const [roDragIdx, setRDI]         = useState(null);
@@ -293,9 +293,7 @@ export default function PDFMergeSplit() {
       const buf = await file.arrayBuffer();
       const pdf = await PDFDocument.load(buf);
       setSplitFile(p => ({ ...p, pageCount: pdf.getPageCount() }));
-    } catch (e) {
-      console.error('Failed to load split file:', e);
-    }
+    } catch {}
   };
 
   /* ═══ REORDER FILE ═══ */
@@ -310,9 +308,7 @@ export default function PDFMergeSplit() {
       setRoOrder(Array.from({ length: count }, (_, i) => ({ origIdx: i, rotation: 0, deleted: false })));
       setRoSel(null);
       setResult(null);
-    } catch (e) {
-      console.error('Failed to load reorder file:', e);
-    }
+    } catch {}
   };
 
   const roToggleDelete = idx => setRoOrder(p => p.map((r, i) => i === idx ? { ...r, deleted: !r.deleted } : r));
@@ -973,9 +969,8 @@ export default function PDFMergeSplit() {
           </div>
         </div>
       </div>
-    </div>
-  </>
-);
+    </>
+  );
 }
 
 /* ═══ SUCCESS CARD (shared) ═══ */

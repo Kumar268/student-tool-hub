@@ -1,5 +1,5 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import React, { useState, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 /* ═══════════════════════════════════════════════════════
    BASE STYLES
@@ -261,8 +261,8 @@ function useConverter() {
           name: baseName(file.name) + '.' + ext(targetFmt),
         });
         setStatus('done');
-      } catch (e) {
-        console.error(e);
+      } catch {
+        console.error('Conversion failed');
         setStatus('error');
       }
     }
@@ -287,7 +287,7 @@ function useConverter() {
             blob, oldKB: (item.size/1024).toFixed(1), newKB: (blob.size/1024).toFixed(1),
             reduction: ((item.size - blob.size)/item.size*100).toFixed(1),
           });
-        } catch(e) { results.push({ name:item.name, error:true }); }
+        } catch { results.push({ name:item.name, error:true }); }
         setProgress(Math.round(((i+1)/batch.length)*100));
       }
       setBatchResults(results);
@@ -536,7 +536,7 @@ function ResultView({ result, batchResults, targetFmt, onDownload, onDownloadAll
    NEON APP
 ═══════════════════════════════════════════════════════ */
 function NeonApp({ onSwitch, cv }) {
-  const { file, loadFile, loadBatch, targetFmt, setTargetFmt, quality, setQuality,
+  const { file, loadBatch, targetFmt, setTargetFmt, quality, setQuality,
     result, status, progress, showAdv, setShowAdv, batch, batchResults,
     convert, downloadSingle, downloadAll, reset } = cv;
   const [drag, setDrag] = useState(false);
@@ -714,7 +714,7 @@ function NeonApp({ onSwitch, cv }) {
    NORMAL APP
 ═══════════════════════════════════════════════════════ */
 function NormalApp({ onSwitch, cv }) {
-  const { file, loadFile, loadBatch, targetFmt, setTargetFmt, quality, setQuality,
+  const { file, loadBatch, targetFmt, setTargetFmt, quality, setQuality,
     result, status, progress, showAdv, setShowAdv, batch, batchResults,
     convert, downloadSingle, downloadAll, reset } = cv;
   const [drag, setDrag] = useState(false);

@@ -378,15 +378,7 @@ function TargetSizeSelector({ quality, setQuality, format }) {
     if (!bytes) { setTargetErr('Enter a valid number (e.g. 200)'); return; }
     setTargetErr('');
     setTargetSearching(true);
-    // Binary search over quality
-    let lo = 1, hi = 100, best = quality;
-    for (let i = 0; i < 14; i++) {
-      const mid = Math.round((lo + hi) / 2);
-      // Estimate: rough linear model quality↔size
-      const estimatedBytes = bytes * (mid / quality) * 1.05;
-      if (estimatedBytes <= bytes * 1.08) { best = mid; hi = mid - 1; }
-      else lo = mid + 1;
-    }
+
     // Simple direct quality set based on ratio
     const ratio = bytes / Math.max(bytes * (quality / 100), 1);
     const newQ = Math.max(1, Math.min(100, Math.round(quality * Math.sqrt(ratio))));

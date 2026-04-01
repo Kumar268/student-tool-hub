@@ -256,7 +256,10 @@ function useBGRemover() {
 
   // Load the background-removal library from CDN
   useEffect(() => {
-    if (window.__bgRemovalLib) { setLibLoaded(true); return; }
+    if (window.__bgRemovalLib) {
+      setTimeout(() => setLibLoaded(true), 0);
+      return;
+    }
     const script = document.createElement('script');
     // Use @imgly/background-removal via jsdelivr
     script.src = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/browser/background-removal.umd.js';
@@ -269,10 +272,8 @@ function useBGRemover() {
     return new Promise(resolve => {
       setTimeout(() => {
         setStageMsg(msg);
-        let cur = 0;
         const step = () => {
           setProgress(p => {
-            cur = p;
             if (p >= targetPct) { resolve(); return p; }
             requestAnimationFrame(step);
             return Math.min(p + 0.8, targetPct);
@@ -352,12 +353,12 @@ function useBGRemover() {
         resultRef.current = url;
         await new Promise(r => setTimeout(r, 300));
         setStatus('done');
-      } catch(e) {
+      } catch {
         setStatus('error');
         setStageMsg('Processing failed. Please try again.');
       }
     }
-  }, [original, animateProgress]);
+  }, [original]);
 
   const reset = useCallback(() => {
     if (original?.url) URL.revokeObjectURL(original.url);
@@ -600,14 +601,13 @@ function BgPicker({ bgType, setBgType, bgColor, setBgColor, bgGrad, setBgGrad, n
 function NeonApp({ onSwitch, bg }) {
   const {
     original, loadImage, result, status, progress, stageMsg,
-    removeBackground, reset, download,
+    removeBackground, reset,
     bgColor, setBgColor, bgType, setBgType, bgGrad, setBgGrad,
     libLoaded, libError, compareMode, setCompareMode,
   } = bg;
 
   const [dragover, setDragover] = useState(false);
   const fileRef = useRef();
-  const shouldReduceMotion = useReducedMotion();
 
   const bgStyle = bgType === 'color' && bgColor !== 'transparent'
     ? { background: bgColor }
@@ -835,7 +835,7 @@ function NeonApp({ onSwitch, bg }) {
 function NormalApp({ onSwitch, bg }) {
   const {
     original, loadImage, result, status, progress, stageMsg,
-    removeBackground, reset, download,
+    removeBackground, reset,
     bgColor, setBgColor, bgType, setBgType, bgGrad, setBgGrad,
     libLoaded, libError, compareMode, setCompareMode,
   } = bg;

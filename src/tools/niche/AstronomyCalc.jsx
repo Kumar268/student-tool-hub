@@ -190,102 +190,92 @@ const fmtTime = (seconds) => {
   return sci(seconds/31557600) + ' years';
 };
 
-/* ════════════════════════════════════════════════════════════ */
-export default function AstronomyCalculator({ isDarkMode: ext } = {}) {
-  const [dark, setDark] = useState(ext !== undefined ? ext : true);
-  const cls = dark ? 'dk' : 'lt';
-  const [tab, setTab] = useState('distance');
-
-  /* ── distance state ── */
-  const [distVal,  setDistVal]  = useState(1);
-  const [distFrom, setDistFrom] = useState('AU');
-  const [distTo,   setDistTo]   = useState('light-years');
-
-  /* ── light travel state ── */
-  const [ltBody, setLtBody] = useState('Sun');
-  const BODIES = {
-    'Sun':              695700e3,
-    'Moon':             384400e3,
-    'Mars (closest)':   54.6e9,
-    'Mars (farthest)':  401e9,
-    'Jupiter':          628.7e9,
-    'Saturn':           1.2e12,
-    'Proxima Centauri': 4.243 * LY,
-    'Andromeda Galaxy': 2.537e6 * LY,
-  };
-
-  /* ── weight state ── */
-  const [earthWeight, setEarthWeight] = useState(70);
-  const [weightUnit,  setWeightUnit]  = useState('kg');
-
-  /* ── orbital state ── */
-  const [orbMass,   setOrbMass]   = useState(1);
-  const [orbDist,   setOrbDist]   = useState(1);
-  const [orbUnit,   setOrbUnit]   = useState('AU');
-
-  /* ── luminosity state ── */
-  const [starTemp,   setStarTemp]   = useState(5778);
-  const [starRadius, setStarRadius] = useState(1);
-
-  /* ════ CALCULATIONS ════ */
-
-  // Distance conversion
-  const distResult = useMemo(() => {
-    const v = parseFloat(distVal); if (!v || isNaN(v)) return null;
-    const toMetres = { 'km':1e3, 'AU':AU, 'light-years':LY, 'parsec':PC, 'light-minutes':C*60, 'light-hours':C*3600 };
-    const metres = v * (toMetres[distFrom] || 1);
-    const results = Object.entries(toMetres).map(([unit, factor]) => ({ unit, value: metres / factor }));
-    return { metres, results };
-  }, [distVal, distFrom, distTo]);
-
-  // Light travel time
-  const ltResult = useMemo(() => {
-    const dist = BODIES[ltBody];
-    if (!dist) return null;
-    const secs = dist / C;
-    return { dist, secs, formatted: fmtTime(secs) };
-  }, [ltBody]);
-
-  // Planet weight
-  const weightResult = useMemo(() => {
-    const w = parseFloat(earthWeight); if (!w || isNaN(w)) return null;
-    const kgMass = weightUnit === 'kg' ? w : w * 0.453592;
-    return PLANETS.map(p => ({ ...p, weight: kgMass * p.g, weightLbs: kgMass * p.g / 0.453592 }));
-  }, [earthWeight, weightUnit]);
-
-  // Orbital period (Kepler's 3rd)
-  const orbResult = useMemo(() => {
-    const M  = parseFloat(orbMass)   * M_SUN; if (!M || isNaN(M)) return null;
-    const toM = { 'AU':AU, 'km':1e3, 'light-minutes':C*60 };
-    const a  = parseFloat(orbDist) * (toM[orbUnit] || AU);
-    const T  = 2 * Math.PI * Math.sqrt(Math.pow(a, 3) / (G * M));
-    return { T, years: T / 31557600, days: T / 86400 };
-  }, [orbMass, orbDist, orbUnit]);
-
-  // Star luminosity (Stefan-Boltzmann)
-  const lumResult = useMemo(() => {
-    const T = parseFloat(starTemp);
-    const R = parseFloat(starRadius) * 6.957e8; // solar radii → metres
-    if (!T || !R || isNaN(T) || isNaN(R)) return null;
-    const sigma = 5.670374419e-8;
-    const L = 4 * Math.PI * R * R * sigma * Math.pow(T, 4);
-    const LSun = L / L_SUN;
-    return { L, LSun };
-  }, [starTemp, starRadius]);
-
-  /* ════ SHARED UI ════ */
-  const L = ({ children }) => <label className="lbl">{children}</label>;
-  const Row = ({ label, val, unit, color }) => (
-    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center',
-      padding:'5px 9px', marginBottom:3, borderRadius:dark?2:6,
-      border:dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)',
-      background:dark?'rgba(20,255,180,.02)':'rgba(13,51,32,.02)' }}>
-      <span style={{ fontFamily:"'Outfit',sans-serif", fontSize:10.5, color:'var(--txm)' }}>{label}</span>
-      <span style={{ fontFamily:"'Fira Code',monospace", fontSize:9.5, color:color||'var(--acc)' }}>{val} {unit||''}</span>
-    </div>
-  );
-
   /* ════════════════════════════════════════════════════════════ */
+  const L = ({ children }) => <label className="lbl">{children}</label>;
+
+const BODIES = {
+  'Sun':              695700e3,
+  'Moon':             384400e3,
+  'Mars (closest)':   54.6e9,
+  'Mars (farthest)':  401e9,
+  'Jupiter':          628.7e9,
+  'Saturn':           1.2e12,
+  'Proxima Centauri': 4.243 * LY,
+  'Andromeda Galaxy': 2.537e6 * LY,
+};
+
+export default function AstronomyCalculator({ isDarkMode: ext } = {}) {
+    const [dark, setDark] = useState(ext !== undefined ? ext : true);
+    const cls = dark ? 'dk' : 'lt';
+    const [tab, setTab] = useState('distance');
+  
+    /* ── distance state ── */
+    const [distVal,  setDistVal]  = useState(1);
+    const [distFrom, setDistFrom] = useState('AU');
+  
+    /* ── light travel state ── */
+    const [ltBody, setLtBody] = useState('Sun');
+  
+    /* ── weight state ── */
+    const [earthWeight, setEarthWeight] = useState(70);
+    const [weightUnit,  setWeightUnit]  = useState('kg');
+  
+    /* ── orbital state ── */
+    const [orbMass,   setOrbMass]   = useState(1);
+    const [orbDist,   setOrbDist]   = useState(1);
+    const [orbUnit,   setOrbUnit]   = useState('AU');
+  
+    /* ── luminosity state ── */
+    const [starTemp,   setStarTemp]   = useState(5778);
+    const [starRadius, setStarRadius] = useState(1);
+  
+  /* ════ CALCULATIONS ════ */
+  
+    // Distance conversion
+    const distResult = useMemo(() => {
+      const v = parseFloat(distVal); if (!v || isNaN(v)) return null;
+      const toMetres = { 'km':1e3, 'AU':AU, 'light-years':LY, 'parsec':PC, 'light-minutes':C*60, 'light-hours':C*3600 };
+      const metres = v * (toMetres[distFrom] || 1);
+      const results = Object.entries(toMetres).map(([unit, factor]) => ({ unit, value: metres / factor }));
+      return { metres, results };
+    }, [distVal, distFrom]);
+  
+    // Light travel time
+    const ltResult = useMemo(() => {
+      const dist = BODIES[ltBody];
+      if (!dist) return null;
+      const secs = dist / C;
+      return { dist, secs, formatted: fmtTime(secs) };
+    }, [ltBody]);
+  
+    // Planet weight
+    const weightResult = useMemo(() => {
+      const w = parseFloat(earthWeight); if (!w || isNaN(w)) return null;
+      const kgMass = weightUnit === 'kg' ? w : w * 0.453592;
+      return PLANETS.map(p => ({ ...p, weight: kgMass * p.g, weightLbs: kgMass * p.g / 0.453592 }));
+    }, [earthWeight, weightUnit]);
+  
+    // Orbital period (Kepler's 3rd)
+    const orbResult = useMemo(() => {
+      const M  = parseFloat(orbMass)   * M_SUN; if (!M || isNaN(M)) return null;
+      const toM = { 'AU':AU, 'km':1e3, 'light-minutes':C*60 };
+      const a  = parseFloat(orbDist) * (toM[orbUnit] || AU);
+      const T  = 2 * Math.PI * Math.sqrt(Math.pow(a, 3) / (G * M));
+      return { T, years: T / 31557600, days: T / 86400 };
+    }, [orbMass, orbDist, orbUnit]);
+  
+    // Star luminosity (Stefan-Boltzmann)
+    const lumResult = useMemo(() => {
+      const T = parseFloat(starTemp);
+      const R = parseFloat(starRadius) * 6.957e8; // solar radii → metres
+      if (!T || !R || isNaN(T) || isNaN(R)) return null;
+      const sigma = 5.670374419e-8;
+      const L = 4 * Math.PI * R * R * sigma * Math.pow(T, 4);
+      const LSun = L / L_SUN;
+      return { L, LSun };
+    }, [starTemp, starRadius]);
+  
+    /* ════════════════════════════════════════════════════════════ */
   return (
     <>
       <style>{STYLES}</style>
@@ -370,7 +360,7 @@ export default function AstronomyCalculator({ isDarkMode: ext } = {}) {
                 <div style={{ width:16, height:16, borderRadius:'50%', background:dark?'#fbbf24':'#d97706',
                   boxShadow:dark?'0 0 12px rgba(251,191,36,.6)':'none', flexShrink:0 }} />
                 {/* orbits */}
-                {[22,34,46].map((r,i) => (
+                {[22,34,46].map((r) => (
                   <div key={r} style={{ position:'absolute', width:r*2, height:r*2, borderRadius:'50%',
                     border:`1px solid ${dark?'rgba(20,255,180,.1)':'rgba(13,51,32,.08)'}` }} />
                 ))}

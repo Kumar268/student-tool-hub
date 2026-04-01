@@ -942,6 +942,7 @@ Each on a new line. No numbers, no bullets. Just the phrases. Make them varied â
           </div>
         </div>
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 }

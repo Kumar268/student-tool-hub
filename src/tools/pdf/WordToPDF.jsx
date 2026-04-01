@@ -233,7 +233,7 @@ function printAsPDF(html, filename) {
     window.onload = function() {
       setTimeout(function() { window.print(); }, 400);
     };
-  <\/script>
+  </script>
 </body>
 </html>`);
   win.document.close();

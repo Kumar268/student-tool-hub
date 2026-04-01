@@ -176,8 +176,7 @@ const NutritionTracker = ({ isDarkMode }) => {
     };
 
     return (
-        <div className={`min-h-screen pb-20 font-sans transition-colors duration-500 overflow-hidden relative ${isDarkMode ? 'bg-[#000510] text-cyan-50' : 'bg-slate-50 text-slate-900'
-            }`}>
+        <div className={`min-h-screen pb-20 font-sans transition-colors duration-500 overflow-hidden relative ${isDarkMode ? 'bg-[#000510] text-cyan-50' : 'bg-slate-50 text-slate-900'}`}>
 
             {/* Background HUD effects */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -193,7 +192,6 @@ const NutritionTracker = ({ isDarkMode }) => {
         .hud-glitch:hover { animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; }
         @keyframes glitch { 0% { transform: translate(0) } 20% { transform: translate(-2px, 2px) } 40% { transform: translate(-2px, -2px) } 60% { transform: translate(2px, 2px) } 80% { transform: translate(2px, -2px) } 100% { transform: translate(0) } }
         
-        /* 3D Container class */
         .perspective-1000 { perspective: 1000px; }
         .preserve-3d { transform-style: preserve-3d; }
       `}</style>
@@ -529,10 +527,7 @@ const NutritionTracker = ({ isDarkMode }) => {
                         </div>
                     </div>
                   </div>
-                </div>
-
             </div>
-
         </div>
     );
 };

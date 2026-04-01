@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion as Motion, AnimatePresence } from "framer-motion";
 
 /* ═══════════════════════════════════════════════════════════════
    MUSIC THEORY CALCULATOR — Document Tools Series #8
@@ -247,7 +247,7 @@ function playNote(midiNote, duration=0.65, type='triangle', vol=0.18) {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+duration);
     osc.connect(gain); gain.connect(ctx.destination);
     osc.start(); osc.stop(ctx.currentTime+duration);
-  } catch(e){}
+  } catch {}
 }
 function playChord(midiNotes, stagger=55) {
   midiNotes.forEach((n,i)=>setTimeout(()=>playNote(n,1.3),i*stagger));
@@ -263,7 +263,7 @@ function playMetClick(accent=false) {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.04);
     osc.connect(gain); gain.connect(ctx.destination);
     osc.start(); osc.stop(ctx.currentTime+0.05);
-  } catch(e){}
+  } catch {}
 }
 
 const TABS = [
@@ -279,6 +279,50 @@ const TABS = [
 ];
 
 /* ════════════════════════════════════════════════════════════ */
+/* ── Piano ── */
+const Piano = ({highlighted, dark, playNote})=>{
+  const WHITE_KEYS=[0,2,4,5,7,9,11];
+  const wkCount=14;
+  const allWhites=[];
+  for(let o=0;o<2;o++) WHITE_KEYS.forEach((s,wi)=>allWhites.push({s,wi:wi+o*7,n:NOTES[s%12],o}));
+  return (
+    <div style={{position:'relative',height:80,marginTop:8,borderRadius:4,overflow:'hidden',
+      border:dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'}}>
+      <div style={{display:'flex',height:'100%'}}>
+        {allWhites.map((k,i)=>(
+          <div key={i} onClick={()=>playNote(60+k.s+k.o*12)}
+            style={{flex:1,height:'100%',cursor:'pointer',position:'relative',
+              borderRight:dark?'1px solid #1a2820':'1px solid #b8ddc8',
+              background:highlighted.has(k.n)?(dark?'var(--acc)':'var(--acc)'):(dark?'#e8fff8':'#f0faf5'),
+              boxShadow:highlighted.has(k.n)?(dark?'inset 0 -4px 12px rgba(20,255,180,.4)':'inset 0 -4px 8px rgba(13,51,32,.2)'):'none',
+              transition:'all .12s'}}>
+            {(k.wi===0||k.wi===7)&&(
+              <span style={{position:'absolute',bottom:4,left:'50%',transform:'translateX(-50%)',
+                fontFamily:"'Fira Code',monospace",fontSize:7,color:highlighted.has(k.n)?(dark?'#060a09':'#fff'):'var(--txm)'}}>
+                {k.n}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+      {[0,1].map(o=>[1,3,6,8,10].map(s=>{
+        const n=NOTES[s%12];
+        const isAct=highlighted.has(n);
+        const whitesBefore=WHITE_KEYS.filter(w=>w<s).length;
+        const leftPct=((whitesBefore+o*7-0.3)/wkCount)*100;
+        return (
+          <div key={`${o}-${s}`} onClick={e=>{e.stopPropagation();playNote(60+s+o*12);}}
+            style={{position:'absolute',top:0,left:`${leftPct}%`,width:`${(100/wkCount)*0.6}%`,height:'57%',
+              borderRadius:'0 0 3px 3px',cursor:'pointer',zIndex:2,
+              background:isAct?'var(--acc)':(dark?'#0a0f0d':'#071810'),
+              boxShadow:isAct?(dark?'0 0 10px rgba(20,255,180,.6)':'none'):(dark?'2px 3px 6px rgba(0,0,0,.5)':'2px 3px 4px rgba(7,24,16,.25)'),
+              transition:'all .12s'}}/>
+        );
+      }))}
+    </div>
+  );
+};
+
 export default function MusicTheoryCalc({isDarkMode:ext}={}) {
   const [dark, setDark] = useState(ext!==undefined?ext:true);
   const cls = dark?'dk':'lt';
@@ -294,13 +338,13 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
 
   /* BPM state */
   const [bpm,          setBpm]         = useState(120);
-  const [tapTimes,     setTapTimes]    = useState([]);
+  const [_tapTimes,    setTapTimes]    = useState([]);
   const [tapFlash,     setTapFlash]    = useState(false);
   const [metroOn,      setMetroOn]     = useState(false);
   const [metroBeat,    setMetroBeat]   = useState(0);
   const [metroSig,     setMetroSig]    = useState(4);
   const metroRef = useRef(null);
-  const beatRef  = useRef(0);
+  const _beatRef  = useRef(0);
 
   /* Transpose state */
   const [trpInput,  setTrpInput]  = useState('C  E  G  Am  F');
@@ -318,19 +362,19 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
 
   /* Nashville state */
   const [nashKey,  setNashKey]  = useState('C');
-  const [nashMode, setNashMode] = useState('major');
+  const [_nashMode, _setNashMode] = useState('major');
 
   /* ── derived ── */
   const scaleData  = SCALES[scaleType];
   const scaleNotes = useMemo(()=>{
     const ri=NOTES.indexOf(rootNote);
     return scaleData.intervals.map(iv=>NOTES[(ri+iv)%12]);
-  },[rootNote,scaleType]);
+  },[rootNote, scaleData.intervals]);
   const chordData  = CHORDS[chordType];
   const chordNotes = useMemo(()=>{
     const ri=NOTES.indexOf(rootNote);
     return chordData.intervals.map(iv=>NOTES[(ri+iv)%12]);
-  },[rootNote,chordType]);
+  },[rootNote, chordData.intervals]);
   const intervalData = useMemo(()=>{
     const i1=NOTES.indexOf(note1),i2=NOTES.indexOf(note2);
     return INTERVALS[(i2-i1+12)%12];
@@ -461,50 +505,6 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
   const playIntervalFn = ()=>{
     const i1=NOTES.indexOf(note1)+60, i2=NOTES.indexOf(note2)+60;
     playNote(i1,0.8); setTimeout(()=>playNote(i2,0.8),450);
-  };
-
-  /* ── Piano ── */
-  const Piano = ({highlighted})=>{
-    const WHITE_KEYS=[0,2,4,5,7,9,11];
-    const wkCount=14;
-    const allWhites=[];
-    for(let o=0;o<2;o++) WHITE_KEYS.forEach((s,wi)=>allWhites.push({s,wi:wi+o*7,n:NOTES[s%12],o}));
-    return (
-      <div style={{position:'relative',height:80,marginTop:8,borderRadius:4,overflow:'hidden',
-        border:dark?'1px solid var(--bdr)':'1.5px solid var(--bdr)'}}>
-        <div style={{display:'flex',height:'100%'}}>
-          {allWhites.map((k,i)=>(
-            <div key={i} onClick={()=>playNote(60+k.s+k.o*12)}
-              style={{flex:1,height:'100%',cursor:'pointer',position:'relative',
-                borderRight:dark?'1px solid #1a2820':'1px solid #b8ddc8',
-                background:highlighted.has(k.n)?(dark?'var(--acc)':'var(--acc)'):(dark?'#e8fff8':'#f0faf5'),
-                boxShadow:highlighted.has(k.n)?(dark?'inset 0 -4px 12px rgba(20,255,180,.4)':'inset 0 -4px 8px rgba(13,51,32,.2)'):'none',
-                transition:'all .12s'}}>
-              {(k.wi===0||k.wi===7)&&(
-                <span style={{position:'absolute',bottom:4,left:'50%',transform:'translateX(-50%)',
-                  fontFamily:"'Fira Code',monospace",fontSize:7,color:highlighted.has(k.n)?(dark?'#060a09':'#fff'):'var(--txm)'}}>
-                  {k.n}
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-        {[0,1].map(o=>[1,3,6,8,10].map(s=>{
-          const n=NOTES[s%12];
-          const isAct=highlighted.has(n);
-          const whitesBefore=WHITE_KEYS.filter(w=>w<s).length;
-          const leftPct=((whitesBefore+o*7-0.3)/wkCount)*100;
-          return (
-            <div key={`${o}-${s}`} onClick={e=>{e.stopPropagation();playNote(60+s+o*12);}}
-              style={{position:'absolute',top:0,left:`${leftPct}%`,width:`${(100/wkCount)*0.6}%`,height:'57%',
-                borderRadius:'0 0 3px 3px',cursor:'pointer',zIndex:2,
-                background:isAct?'var(--acc)':(dark?'#0a0f0d':'#071810'),
-                boxShadow:isAct?(dark?'0 0 10px rgba(20,255,180,.6)':'none'):(dark?'2px 3px 6px rgba(0,0,0,.5)':'2px 3px 4px rgba(7,24,16,.25)'),
-                transition:'all .12s'}}/>
-          );
-        }))}
-      </div>
-    );
   };
 
   /* ─── play-btn shared style ─── */
@@ -687,7 +687,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
 
               {/* ═══ SCALES ═══ */}
               {tab==='scale'&&(
-                <motion.div key="sc" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                <Motion.div key="sc" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
                   <div className="panel" style={{padding:'18px 20px'}}>
                     <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
                       <div style={{display:'flex',alignItems:'center',gap:9}}>
@@ -703,7 +703,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       <div><label className="lbl">Scale type</label><select className="fi" value={scaleType} onChange={e=>setScaleType(e.target.value)}>{Object.keys(SCALES).map(s=><option key={s}>{s}</option>)}</select></div>
                     </div>
                     <AnimatePresence mode="wait">
-                      <motion.div key={rootNote+scaleType} initial={{opacity:0}} animate={{opacity:1}}
+                      <Motion.div key={rootNote+scaleType} initial={{opacity:0}} animate={{opacity:1}}
                         style={{display:'flex',flexWrap:'wrap',gap:8,marginBottom:14}}>
                         {scaleNotes.map((note,i)=>(
                           <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
@@ -711,7 +711,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                             <span style={{fontFamily:"'Fira Code',monospace",fontSize:8,color:'var(--txm)'}}>{scaleData.degrees[i]||''}</span>
                           </div>
                         ))}
-                      </motion.div>
+                      </Motion.div>
                     </AnimatePresence>
                     <div style={{display:'flex',gap:4,marginBottom:14,flexWrap:'wrap'}}>
                       {scaleData.intervals.map((iv,i)=>{
@@ -720,7 +720,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                         return <div key={i} style={{fontFamily:"'Fira Code',monospace",fontSize:9,color:'var(--acc)',padding:'2px 7px',borderRadius:2,background:dark?'rgba(20,255,180,.07)':'rgba(13,51,32,.06)'}}>{step===2?'W':step===1?'H':'W+H'}</div>;
                       })}
                     </div>
-                    <Piano highlighted={activeNotes}/>
+                    <Piano highlighted={activeNotes} dark={dark} playNote={playNote}/>
                     <div style={{marginTop:14,fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--tx2)',padding:'9px 13px',borderRadius:dark?3:7,border:dark?'1px solid rgba(20,255,180,.1)':'1.5px solid var(--bdr)',background:dark?'rgba(0,0,0,.4)':'rgba(245,251,248,.9)'}}>
                       {rootNote} {scaleType}: {scaleNotes.join(' – ')}{'\n'}Semitones: {scaleData.intervals.join(', ')}
                     </div>
@@ -741,12 +741,12 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       );
                     })}
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
               {/* ═══ CHORDS ═══ */}
               {tab==='chord'&&(
-                <motion.div key="ch" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                <Motion.div key="ch" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
                   <div className="panel" style={{padding:'18px 20px'}}>
                     <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
                       <div style={{display:'flex',alignItems:'center',gap:9}}>
@@ -762,7 +762,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       <div><label className="lbl">Chord type</label><select className="fi" value={chordType} onChange={e=>setChordType(e.target.value)}>{Object.keys(CHORDS).map(c=><option key={c}>{c}</option>)}</select></div>
                     </div>
                     <AnimatePresence mode="wait">
-                      <motion.div key={rootNote+chordType} initial={{opacity:0}} animate={{opacity:1}} style={{display:'flex',flexWrap:'wrap',gap:10,marginBottom:16}}>
+                      <Motion.div key={rootNote+chordType} initial={{opacity:0}} animate={{opacity:1}} style={{display:'flex',flexWrap:'wrap',gap:10,marginBottom:16}}>
                         {chordNotes.map((note,i)=>(
                           <div key={i} style={{display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
                             <div className={`chord-pill${i===0?' root':''}`} onClick={()=>playNote(NOTES.indexOf(note)+60)} style={{animationDelay:`${i*60}ms`}}>{note}</div>
@@ -773,9 +773,9 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                           <div style={{fontFamily:"'Fira Code',monospace",fontSize:28,fontWeight:500,color:'var(--acc4)',lineHeight:1}}>{rootNote}{chordData.symbol}</div>
                           <div style={{fontFamily:"'Outfit',sans-serif",fontSize:11,color:'var(--txm)',marginTop:3}}>{chordType}</div>
                         </div>
-                      </motion.div>
+                      </Motion.div>
                     </AnimatePresence>
-                    <Piano highlighted={activeNotes}/>
+                    <Piano highlighted={activeNotes} dark={dark} playNote={playNote}/>
                     <div style={{marginTop:14,fontFamily:"'Fira Code',monospace",fontSize:11,color:'var(--tx2)',padding:'9px 13px',borderRadius:dark?3:7,border:dark?'1px solid rgba(167,139,250,.12)':'1.5px solid rgba(91,33,182,.1)',background:dark?'rgba(167,139,250,.04)':'rgba(91,33,182,.03)'}}>
                       {`${rootNote}${chordData.symbol}: ${chordNotes.join(' + ')}\nIntervals: ${chordData.intervals.join(' – ')} semitones`}
                     </div>
@@ -799,12 +799,12 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       })}
                     </div>
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
               {/* ═══ INTERVALS ═══ */}
               {tab==='interval'&&(
-                <motion.div key="iv" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                <Motion.div key="iv" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
                   <div className="panel" style={{padding:'18px 20px'}}>
                     <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
                       <div style={{display:'flex',alignItems:'center',gap:9}}>
@@ -820,14 +820,14 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       <div><label className="lbl">Second note</label><select className="fi" value={note2} onChange={e=>setNote2(e.target.value)}>{NOTES.map(n=><option key={n}>{n}</option>)}</select></div>
                     </div>
                     <AnimatePresence mode="wait">
-                      <motion.div key={note1+note2} className="int-display" initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}}>
+                      <Motion.div key={note1+note2} className="int-display" initial={{opacity:0,scale:.97}} animate={{opacity:1,scale:1}}>
                         <div style={{fontFamily:"'Fraunces',serif",fontSize:32,fontWeight:700,color:'var(--acc)',lineHeight:1,marginBottom:7}}>{intervalData.name}</div>
                         <div style={{fontFamily:"'Fira Code',monospace",fontSize:13,color:'var(--acc4)',marginBottom:6}}>{intervalData.abbr}</div>
                         <div style={{fontFamily:"'Outfit',sans-serif",fontSize:13,color:'var(--tx2)',marginBottom:3}}>{intervalData.semitones} semitone{intervalData.semitones!==1?'s':''} · {note1} to {note2}</div>
                         <div style={{fontFamily:"'Outfit',sans-serif",fontSize:12,color:'var(--txm)'}}>{intervalData.consonance}</div>
-                      </motion.div>
+                      </Motion.div>
                     </AnimatePresence>
-                    <Piano highlighted={activeNotes}/>
+                    <Piano highlighted={activeNotes} dark={dark} playNote={playNote}/>
                   </div>
                   <div className="panel" style={{padding:'16px 18px'}}>
                     <div style={{fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:700,color:'var(--tx)',marginBottom:12}}>All intervals</div>
@@ -843,12 +843,12 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       </div>
                     ))}
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
               {/* ═══ PROGRESSIONS ═══ */}
               {tab==='progression'&&(
-                <motion.div key="pg" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                <Motion.div key="pg" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
                   <div className="panel" style={{padding:'18px 20px'}}>
                     <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:16}}>
                       <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,border:dark?'1px solid rgba(251,191,36,.3)':'1.5px solid rgba(146,64,14,.2)',background:dark?'rgba(251,191,36,.07)':'rgba(146,64,14,.04)'}}>♪</div>
@@ -905,12 +905,12 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       );
                     })}
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
               {/* ═══ BPM & TEMPO ═══ */}
               {tab==='bpm'&&(
-                <motion.div key="bpm" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                <Motion.div key="bpm" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
                   <div className="panel" style={{padding:'18px 20px'}}>
                     <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:20}}>
                       <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,border:dark?'1px solid rgba(251,191,36,.3)':'1.5px solid rgba(146,64,14,.2)',background:dark?'rgba(251,191,36,.07)':'rgba(146,64,14,.04)'}}>🥁</div>
@@ -997,12 +997,12 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       </div>
                     ))}
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
               {/* ═══ TRANSPOSE ═══ */}
               {tab==='transpose'&&(
-                <motion.div key="tr" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                <Motion.div key="tr" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
                   <div className="panel" style={{padding:'18px 20px'}}>
                     <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:18}}>
                       <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Fira Code',monospace",fontSize:14,color:'var(--acc)',border:dark?'1px solid rgba(20,255,180,.25)':'1.5px solid rgba(13,51,32,.2)',background:dark?'rgba(20,255,180,.06)':'rgba(13,51,32,.05)'}}>↔</div>
@@ -1091,12 +1091,12 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       </table>
                     </div>
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
               {/* ═══ EAR TRAINING ═══ */}
               {tab==='ear'&&(
-                <motion.div key="ear" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                <Motion.div key="ear" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
                   <div className="panel" style={{padding:'18px 20px'}}>
                     <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:16}}>
                       <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,border:dark?'1px solid rgba(20,255,180,.25)':'1.5px solid rgba(13,51,32,.2)',background:dark?'rgba(20,255,180,.06)':'rgba(13,51,32,.05)'}}>👂</div>
@@ -1108,7 +1108,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
 
                     <AnimatePresence mode="wait">
                       {earPhase==='idle'&&(
-                        <motion.div key="idle" initial={{opacity:0}} animate={{opacity:1}} style={{textAlign:'center',padding:'32px 0'}}>
+                        <Motion.div key="idle" initial={{opacity:0}} animate={{opacity:1}} style={{textAlign:'center',padding:'32px 0'}}>
                           <div style={{fontFamily:"'Outfit',sans-serif",fontSize:14,color:'var(--txm)',marginBottom:20}}>
                             Direction: <strong style={{color:'var(--acc)',textTransform:'capitalize'}}>{earDirection}</strong>
                           </div>
@@ -1120,11 +1120,11 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                               animation:'glow 2.5s infinite'}}>
                             ▶ Play interval
                           </button>
-                        </motion.div>
+                        </Motion.div>
                       )}
 
                       {(earPhase==='playing'||earPhase==='answered')&&(
-                        <motion.div key="q" initial={{opacity:0,y:4}} animate={{opacity:1,y:0}}>
+                        <Motion.div key="q" initial={{opacity:0,y:4}} animate={{opacity:1,y:0}}>
                           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
                             <div style={{fontFamily:"'Outfit',sans-serif",fontSize:13,color:'var(--txm)'}}>
                               What interval did you hear?
@@ -1148,7 +1148,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                           </div>
 
                           {earPhase==='answered'&&(
-                            <motion.div initial={{opacity:0,y:4}} animate={{opacity:1,y:0}}
+                            <Motion.div initial={{opacity:0,y:4}} animate={{opacity:1,y:0}}
                               style={{textAlign:'center',padding:'14px',borderRadius:dark?3:9,marginBottom:14,
                                 border:earGuess?.semitones===earInterval?.semitones?(dark?'1px solid rgba(20,255,180,.3)':'1.5px solid rgba(20,255,180,.4)'):(dark?'1px solid rgba(255,107,107,.3)':'1.5px solid rgba(255,107,107,.4)'),
                                 background:earGuess?.semitones===earInterval?.semitones?(dark?'rgba(20,255,180,.06)':'rgba(20,255,180,.08)'):(dark?'rgba(255,107,107,.06)':'rgba(255,107,107,.08)')}}>
@@ -1159,7 +1159,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                               <div style={{fontFamily:"'Outfit',sans-serif",fontSize:13,color:'var(--tx2)'}}>
                                 The interval was <strong style={{color:'var(--acc)'}}>{earInterval?.name}</strong> ({earInterval?.semitones} semitones)
                               </div>
-                            </motion.div>
+                            </Motion.div>
                           )}
 
                           {earPhase==='answered'&&(
@@ -1173,7 +1173,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                               </button>
                             </div>
                           )}
-                        </motion.div>
+                        </Motion.div>
                       )}
                     </AnimatePresence>
                   </div>
@@ -1205,12 +1205,12 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       </div>
                     ))}
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
               {/* ═══ NASHVILLE NUMBERS ═══ */}
               {tab==='nashville'&&(
-                <motion.div key="nash" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                <Motion.div key="nash" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
                   <div className="panel" style={{padding:'18px 20px'}}>
                     <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:16}}>
                       <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Fira Code',monospace",fontSize:14,fontWeight:700,color:dark?'#fbbf24':'#92400e',border:dark?'1px solid rgba(251,191,36,.3)':'1.5px solid rgba(146,64,14,.2)',background:dark?'rgba(251,191,36,.07)':'rgba(146,64,14,.04)'}}>1–7</div>
@@ -1296,12 +1296,12 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       </div>
                     ))}
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
               {/* ═══ GUIDE ═══ */}
               {tab==='guide'&&(
-                <motion.div key="gu" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
+                <Motion.div key="gu" initial={{opacity:0,y:6}} animate={{opacity:1,y:0}} exit={{opacity:0}} style={{display:'flex',flexDirection:'column',gap:14}}>
                   <div className="panel" style={{padding:'22px 24px'}}>
                     <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:16}}>
                       <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,border:dark?'1px solid rgba(20,255,180,.25)':'1.5px solid rgba(13,51,32,.2)',background:dark?'rgba(20,255,180,.06)':'rgba(13,51,32,.04)'}}>📖</div>
@@ -1330,7 +1330,7 @@ export default function MusicTheoryCalc({isDarkMode:ext}={}) {
                       </div>
                     ))}
                   </div>
-                </motion.div>
+                </Motion.div>
               )}
 
             </AnimatePresence>

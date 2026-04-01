@@ -1,0 +1,1132 @@
+🔧 COMPREHENSIVE TOOL FILE FIX SCRIPT
+🔧 Starting at: 31/3/2026, 1:58:34 pm
+
+============================================================
+
+📊 Found 91 JSX files to process
+
+
+============================================================
+📄 src\tools\academic\BasicStats.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 146 open, 143 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 146 open, 143 close
+
+============================================================
+📄 src\tools\academic\CalculusSolver.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 84 open, 79 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for useRef import
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 84 open, 79 close
+
+============================================================
+📄 src\tools\academic\ChemistryBalancer.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 91 open, 85 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 92 open, 88 close
+
+============================================================
+📄 src\tools\academic\CircuitDesigner.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 116 open, 109 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 117 open, 111 close
+
+============================================================
+📄 src\tools\academic\DerivativeSolver.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 125 open, 120 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 126 open, 128 close
+
+============================================================
+📄 src\tools\academic\EconomicsElasticity.jsx
+============================================================
+ℹ️  No changes needed
+
+============================================================
+📄 src\tools\academic\GPACalculator.jsx
+============================================================
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 31 open, 33 close
+
+============================================================
+📄 src\tools\academic\IntegralCalculator.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 75 open, 70 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 76 open, 75 close
+
+============================================================
+📄 src\tools\academic\MatrixAlgebra.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 77 open, 72 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 78 open, 76 close
+
+============================================================
+📄 src\tools\academic\PercentageCalc.jsx
+============================================================
+ℹ️  No changes needed
+
+============================================================
+📄 src\tools\academic\PhysicsKinematics.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 72 open, 67 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 73 open, 71 close
+
+============================================================
+📄 src\tools\academic\ProjectileSimulator.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 103 open, 97 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 104 open, 100 close
+
+============================================================
+📄 src\tools\academic\QuadraticSolver.jsx
+============================================================
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+
+✅ All issues resolved!
+
+============================================================
+📄 src\tools\academic\scientificCalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 74 open, 70 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Renamed 1 unused state variable(s)
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 75 open, 71 close
+
+============================================================
+📄 src\tools\academic\ScientificCalculator.jsx
+============================================================
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+
+✅ All issues resolved!
+
+============================================================
+📄 src\tools\academic\ScientificNotation.jsx
+============================================================
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 29 open, 31 close
+
+============================================================
+📄 src\tools\academic\UnitConverter.jsx
+============================================================
+ℹ️  No changes needed
+
+============================================================
+📄 src\tools\audio\AudioConverter.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 83 open, 77 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+   ✓ Renamed 1 unused state variable(s)
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 84 open, 81 close
+
+============================================================
+📄 src\tools\audio\AudioToText.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 64 open, 55 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 65 open, 59 close
+
+============================================================
+📄 src\tools\audio\TextToSpeech.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 93 open, 87 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 94 open, 91 close
+
+============================================================
+📄 src\tools\audio\VoiceRecorder.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 84 open, 77 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Renamed 1 unused state variable(s)
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 85 open, 80 close
+
+============================================================
+📄 src\tools\ComingSoonTemplate.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 6 open, 5 close
+ℹ️  No changes needed
+
+============================================================
+📄 src\tools\developer\CarbonFootprint.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 125 open, 121 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 126 open, 124 close
+
+============================================================
+📄 src\tools\developer\CodeFormatter.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 82 open, 78 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 83 open, 80 close
+
+============================================================
+📄 src\tools\developer\ColorPicker.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 120 open, 101 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 121 open, 105 close
+
+============================================================
+📄 src\tools\developer\CSSMinifier.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 97 open, 89 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+   ✓ Renamed 1 unused state variable(s)
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 98 open, 94 close
+
+============================================================
+📄 src\tools\developer\HTMLPreviewer.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 108 open, 94 close, Space before closing tag slash
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+   ✓ Fixed space before closing tag slash
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 109 open, 100 close
+
+============================================================
+📄 src\tools\developer\MusicTheoryCalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 128 open, 114 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 129 open, 117 close
+
+============================================================
+📄 src\tools\developer\PasswordGenerator.jsx
+============================================================
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+
+✅ All issues resolved!
+
+============================================================
+📄 src\tools\developer\QRGenerator.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 99 open, 90 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 100 open, 92 close
+
+============================================================
+📄 src\tools\developer\RSADemo.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 118 open, 114 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 119 open, 115 close
+
+============================================================
+📄 src\tools\developer\TruthTableGenerator.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 63 open, 56 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 64 open, 58 close
+
+============================================================
+📄 src\tools\documentmaker\AssignmentCoverPage.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 233 open, 221 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+   ✓ Renamed 1 unused state variable(s)
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 234 open, 222 close
+
+============================================================
+📄 src\tools\documentmaker\BiodataMaker.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 157 open, 145 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 158 open, 146 close
+
+============================================================
+📄 src\tools\documentmaker\biographyGenerator.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 66 open, 63 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 67 open, 65 close
+
+============================================================
+📄 src\tools\documentmaker\CoverLetterGenerator.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 159 open, 147 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 160 open, 149 close
+
+============================================================
+📄 src\tools\documentmaker\CVMaker.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 197 open, 184 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 198 open, 185 close
+
+============================================================
+📄 src\tools\documentmaker\InternshipApplication.jsx
+============================================================
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+
+✅ All issues resolved!
+
+============================================================
+📄 src\tools\documentmaker\InternshipLetter.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 124 open, 119 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 125 open, 120 close
+
+============================================================
+📄 src\tools\documentmaker\JobApplicationTracker.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 88 open, 85 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 89 open, 86 close
+
+============================================================
+📄 src\tools\documentmaker\LabReportBuilder.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 83 open, 79 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 84 open, 81 close
+
+============================================================
+📄 src\tools\documentmaker\LinkedInSummaryGen.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 116 open, 106 close
+
+📝 Changes applied:
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 117 open, 109 close
+
+============================================================
+📄 src\tools\documentmaker\RecommendationLetter.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 115 open, 110 close
+
+📝 Changes applied:
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 116 open, 111 close
+
+============================================================
+📄 src\tools\documentmaker\ReferenceGenerator.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 102 open, 97 close
+
+📝 Changes applied:
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 103 open, 98 close
+
+============================================================
+📄 src\tools\documentmaker\ResearchPaperOutline.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 107 open, 103 close
+
+📝 Changes applied:
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 108 open, 105 close
+
+============================================================
+📄 src\tools\documentmaker\ResumeMaker.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 196 open, 185 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 197 open, 186 close
+
+============================================================
+📄 src\tools\documentmaker\ScholarshipLatter.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 100 open, 95 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 101 open, 98 close
+
+============================================================
+📄 src\tools\documentmaker\SOPGenerator.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 128 open, 120 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 129 open, 121 close
+
+============================================================
+📄 src\tools\financial\EMILoanCalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 191 open, 183 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 192 open, 184 close
+
+============================================================
+📄 src\tools\financial\HousingCalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 139 open, 136 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 140 open, 137 close
+
+============================================================
+📄 src\tools\financial\MovingCosts.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 123 open, 119 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 124 open, 120 close
+
+============================================================
+📄 src\tools\financial\PomodoroTimer.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 62 open, 58 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 63 open, 60 close
+
+============================================================
+📄 src\tools\financial\salaryTax.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 137 open, 134 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 138 open, 136 close
+
+============================================================
+📄 src\tools\financial\ScholarshipROICalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 106 open, 105 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 107 open, 106 close
+
+============================================================
+📄 src\tools\financial\SIPCalculator.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 155 open, 151 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 156 open, 152 close
+
+============================================================
+📄 src\tools\financial\StudentBudgeting.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 131 open, 127 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 132 open, 128 close
+
+============================================================
+📄 src\tools\financial\StudentLoanRepayment.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 88 open, 81 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 89 open, 82 close
+
+============================================================
+📄 src\tools\financial\TextbookResale.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 130 open, 128 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 131 open, 129 close
+
+============================================================
+📄 src\tools\health\agecalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 174 open, 169 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 176 open, 171 close
+
+============================================================
+📄 src\tools\health\BMIAndCalorie.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 162 open, 154 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 163 open, 156 close
+
+============================================================
+📄 src\tools\health\NutritionCalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 62 open, 52 close
+ℹ️  No changes needed
+
+============================================================
+📄 src\tools\image\BackgroundRemover.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 135 open, 110 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 136 open, 113 close
+
+============================================================
+📄 src\tools\image\FormatConverter.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 110 open, 96 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 111 open, 97 close
+
+============================================================
+📄 src\tools\image\ImageCompressor.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 148 open, 131 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 148 open, 133 close
+
+============================================================
+📄 src\tools\image\ImageEditor.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 111 open, 93 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 112 open, 98 close
+
+============================================================
+📄 src\tools\image\ImageResizer.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 206 open, 177 close
+
+📝 Changes applied:
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 207 open, 178 close
+
+============================================================
+📄 src\tools\image\ImageToPDF.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 99 open, 85 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 100 open, 90 close
+
+============================================================
+📄 src\tools\image\ScreenshotMockup.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 96 open, 81 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 97 open, 84 close
+
+============================================================
+📄 src\tools\niche\AstronomyCalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 133 open, 124 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 134 open, 125 close
+
+============================================================
+📄 src\tools\niche\BinaryConverter.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 113 open, 107 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 114 open, 108 close
+
+============================================================
+📄 src\tools\niche\MusicTheoryCalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 201 open, 196 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Fixed empty catch blocks
+   ✓ Replaced React fragments with div wrapper
+   ✓ Renamed 2 unused state variable(s)
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 202 open, 197 close
+
+============================================================
+📄 src\tools\niche\TypingSpeedTest.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 95 open, 87 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 96 open, 89 close
+
+============================================================
+📄 src\tools\pdf\ImageToPDF.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 134 open, 128 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 135 open, 131 close
+
+============================================================
+📄 src\tools\pdf\PDFCompressor.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 65 open, 60 close
+ℹ️  No changes needed
+
+============================================================
+📄 src\tools\pdf\PDFMergeSplit.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 125 open, 119 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 125 open, 124 close
+
+============================================================
+📄 src\tools\pdf\PDFToWord.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 54 open, 52 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 55 open, 53 close
+
+============================================================
+📄 src\tools\pdf\PDFUnlock.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 61 open, 58 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 62 open, 59 close
+
+============================================================
+📄 src\tools\pdf\WordToPDF.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 57 open, 54 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Fixed script tag escaping
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 58 open, 55 close
+
+============================================================
+📄 src\tools\text\CaseConverter.jsx
+============================================================
+
+📝 Changes applied:
+   ✓ Added eslint-disable for useRef import
+   ✓ Renamed 1 unused state variable(s)
+
+✅ All issues resolved!
+
+============================================================
+📄 src\tools\text\GrammarChecker.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 58 open, 56 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Renamed 1 unused state variable(s)
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 58 open, 57 close
+
+============================================================
+📄 src\tools\text\PlagiarismCheck.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 67 open, 63 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Renamed 2 unused state variable(s)
+   ✓ Added background colors to main container
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 68 open, 66 close
+
+============================================================
+📄 src\tools\text\TextFormatter.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 63 open, 57 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Renamed 1 unused state variable(s)
+   ✓ Added background colors to main container
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 64 open, 60 close
+
+============================================================
+📄 src\tools\text\wordCount.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 145 open, 142 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+
+✅ All issues resolved!
+
+============================================================
+📄 src\tools\text\WordCounter.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 98 open, 90 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Added background colors to main container
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 99 open, 91 close
+
+============================================================
+📄 src\tools\utility\AgeCalculator.jsx
+============================================================
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+✅ All issues resolved!
+
+============================================================
+📄 src\tools\utility\AssignmentTracker.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 132 open, 123 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 133 open, 126 close
+
+============================================================
+📄 src\tools\utility\DateDifference.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 113 open, 107 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 115 open, 109 close
+
+============================================================
+📄 src\tools\utility\ExamWeighting.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 84 open, 79 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 85 open, 80 close
+
+============================================================
+📄 src\tools\utility\FinalGradeCalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 81 open, 74 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Replaced React fragments with div wrapper
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 82 open, 75 close
+
+============================================================
+📄 src\tools\utility\PercentageCalc.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 58 open, 55 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Renamed 1 unused state variable(s)
+   ✓ Added background colors to main container
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 59 open, 56 close
+
+============================================================
+📄 src\tools\utility\StudyPlanner.jsx
+============================================================
+⚠️  Issues found: Mismatched div tags: 22 open, 20 close
+
+📝 Changes applied:
+   ✓ Added eslint-disable for motion import
+   ✓ Added eslint-disable for useRef import
+   ✓ Replaced React fragments with div wrapper
+   ✓ Added background colors to main container
+
+⚠️  Remaining issues:
+   - Mismatched div tags: 23 open, 21 close
+
+============================================================
+
+📊 FINAL SUMMARY
+============================================================
+Total files processed: 91
+Files fixed: 85
+Files unchanged: 6
+Errors encountered: 0
+Total changes applied: 243
+Remaining issues: 81
+
+✨ Script completed at: 31/3/2026, 1:58:35 pm
+============================================================

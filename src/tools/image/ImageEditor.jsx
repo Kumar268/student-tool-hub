@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 /* ═══════════════════════════════════════════════════════
    BASE STYLES — shared keyframes + utilities
@@ -324,7 +324,6 @@ function useEditor() {
   const [resizeH, setResizeH] = useState('');
   const [aspectLock, setAspectLock] = useState(true);
   const canvasRef = useRef(null);
-  const offscreenRef = useRef(null);
 
   const pushHistory = useCallback((label, adj) => {
     setHistory(h => {
@@ -540,7 +539,7 @@ function DropZone({ onLoad, neon }) {
 /* ═══════════════════════════════════════════════════════
    FILTERS PANEL (thumbnails)
 ═══════════════════════════════════════════════════════ */
-function FiltersPanel({ image, onApply, currentAdj, neon }) {
+function FiltersPanel({ onApply, currentAdj, neon }) {
   return (
     <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6 }}>
       {FILTERS.map(f => {
@@ -657,14 +656,12 @@ function EditorNeon({ onSwitch, editor }) {
     image, loadImage, adjustments, setAdj, applyFilter,
     undo, redo, canUndo, canRedo, history, histIdx,
     resetAll, zoom, setZoom, rotation, setRotation, flipH, setFlipH, flipV, setFlipV,
-    textLayers, setTextLayers, resizeW, setResizeW, resizeH, setResizeH,
-    aspectLock, setAspectLock, applyResize, canvasRef, downloadImage, pushHistory,
+    textLayers, setTextLayers, canvasRef, downloadImage,
   } = editor;
 
   const [tab, setTab] = useState('adjust');
   const [dlFormat, setDlFormat] = useState('png');
   const [dlQuality, setDlQuality] = useState(92);
-  const shouldReduceMotion = useReducedMotion();
 
   const tabs = [
     { id:'adjust', label:'ADJUST', icon:<IcoSun s={13}/> },
@@ -766,7 +763,7 @@ function EditorNeon({ onSwitch, editor }) {
             {tab === 'filters' && (
               <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:.2}}>
                 <div style={{ fontSize:9, fontWeight:600, color:'rgba(0,255,247,.4)', letterSpacing:'.14em', marginBottom:12, textTransform:'uppercase' }}>◈ PRESET FILTERS</div>
-                <FiltersPanel image={image} onApply={applyFilter} currentAdj={adjustments} neon={true} />
+                <FiltersPanel onApply={applyFilter} currentAdj={adjustments} neon={true} />
               </motion.div>
             )}
 
@@ -1022,7 +1019,7 @@ function EditorNormal({ onSwitch, editor }) {
             {tab === 'filters' && (
               <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:.2}}>
                 <div className="nm-section-label" style={{ marginBottom:12 }}>Preset Filters</div>
-                <FiltersPanel image={image} onApply={applyFilter} currentAdj={adjustments} neon={false} />
+                <FiltersPanel onApply={applyFilter} currentAdj={adjustments} neon={false} />
               </motion.div>
             )}
 

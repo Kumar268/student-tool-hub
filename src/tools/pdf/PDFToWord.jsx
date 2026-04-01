@@ -231,9 +231,9 @@ function generateWordDoc(text, filename) {
       if (inList) { html += '</ul>'; inList = false; }
       const title = line.replace(/^-+\s*/, '').replace(/\s*-+$/, '').trim();
       html += `<h2>${title}</h2>`;
-    } else if (/^[•\-\*]\s/.test(line)) {
+    } else if (/^[•\-*]\s/.test(line)) {
       if (!inList) { html += '<ul>'; inList = true; }
-      html += `<li>${line.replace(/^[•\-\*]\s/, '')}</li>`;
+      html += `<li>${line.replace(/^[•\-*]\s/, '')}</li>`;
     } else if (/^\d+\.\s/.test(line)) {
       if (inList) { html += '</ul>'; inList = false; }
       html += `<p>${line}</p>`;

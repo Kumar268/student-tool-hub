@@ -95,7 +95,6 @@ const pad8 = s => s.padStart(Math.ceil(Math.max(s.length,1)/8)*8,'0');
 const toBin = n => (n>>>0).toString(2);
 const toHex = n => (n>>>0).toString(16).toUpperCase();
 const toOct = n => (n>>>0).toString(8);
-const L_SUN = 3.828e26;
 
 const BITWISE_OPS = [
   {op:'AND', sym:'&',  fn:(a,b)=>a&b,        desc:'Output is 1 only when BOTH input bits are 1'},
@@ -218,14 +217,6 @@ export default function BinaryConverter({isDarkMode:ext}={}) {
     setCopied(label||text.slice(0,12));
     setTimeout(()=>setCopied(''),1800);
   },[]);
-
-  const PanelIcon = ({emoji,color1,color2})=>(
-    <div style={{width:34,height:34,borderRadius:dark?3:9,display:'flex',alignItems:'center',justifyContent:'center',
-      fontSize:16,border:dark?`1px solid ${color1}`:`1.5px solid ${color2}`,
-      background:dark?`rgba(${color1.slice(1).match(/../g).map(h=>parseInt(h,16)).join(',')},0.07)`:`rgba(${color2.slice(1).match(/../g).map(h=>parseInt(h,16)).join(',')},0.05)`}}>
-      {emoji}
-    </div>
-  );
 
   return (
     <>

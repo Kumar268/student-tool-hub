@@ -197,7 +197,7 @@ export default function TypingSpeedTest({isDarkMode:ext}={}) {
   const [wpm,      setWpm]      = useState(0);
   const [rawWpm,   setRawWpm]   = useState(0);
   const [accuracy, setAccuracy] = useState(100);
-  const [errors,   setErrors]   = useState(0);
+  const [,         setErrors]   = useState(0);
   const [history,  setHistory]  = useState([]);
   const [shakeInput, setShakeInput] = useState(false);
 
@@ -248,7 +248,6 @@ export default function TypingSpeedTest({isDarkMode:ext}={}) {
     if(phase==='idle' && val.length > 0){
       setPhase('typing');
       startTime.current = Date.now();
-      const dur = duration;
       timerRef.current = setInterval(()=>{
         setTimeLeft(prev=>{
           if(prev<=1){
@@ -297,19 +296,22 @@ export default function TypingSpeedTest({isDarkMode:ext}={}) {
     if(phase==='done'){
       const elapsed = startTime.current ? (Date.now()-startTime.current)/60000 : duration/60;
       const finalWpm = elapsed>0 ? Math.round((correctChars/5)/elapsed) : 0;
-      setWpm(finalWpm);
       const finalAcc = typed.length>0 ? Math.max(0,Math.round((correctChars/typed.length)*100)) : 100;
-      setAccuracy(finalAcc);
-      setHistory(h=>[{
-        wpm:finalWpm,
-        accuracy:finalAcc,
-        errors:currentErrors,
-        duration,
-        category,
-        date:new Date().toLocaleTimeString(),
-      },...h.slice(0,19)]);
+
+      setTimeout(() => {
+        setWpm(finalWpm);
+        setAccuracy(finalAcc);
+        setHistory(h=>[{
+          wpm:finalWpm,
+          accuracy:finalAcc,
+          errors:currentErrors,
+          duration,
+          category,
+          date:new Date().toLocaleTimeString(),
+        },...h.slice(0,19)]);
+      }, 0);
     }
-  },[phase]);
+  }, [phase, duration, category, correctChars, currentErrors, typed.length]);
 
   useEffect(()=>()=>clearInterval(timerRef.current),[]);
 
